@@ -1,18 +1,22 @@
-import React, { useState } from "react";
-import { signUp } from "~/lib/auth/client";
+import { useState } from "react";
+import { signUp } from "../../server/lib/auth/client";
+import { useNavigate } from "react-router";
 
 export function SignUpForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirmPassword") as string;
 
     if (password !== confirmPassword) {
       setError("Les mots de passe ne correspondent pas");
@@ -21,14 +25,19 @@ export function SignUpForm() {
     }
 
     try {
-      await signUp.email({
-        name,
+      const { data, error: authError } = await signUp.email({
         email,
         password,
-        callbackURL: "/",
+        name,
       });
+
+      if (authError) {
+        setError("Erreur lors de l'inscription. Vérifiez vos informations.");
+      } else if (data?.user) {
+        navigate("/");
+      }
     } catch (err) {
-      setError("Erreur lors de l'inscription. Vérifiez vos informations.");
+      setError("Une erreur s'est produite lors de l'inscription.");
     } finally {
       setIsLoading(false);
     }
@@ -46,8 +55,7 @@ export function SignUpForm() {
         <input
           type="text"
           id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          name="name"
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
@@ -63,8 +71,7 @@ export function SignUpForm() {
         <input
           type="email"
           id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
@@ -80,8 +87,7 @@ export function SignUpForm() {
         <input
           type="password"
           id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
@@ -97,8 +103,7 @@ export function SignUpForm() {
         <input
           type="password"
           id="confirmPassword"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          name="confirmPassword"
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />

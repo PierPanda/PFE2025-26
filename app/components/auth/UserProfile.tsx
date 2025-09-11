@@ -1,6 +1,5 @@
-import React from "react";
-import { useAuth } from "~/hooks/useAuth";
-import { signOut } from "~/lib/auth/client";
+import { Form } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
 
 export function UserProfile() {
   const { user, isLoading } = useAuth();
@@ -13,12 +12,8 @@ export function UserProfile() {
     return null;
   }
 
-  const handleSignOut = async () => {
-    await signOut();
-  };
-
   return (
-    <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+    <div className="flex items-center space-x-4 p-4 rounded-lg">
       {user.image && (
         <img
           src={user.image}
@@ -30,12 +25,14 @@ export function UserProfile() {
         <p className="font-medium text-gray-900">{user.name}</p>
         <p className="text-sm text-gray-600">{user.email}</p>
       </div>
-      <button
-        onClick={handleSignOut}
-        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      >
-        Se déconnecter
-      </button>
+      <Form method="post" action="/auth?intent=logout">
+        <button
+          type="submit"
+          className="px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Se déconnecter
+        </button>
+      </Form>
     </div>
   );
 }

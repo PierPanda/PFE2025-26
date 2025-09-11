@@ -1,39 +1,51 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
-import { useAuth } from "~/hooks/useAuth";
-import { UserProfile } from "~/components/auth/UserProfile";
-import { Link } from "react-router";
+import { redirect } from "react-router";
+import { auth } from "../server/lib/auth";
+import { UserProfile } from "../components/auth/UserProfile";
+
+export async function loader({ request }: Route.LoaderArgs) {
+  try {
+    const session = await auth.api.getSession({ headers: request.headers });
+    
+    if (!session?.user) {
+      throw redirect("/auth");
+    }
+    
+    return { user: session.user };
+  } catch (error) {
+    throw redirect("/auth");
+  }
+}
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Simulator - Accueil" },
+    { name: "description", content: "Bienvenue sur Imulator!" },
   ];
 }
 
 export default function Home() {
-  const { isAuthenticated, user, isLoading } = useAuth();
-
   return (
-    <div>
-      <div className="p-4 border-b">
-        {isLoading ? (
-          <div>Chargement de l'état d'authentification...</div>
-        ) : isAuthenticated ? (
-          <UserProfile />
-        ) : (
-          <div className="text-center">
-            <p className="mb-4">Vous n'êtes pas connecté.</p>
-            <Link
-              to="/auth"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
-            >
-              Se connecter
-            </Link>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <h1 className="text-2xl font-bold text-gray-900">Imulator</h1>
+            <UserProfile />
           </div>
-        )}
-      </div>
-      <Welcome />
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Bienvenue!
+          </h2>
+          <p className="text-gray-600">
+            Vous êtes maintenant connecté à l'application.
+          </p>
+        </div>
+      </main>
     </div>
   );
 }

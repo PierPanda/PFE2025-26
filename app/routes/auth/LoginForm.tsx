@@ -1,25 +1,34 @@
-import React, { useState } from "react";
-import { signIn } from "~/lib/auth/client";
+import { useState } from "react";
+import { signIn } from "../../server/lib/auth/client";
+import { useNavigate } from "react-router";
 
 export function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     try {
-      await signIn.email({
+      const { data, error: authError } = await signIn.email({
         email,
         password,
-        callbackURL: "/",
       });
+
+      if (authError) {
+        setError("Erreur de connexion. Vérifiez vos identifiants.");
+      } else if (data?.user) {
+        navigate("/");
+      }
     } catch (err) {
-      setError("Erreur de connexion. Vérifiez vos identifiants.");
+      setError("Une erreur s'est produite lors de la connexion.");
     } finally {
       setIsLoading(false);
     }
@@ -37,8 +46,7 @@ export function LoginForm() {
         <input
           type="email"
           id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
@@ -54,8 +62,7 @@ export function LoginForm() {
         <input
           type="password"
           id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />

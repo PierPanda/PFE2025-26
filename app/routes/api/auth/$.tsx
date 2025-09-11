@@ -1,5 +1,5 @@
-import { auth } from "~/lib/auth/config";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { auth } from "../../../server/lib/auth";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   return auth.handler(request);

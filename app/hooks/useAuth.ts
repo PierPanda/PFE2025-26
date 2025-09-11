@@ -1,13 +1,25 @@
-import { useSession as useBetterAuthSession } from "~/lib/auth/client";
+import { useLoaderData } from "react-router";
+import type { AuthState } from "../types/user";
 
-export function useAuth() {
-  const { data: session, isPending, error } = useBetterAuthSession();
-
-  return {
-    user: session?.user || null,
-    session,
-    isLoading: isPending,
-    isAuthenticated: !!session?.user,
-    error,
-  };
+export function useAuth(): AuthState {
+  try {
+    const data = useLoaderData() as { user?: any };
+    
+    return {
+      user: data?.user || null,
+      session: null,
+      isLoading: false,
+      isAuthenticated: !!data?.user,
+      error: null,
+    };
+  } catch {
+    // Si on ne peut pas accéder aux données du loader, on est pas authentifié
+    return {
+      user: null,
+      session: null,
+      isLoading: false,
+      isAuthenticated: false,
+      error: null,
+    };
+  }
 }
