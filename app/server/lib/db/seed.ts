@@ -63,7 +63,11 @@ async function seed() {
       await createUser(ADMIN_USER);
       console.log("✅ Utilisateur admin créé !");
       console.log(`📧 Email: ${ADMIN_USER.email}`);
+<<<<<<< HEAD
       // console.log(`🔐 Mot de passe: ${ADMIN_USER.password}`); // Removed for security
+=======
+      console.log("🔐 Mot de passe: ******");
+>>>>>>> 1467aa1 (feat(auth): clean files from logs)
     } else {
       console.log("👤 L'utilisateur admin existe déjà");
     }
