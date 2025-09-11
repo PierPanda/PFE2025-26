@@ -1,0 +1,14 @@
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+};
+
+export type AuthState = {
+  user: User | null;
+  session: any;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  error: any;
+};
