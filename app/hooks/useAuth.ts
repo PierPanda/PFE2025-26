@@ -1,9 +1,9 @@
 import { useLoaderData } from "react-router";
-import type { AuthState, User } from "../types/user";
+import type { AuthState } from "../types/user";
 
 export function useAuth(): AuthState {
   try {
-    const data = useLoaderData() as { user?: User };
+    const data = useLoaderData() as { user?: any };
     
     return {
       user: data?.user || null,
