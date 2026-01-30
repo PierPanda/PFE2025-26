@@ -65,7 +65,7 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
       } else if (data?.user) {
         navigate("/");
       }
-    } catch (err) {
+    } catch {
       setError("Une erreur s'est produite lors de l'inscription.");
     } finally {
       setIsLoading(false);
