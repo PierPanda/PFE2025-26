@@ -7,7 +7,7 @@ export type User = {
 
 export type AuthState = {
   user: User | null;
-  session: any;
+  session: unknown;
   isLoading: boolean;
   isAuthenticated: boolean;
   error: any;
