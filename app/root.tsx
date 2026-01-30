@@ -5,7 +5,10 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useNavigate,
+  useHref,
 } from "react-router";
+import { HeroUIProvider } from "@heroui/react";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -42,7 +45,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const navigate = useNavigate();
+  return (
+    <HeroUIProvider navigate={navigate} useHref={useHref}>
+      <Outlet />
+    </HeroUIProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

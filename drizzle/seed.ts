@@ -1,13 +1,14 @@
 import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import * as schema from "./schema";
-import { user, account } from "./schema";
+import * as schema from "../app/server/lib/db/schema";
+import { user, account } from "../app/server/lib/db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { ADMIN_USER, SEED_USERS } from "./seed.config";
+import { env } from "~/../app/server/utils/env";
 
-const DATABASE_URL = process.env.DATABASE_URL;
+const DATABASE_URL = env.DATABASE_URL;
 
 if (!DATABASE_URL) {
   console.error("❌ DATABASE_URL est requis dans votre fichier .env");
@@ -63,11 +64,7 @@ async function seed() {
       await createUser(ADMIN_USER);
       console.log("✅ Utilisateur admin créé !");
       console.log(`📧 Email: ${ADMIN_USER.email}`);
-<<<<<<< HEAD
-      // console.log(`🔐 Mot de passe: ${ADMIN_USER.password}`); // Removed for security
-=======
       console.log("🔐 Mot de passe: ******");
->>>>>>> 1467aa1 (feat(auth): clean files from logs)
     } else {
       console.log("👤 L'utilisateur admin existe déjà");
     }

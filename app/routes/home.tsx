@@ -6,11 +6,11 @@ import { UserProfile } from "../components/auth/UserProfile";
 export async function loader({ request }: Route.LoaderArgs) {
   try {
     const session = await auth.api.getSession({ headers: request.headers });
-    
+
     if (!session?.user) {
       throw redirect("/auth");
     }
-    
+
     return { user: session.user };
   } catch (error) {
     throw redirect("/auth");
