@@ -48,8 +48,8 @@ async function seed() {
       if (result?.user) {
         console.log(`[OK] ${userData.name} cree (${userData.email})`);
       }
-    } catch (error: any) {
-      const message = error?.message || error?.body?.message || String(error);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
       if (message.includes("already") || message.includes("User")) {
         console.log(`[SKIP] ${userData.email} existe deja`);
       } else {
