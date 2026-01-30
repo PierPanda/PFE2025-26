@@ -10,5 +10,5 @@ export type AuthState = {
   session: unknown;
   isLoading: boolean;
   isAuthenticated: boolean;
-  error: any;
+  error: Error | null;
 };
