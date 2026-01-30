@@ -95,7 +95,7 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
           <div className="flex flex-col items-center mb-6">
             <div className="relative">
               <Avatar
-                className="w-16 h-16 mb-3 ring-2 ring-white/30 shadow-lg bg-gradient-to-r from-emerald-700 to-cyan-600"
+                className="w-16 h-16 mb-3 ring-2 ring-white/30 shadow-lg bg-linear-to-r from-emerald-700 to-cyan-600"
                 fallback={
                   <div className="w-full h-full flex items-center justify-center">
                     <Icon
@@ -115,7 +115,7 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
             </div>
 
             <div className="text-center">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-700 to-cyan-600 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold bg-linear-to-r from-emerald-700 to-cyan-600 bg-clip-text text-transparent">
                 Rejoignez-nous
               </h1>
               <p className="text-gray-600 text-xs mt-1">
@@ -128,7 +128,7 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
             <div className="grid gap-3">
               {/* Name Input avec div flex */}
               <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border-2 border-white/30 rounded-lg p-3 shadow-md hover:shadow-lg hover:bg-white/90 focus-within:bg-white/95 focus-within:border-emerald-500/50 transition-all duration-300 ease-in-out">
-                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex-shrink-0">
+                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-linear-to-br from-emerald-500 to-teal-600 shrink-0">
                   <svg
                     className="w-2.5 h-2.5 text-white"
                     fill="currentColor"
@@ -152,7 +152,7 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
 
               {/* Email Input avec div flex */}
               <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border-2 border-white/30 rounded-lg p-3 shadow-md hover:shadow-lg hover:bg-white/90 focus-within:bg-white/95 focus-within:border-emerald-500/50 transition-all duration-300 ease-in-out">
-                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex-shrink-0">
+                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-linear-to-br from-teal-500 to-cyan-600 shrink-0">
                   <svg
                     className="w-2.5 h-2.5 text-white"
                     fill="currentColor"
@@ -174,7 +174,7 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
               <div className="space-y-1">
                 {/* Password Input avec div flex */}
                 <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border-2 border-white/30 rounded-lg p-3 shadow-md hover:shadow-lg hover:bg-white/90 focus-within:bg-white/95 focus-within:border-emerald-500/50 transition-all duration-300 ease-in-out">
-                  <div className="flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex-shrink-0">
+                  <div className="flex items-center justify-center w-4 h-4 rounded-full bg-linear-to-br from-cyan-500 to-blue-600 shrink-0">
                     <svg
                       className="w-2.5 h-2.5 text-white"
                       fill="currentColor"
@@ -229,7 +229,7 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
 
               {/* Confirm Password Input avec div flex */}
               <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border-2 border-white/30 rounded-lg p-3 shadow-md hover:shadow-lg hover:bg-white/90 focus-within:bg-white/95 focus-within:border-emerald-500/50 transition-all duration-300 ease-in-out">
-                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex-shrink-0">
+                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-linear-to-br from-blue-500 to-purple-600 shrink-0">
                   <svg
                     className="w-2.5 h-2.5 text-white"
                     fill="currentColor"
@@ -258,7 +258,7 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
                 <div className="relative bg-red-50/80 backdrop-blur-sm border border-red-200/50 text-red-700 px-3 py-2 rounded-lg text-sm font-medium">
                   <div className="flex items-center space-x-2">
                     <svg
-                      className="w-3 h-3 flex-shrink-0"
+                      className="w-3 h-3 shrink-0"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -282,18 +282,18 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
               radius="lg"
               isLoading={isLoading}
               disabled={isLoading}
-              className="w-full rounded-lg relative overflow-hidden bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-medium shadow-lg hover:shadow-xl transform transition-all duration-300 hover:-translate-y-0.5"
+              className="w-full rounded-lg relative overflow-hidden bg-linear-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-medium shadow-lg hover:shadow-xl transform transition-all duration-300 hover:-translate-y-0.5"
             >
               <span className="relative z-10">
                 {isLoading ? "Création en cours..." : "Créer mon compte"}
               </span>
               {/* Animated background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-700 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-linear-to-r from-emerald-700 via-teal-700 to-cyan-700 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
 
               {/* Shimmer effect */}
               {!isLoading && (
                 <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                  <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
                 </div>
               )}
             </Button>

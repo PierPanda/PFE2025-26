@@ -33,13 +33,17 @@ export function FlexInput({
   disabled = false,
 }: FlexInputProps) {
   const defaultStartContent = startIcon && (
-    <div className={`flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br ${iconColor}`}>
+    <div
+      className={`flex items-center justify-center w-5 h-5 rounded-full bg-linear-to-br ${iconColor}`}
+    >
       {startIcon}
     </div>
   );
 
   const defaultEndContent = endIcon && (
-    <div className={`flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br ${iconColor}`}>
+    <div
+      className={`flex items-center justify-center w-5 h-5 rounded-full bg-linear-to-br ${iconColor}`}
+    >
       {endIcon}
     </div>
   );
@@ -53,7 +57,7 @@ export function FlexInput({
           {isRequired && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
-      
+
       {/* Input Container - Flex Layout */}
       <div className="flex items-center gap-2">
         <div className="flex-1">
@@ -85,7 +89,7 @@ export function FlexInput({
             endContent={defaultEndContent}
           />
         </div>
-        
+
         {/* Additional content can be added here for flex layout */}
         {/* For example: action buttons, status indicators, etc. */}
       </div>
@@ -93,7 +97,11 @@ export function FlexInput({
       {/* Error Message */}
       {error && (
         <div className="flex items-center gap-2 mt-1 text-red-600 text-xs">
-          <svg className="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <svg
+            className="w-3 h-3 shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
             <path
               fillRule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -118,9 +126,7 @@ export function FlexInputRow({
   gap?: string;
 }) {
   return (
-    <div className={`flex items-start gap-${gap} ${className}`}>
-      {children}
-    </div>
+    <div className={`flex items-start gap-${gap} ${className}`}>{children}</div>
   );
 }
 
@@ -141,9 +147,7 @@ export function FlexInputGroup({
           {title}
         </h3>
       )}
-      <div className="grid gap-4">
-        {children}
-      </div>
+      <div className="grid gap-4">{children}</div>
     </div>
   );
 }
@@ -167,7 +171,11 @@ export const InputIcons = {
   ),
   user: (
     <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+      <path
+        fillRule="evenodd"
+        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+        clipRule="evenodd"
+      />
     </svg>
   ),
   phone: (
@@ -177,17 +185,29 @@ export const InputIcons = {
   ),
   search: (
     <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-      <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+      <path
+        fillRule="evenodd"
+        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+        clipRule="evenodd"
+      />
     </svg>
   ),
   calendar: (
     <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-      <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+      <path
+        fillRule="evenodd"
+        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+        clipRule="evenodd"
+      />
     </svg>
   ),
   location: (
     <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+      <path
+        fillRule="evenodd"
+        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+        clipRule="evenodd"
+      />
     </svg>
   ),
 };

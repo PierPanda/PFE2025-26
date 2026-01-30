@@ -33,7 +33,7 @@ export default function AuthPage() {
             onPress={() => setIsLogin(true)}
             className={`px-6 font-medium transition-all duration-300 ${
               isLogin
-                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                ? "bg-linear-to-r from-blue-600 to-purple-600 text-white shadow-lg"
                 : "text-gray-600 hover:text-gray-800 bg-transparent"
             }`}
           >
@@ -47,7 +47,7 @@ export default function AuthPage() {
             onPress={() => setIsLogin(false)}
             className={`px-6 font-medium transition-all duration-300 ${
               !isLogin
-                ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg"
+                ? "bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-lg"
                 : "text-gray-600 hover:text-gray-800 bg-transparent"
             }`}
           >
