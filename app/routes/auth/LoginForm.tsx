@@ -40,7 +40,7 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
       } else if (data?.user) {
         navigate("/");
       }
-    } catch (err) {
+    } catch {
       setError("Une erreur s'est produite lors de la connexion.");
     } finally {
       setIsLoading(false);
