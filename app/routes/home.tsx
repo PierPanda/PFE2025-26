@@ -12,7 +12,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     }
 
     return { user: session.user };
-  } catch (error) {
+  } catch {
     throw redirect("/auth");
   }
 }
