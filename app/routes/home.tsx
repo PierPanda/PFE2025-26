@@ -17,7 +17,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 }
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_args: Route.MetaArgs) {
   return [
     { title: "Simulator - Accueil" },
     { name: "description", content: "Bienvenue sur Imulator!" },
