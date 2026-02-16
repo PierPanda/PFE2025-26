@@ -14,14 +14,20 @@ export const auth = betterAuth({
   },
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
-  basePath: "/api/auth", // Ajout du basePath selon la doc
+  basePath: "/api/auth",
   logger: {
     level: "debug",
   },
   session: {
     cookieCache: {
       enabled: true,
-      maxAge: 60 * 60 * 24 * 7, // 7 jours
+      maxAge: 60 * 60 * 24 * 7,
+    },
+  },
+  socialProviders: {
+    google: {
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
 });

@@ -8,7 +8,7 @@ import {
   Spacer,
   Progress,
 } from "@heroui/react";
-import { signIn } from "../../server/lib/auth/client";
+import { loginWithEmail, loginWithGoogle } from "~/server/actions/auth.actions";
 import { useNavigate } from "react-router";
 
 interface LoginFormProps {
@@ -29,29 +29,23 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    try {
-      const { data, error: authError } = await signIn.email({
-        email,
-        password,
-      });
+    const result = await loginWithEmail(email, password);
 
-      if (authError) {
-        setError("Erreur de connexion. Vérifiez vos identifiants.");
-      } else if (data?.user) {
-        navigate("/");
-      }
-    } catch {
-      setError("Une erreur s'est produite lors de la connexion.");
-    } finally {
-      setIsLoading(false);
+    if (result.success) {
+      navigate("/");
+    } else {
+      setError(
+        result.error || "Une erreur s'est produite lors de la connexion.",
+      );
     }
+
+    setIsLoading(false);
   };
 
   return (
     <div className="w-full">
       <Card className="relative backdrop-blur-xl bg-transparent border border-white/20 shadow-xl rounded-lg">
         <CardBody className="p-6">
-          {/* Logo/Avatar section */}
           <div className="flex flex-col items-center mb-6">
             <Avatar
               className="w-16 h-16 mb-3 ring-2 ring-white/30 shadow-lg bg-linear-to-br from-blue-500 to-purple-600"
@@ -79,7 +73,6 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-3">
-              {/* Email Input avec div flex */}
               <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border-2 border-white/30 rounded-lg p-3 shadow-md hover:shadow-lg hover:bg-white/90 focus-within:bg-white/95 focus-within:border-blue-500/50 transition-all duration-300 ease-in-out">
                 <div className="flex items-center justify-center w-4 h-4 rounded-full bg-linear-to-br from-blue-500 to-purple-600 shrink-0">
                   <svg
@@ -100,7 +93,6 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
                 />
               </div>
 
-              {/* Password Input avec div flex */}
               <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border-2 border-white/30 rounded-lg p-3 shadow-md hover:shadow-lg hover:bg-white/90 focus-within:bg-white/95 focus-within:border-blue-500/50 transition-all duration-300 ease-in-out">
                 <div className="flex items-center justify-center w-4 h-4 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 shrink-0">
                   <svg
@@ -152,7 +144,6 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
             <Button
               type="submit"
               size="md"
-              radius="lg"
               isLoading={isLoading}
               disabled={isLoading}
               className="w-full relative overflow-hidden rounded-lg bg-linear-to-r from-blue-600 via-purple-600 to-indigo-600 text-white font-medium shadow-lg hover:shadow-xl transform transition-all duration-300 hover:-translate-y-0.5"
@@ -160,10 +151,8 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
               <span className="relative z-10">
                 {isLoading ? "Connexion..." : "Se connecter"}
               </span>
-              {/* Animated background */}
               <div className="absolute inset-0 bg-linear-to-r from-blue-700 via-purple-700 to-indigo-700 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
 
-              {/* Ripple effect */}
               {!isLoading && (
                 <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300">
                   <div className="absolute inset-0 bg-linear-to-r from-white/10 to-white/5 animate-pulse"></div>
@@ -171,7 +160,6 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
               )}
             </Button>
 
-            {/* Loading progress */}
             {isLoading && (
               <Progress
                 size="sm"
@@ -186,7 +174,37 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
             )}
           </form>
 
-          {/* Toggle form section */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/20"></div>
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white/50 backdrop-blur-sm px-4 py-1 rounded-full text-gray-500 font-medium">
+                OU
+              </span>
+            </div>
+          </div>
+
+          <Button
+            size="md"
+            radius="md"
+            variant="bordered"
+            onPress={async () => {
+              const result = await loginWithGoogle("/");
+              if (!result.success) {
+                setError(
+                  result.error || "Erreur lors de la connexion avec Google",
+                );
+              }
+            }}
+            className="w-full rounded-lg bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-700 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+          >
+            <div className="flex items-center justify-center gap-3">
+              <Icon icon="flat-color-icons:google" width="18" height="18" />
+              <span>Continuer avec Google</span>
+            </div>
+          </Button>
+
           {onToggleForm && (
             <div className="mt-4 pt-4 border-t border-white/20 text-center">
               <p className="text-xs text-gray-600 mb-2">Première visite ?</p>
