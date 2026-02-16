@@ -9,7 +9,11 @@ import {
   Progress,
   Chip,
 } from "@heroui/react";
-import { signUp } from "../../server/lib/auth/client";
+import {
+  signUpWithEmail,
+  loginWithGoogle,
+  validatePassword,
+} from "~/server/actions/auth.actions";
 import { useNavigate } from "react-router";
 
 interface SignUpFormProps {
@@ -23,12 +27,8 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
   const navigate = useNavigate();
 
   const calculatePasswordStrength = (password: string) => {
-    let strength = 0;
-    if (password.length >= 8) strength += 25;
-    if (/[A-Z]/.test(password)) strength += 25;
-    if (/[0-9]/.test(password)) strength += 25;
-    if (/[^A-Za-z0-9]/.test(password)) strength += 25;
-    return strength;
+    const validation = validatePassword(password);
+    return validation.strength;
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,23 +53,26 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
       return;
     }
 
-    try {
-      const { data, error: authError } = await signUp.email({
-        email,
-        password,
-        name,
-      });
-
-      if (authError) {
-        setError("Erreur lors de l'inscription. Vérifiez vos informations.");
-      } else if (data?.user) {
-        navigate("/");
-      }
-    } catch {
-      setError("Une erreur s'est produite lors de l'inscription.");
-    } finally {
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      setError(
+        passwordValidation.message || "Le mot de passe n'est pas valide",
+      );
       setIsLoading(false);
+      return;
     }
+
+    const result = await signUpWithEmail(email, password, name);
+
+    if (result.success) {
+      navigate("/");
+    } else {
+      setError(
+        result.error || "Une erreur s'est produite lors de l'inscription.",
+      );
+    }
+
+    setIsLoading(false);
   };
 
   const getPasswordStrengthColor = (strength: number) => {
@@ -88,10 +91,8 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
 
   return (
     <div className="w-full">
-      {/* Glass morphism card */}
       <Card className="relative backdrop-blur-xl bg-transparent border border-white/20 shadow-xl rounded-lg">
         <CardBody className="p-6">
-          {/* Logo/Avatar section */}
           <div className="flex flex-col items-center mb-6">
             <div className="relative">
               <Avatar
@@ -107,7 +108,6 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
                   </div>
                 }
               />
-              {/* Animated ring */}
               <div
                 className="absolute inset-0 w-16 h-16 rounded-full border border-emerald-400/50 animate-spin"
                 style={{ animationDuration: "3s" }}
@@ -126,7 +126,6 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid gap-3">
-              {/* Name Input avec div flex */}
               <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border-2 border-white/30 rounded-lg p-3 shadow-md hover:shadow-lg hover:bg-white/90 focus-within:bg-white/95 focus-within:border-emerald-500/50 transition-all duration-300 ease-in-out">
                 <div className="flex items-center justify-center w-4 h-4 rounded-full bg-linear-to-br from-emerald-500 to-teal-600 shrink-0">
                   <svg
@@ -150,7 +149,6 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
                 />
               </div>
 
-              {/* Email Input avec div flex */}
               <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border-2 border-white/30 rounded-lg p-3 shadow-md hover:shadow-lg hover:bg-white/90 focus-within:bg-white/95 focus-within:border-emerald-500/50 transition-all duration-300 ease-in-out">
                 <div className="flex items-center justify-center w-4 h-4 rounded-full bg-linear-to-br from-teal-500 to-cyan-600 shrink-0">
                   <svg
@@ -172,7 +170,6 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
               </div>
 
               <div className="space-y-1">
-                {/* Password Input avec div flex */}
                 <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border-2 border-white/30 rounded-lg p-3 shadow-md hover:shadow-lg hover:bg-white/90 focus-within:bg-white/95 focus-within:border-emerald-500/50 transition-all duration-300 ease-in-out">
                   <div className="flex items-center justify-center w-4 h-4 rounded-full bg-linear-to-br from-cyan-500 to-blue-600 shrink-0">
                     <svg
@@ -197,7 +194,6 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
                   />
                 </div>
 
-                {/* Password strength indicator */}
                 {passwordStrength > 0 && (
                   <div className="space-y-0.5">
                     <Progress
@@ -287,10 +283,8 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
               <span className="relative z-10">
                 {isLoading ? "Création en cours..." : "Créer mon compte"}
               </span>
-              {/* Animated background */}
               <div className="absolute inset-0 bg-linear-to-r from-emerald-700 via-teal-700 to-cyan-700 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
 
-              {/* Shimmer effect */}
               {!isLoading && (
                 <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300">
                   <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
@@ -298,7 +292,6 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
               )}
             </Button>
 
-            {/* Loading progress */}
             {isLoading && (
               <Progress
                 size="sm"
@@ -313,7 +306,37 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
             )}
           </form>
 
-          {/* Footer */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/20"></div>
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white/50 backdrop-blur-sm px-4 py-1 rounded-full text-gray-500 font-medium">
+                OU
+              </span>
+            </div>
+          </div>
+
+          <Button
+            size="md"
+            radius="md"
+            variant="bordered"
+            onPress={async () => {
+              const result = await loginWithGoogle("/");
+              if (!result.success) {
+                setError(
+                  result.error || "Erreur lors de l'inscription avec Google",
+                );
+              }
+            }}
+            className="w-full rounded-lg bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-700 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+          >
+            <div className="flex items-center justify-center gap-3">
+              <Icon icon="flat-color-icons:google" width="18" height="18" />
+              <span>Continuer avec Google</span>
+            </div>
+          </Button>
+
           <div className="mt-4 text-center">
             <p className="text-xs text-gray-500 leading-relaxed">
               En créant un compte, vous acceptez nos{" "}
@@ -327,7 +350,6 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
             </p>
           </div>
 
-          {/* Toggle form section */}
           {onToggleForm && (
             <div className="mt-4 pt-4 border-t border-white/20 text-center">
               <p className="text-xs text-gray-600 mb-2">Déjà membre ?</p>

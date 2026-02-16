@@ -1,6 +1,7 @@
 import { createAuthClient } from "better-auth/react";
 
-export const { signIn, signUp, signOut, useSession, getSession } =
-  createAuthClient({
-    basePath: "/api/auth",
-  });
+export const authClient = createAuthClient({
+  basePath: "/api/auth",
+});
+
+export const { signIn, signUp, signOut, useSession, getSession } = authClient;
