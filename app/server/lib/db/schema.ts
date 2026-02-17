@@ -1,8 +1,5 @@
-import { user, session, account, verification } from "./auth-schema";
+// better-auth schema
+export { user, session, account, verification } from "./auth-schema";
 
-export const schema = {
-  user,
-  session,
-  account,
-  verification,
-};
+// teacher schema
+export { teacher } from "./teacher";
