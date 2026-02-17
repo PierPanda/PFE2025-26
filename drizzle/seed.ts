@@ -2,8 +2,8 @@ import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { sql } from "drizzle-orm";
-import * as schema from "../app/server/lib/db/schema";
-import { auth } from "../app/server/lib/auth";
+import { schema } from "~/server/lib/db/schema";
+import { auth } from "~/server/lib/auth";
 import { ADMIN_USER, SEED_USERS } from "./seed.config";
 
 const DATABASE_URL = process.env.DATABASE_URL;
