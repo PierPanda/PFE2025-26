@@ -12,15 +12,8 @@
     {
       "idx": 1,
       "version": "7",
-      "when": 1771326198857,
-      "tag": "0001_noisy_madame_web",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1771411319733,
-      "tag": "0002_ambitious_marrow",
+      "when": 1771412483558,
+      "tag": "0001_cool_doomsday",
       "breakpoints": true
     }
   ]

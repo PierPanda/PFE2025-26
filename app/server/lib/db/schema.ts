@@ -13,13 +13,13 @@ export { teachers } from "./schema-definition/teachers";
 export { learners } from "./schema-definition/learners";
 
 // availability schema
-export { availability } from "./schema-definition/availability";
+export { availabilities } from "./schema-definition/availabilities";
 
 // booking schema
-export { bookings } from "./schema-definition/bookings";
+export { bookings, bookingStatus } from "./schema-definition/bookings";
 
 // course schema
-export { courses } from "./schema-definition/courses";
+export { courses, category } from "./schema-definition/courses";
 
 // rating schema
 export { ratings } from "./schema-definition/ratings";

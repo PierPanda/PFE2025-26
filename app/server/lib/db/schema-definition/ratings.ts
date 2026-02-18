@@ -2,7 +2,7 @@ import { pgTable, text, numeric, timestamp } from "drizzle-orm/pg-core";
 import { courses } from "./courses";
 import { learners } from "./learners";
 
-export const ratings = pgTable("rating", {
+export const ratings = pgTable("ratings", {
   id: text("id").primaryKey(),
   courseId: text("courseId")
     .notNull()

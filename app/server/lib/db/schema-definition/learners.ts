@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
 
-export const learners = pgTable("learner", {
+export const learners = pgTable("learners", {
   id: text("id").primaryKey(),
   userId: text("userId")
     .notNull()

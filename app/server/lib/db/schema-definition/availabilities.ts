@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { teachers } from "./teachers";
 
-export const availability = pgTable("availability", {
+export const availabilities = pgTable("availabilities", {
   id: text("id").primaryKey(),
   teacherId: text("teacherId")
     .notNull()

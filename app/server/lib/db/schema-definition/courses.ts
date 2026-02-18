@@ -11,7 +11,7 @@ import { teachers } from "./teachers";
 
 export const category = pgEnum("category", [""]);
 
-export const courses = pgTable("course", {
+export const courses = pgTable("courses", {
   id: text("id").primaryKey(),
   teacherId: text("teacherId")
     .notNull()
