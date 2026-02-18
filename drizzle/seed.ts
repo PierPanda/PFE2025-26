@@ -2,7 +2,7 @@ import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { sql } from "drizzle-orm";
-import { schema } from "~/server/lib/db/schema";
+import * as schema from "~/server/lib/db/schema";
 import { auth } from "~/server/lib/auth";
 import { ADMIN_USER, SEED_USERS } from "./seed.config";
 
@@ -21,10 +21,10 @@ const shouldReset = process.argv.includes("--reset");
 
 async function resetUsers() {
   console.log("Purge des tables...");
-  await db.execute(sql`DELETE FROM "session"`);
-  await db.execute(sql`DELETE FROM "account"`);
-  await db.execute(sql`DELETE FROM "verification"`);
-  await db.execute(sql`DELETE FROM "user"`);
+  await db.delete(schema.session);
+  await db.delete(schema.account);
+  await db.delete(schema.verification);
+  await db.delete(schema.user);
   console.log("Tables purgees.\n");
 }
 
