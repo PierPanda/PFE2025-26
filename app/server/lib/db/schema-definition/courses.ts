@@ -43,6 +43,12 @@ export type CourseCategory = (typeof categoryValues)[number];
 
 export const category = pgEnum("category", categoryValues);
 
+export const levelValues = ["beginner", "intermediate", "advanced"] as const;
+
+export type CourseLevel = (typeof levelValues)[number];
+
+export const courseLevel = pgEnum("courseLevel", levelValues);
+
 export const courses = pgTable("courses", {
   id: text("id").primaryKey(),
   teacherId: text("teacherId")
@@ -51,7 +57,7 @@ export const courses = pgTable("courses", {
   title: text("title").notNull(),
   description: text("description"),
   duration: integer("duration").notNull(),
-  level: text("level").notNull(),
+  level: courseLevel("level").notNull(),
   price: numeric("price").notNull(),
   isPublished: boolean("isPublished").notNull(),
   category: category("category").notNull(),

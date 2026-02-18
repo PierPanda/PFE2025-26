@@ -1,7 +1,10 @@
 import { eq, and } from "drizzle-orm";
 import { db } from "~/server/lib/db";
 import { courses } from "~/server/lib/db/schema";
-import type { CourseCategory } from "~/server/lib/db/schema-definition/courses";
+import type {
+  CourseCategory,
+  CourseLevel,
+} from "~/server/lib/db/schema-definition/courses";
 
 export async function getCourseById(courseId: string) {
   try {
@@ -44,7 +47,10 @@ export async function getCoursesByTeacher(teacherId: string) {
   }
 }
 
-export async function getCourses(category?: CourseCategory, level?: string) {
+export async function getCourses(
+  category?: CourseCategory,
+  level?: CourseLevel,
+) {
   try {
     const result = await db
       .select()
