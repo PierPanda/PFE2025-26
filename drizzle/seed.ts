@@ -2,7 +2,7 @@ import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { sql } from "drizzle-orm";
-import { schema } from "~/server/lib/db/schema";
+import * as schema from "~/server/lib/db/schema";
 import { auth } from "~/server/lib/auth";
 import { ADMIN_USER, SEED_USERS } from "./seed.config";
 
