@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { db } from "~/server/lib/db";
-import { teacher } from "~/server/lib/db/schema";
+import { teachers } from "~/server/lib/db/schema";
 import { z } from "zod";
 import type { Teacher } from "~/types/teacher";
 
@@ -17,7 +17,7 @@ export const createTeacherSchema = z.object({
 export async function createTeacher(teacherData: Teacher) {
   try {
     const result = await db
-      .insert(teacher)
+      .insert(teachers)
       .values({ ...teacherData, createdAt: sql`NOW()`, updatedAt: sql`NOW()` });
     return {
       success: true,
