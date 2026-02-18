@@ -21,10 +21,10 @@ const shouldReset = process.argv.includes("--reset");
 
 async function resetUsers() {
   console.log("Purge des tables...");
-  await db.execute(sql`DELETE FROM "session"`);
-  await db.execute(sql`DELETE FROM "account"`);
-  await db.execute(sql`DELETE FROM "verification"`);
-  await db.execute(sql`DELETE FROM "user"`);
+  await db.execute(sql`DELETE FROM ${schema.session}`);
+  await db.execute(sql`DELETE FROM ${schema.account}`);
+  await db.execute(sql`DELETE FROM ${schema.verification}`);
+  await db.execute(sql`DELETE FROM ${schema.user}`);
   console.log("Tables purgees.\n");
 }
 
