@@ -1,4 +1,4 @@
-import { pgTable, text } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { user } from './auth-schema';
 
 export const learner = pgTable('learner', {
@@ -6,4 +6,6 @@ export const learner = pgTable('learner', {
   userId: text('userId')
     .notNull()
     .references(() => user.id),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });
