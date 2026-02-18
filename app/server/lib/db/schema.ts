@@ -19,7 +19,11 @@ export { availabilities } from "./schema-definition/availabilities";
 export { bookings, bookingStatus } from "./schema-definition/bookings";
 
 // course schema
-export { courses, category } from "./schema-definition/courses";
+export {
+  courses,
+  category,
+  type CourseCategory,
+} from "./schema-definition/courses";
 
 // rating schema
 export { ratings } from "./schema-definition/ratings";

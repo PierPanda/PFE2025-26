@@ -9,7 +9,39 @@ import {
 } from "drizzle-orm/pg-core";
 import { teachers } from "./teachers";
 
-export const category = pgEnum("category", [""]);
+export const categoryValues = [
+  "piano",
+  "guitar",
+  "violin",
+  "drums",
+  "bass",
+  "saxophone",
+  "flute",
+  "trumpet",
+  "cello",
+  "ukulele",
+  "vocals",
+  "choir",
+  "songwriting",
+  "music-theory",
+  "ear-training",
+  "clarinet",
+  "trombone",
+  "oboe",
+  "harp",
+  "accordion",
+  "banjo",
+  "mandolin",
+  "percussion",
+  "dj",
+  "music-production",
+  "composition",
+  "sight-singing",
+] as const;
+
+export type CourseCategory = (typeof categoryValues)[number];
+
+export const category = pgEnum("category", categoryValues);
 
 export const courses = pgTable("courses", {
   id: text("id").primaryKey(),
