@@ -1,4 +1,4 @@
-import type { CourseCategory } from "~/server/lib/db/schema";
+import type { CourseCategory } from "~/server/lib/db/schema-definition/courses";
 
 export type Course = {
   id: string;

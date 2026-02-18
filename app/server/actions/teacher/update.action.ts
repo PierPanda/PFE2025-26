@@ -8,7 +8,6 @@ export const updateTeacherSchema = z.object({
   description: z.string().min(1, "La description est requise.").optional(),
   graduation: z.record(z.string(), z.string()).optional(),
   skill: z.string().min(1, "La compétence est requise.").optional(),
-  updatedAt: z.date().optional(),
 });
 
 export async function updateTeacher(
