@@ -7,19 +7,19 @@ export {
 } from "./schema-definition/auth-schema";
 
 // teacher schema
-export { teacher } from "./schema-definition/teacher";
+export { teachers } from "./schema-definition/teachers";
 
 // learner schema
-export { learner } from "./schema-definition/learner";
+export { learners } from "./schema-definition/learners";
 
 // availability schema
 export { availability } from "./schema-definition/availability";
 
 // booking schema
-export { booking } from "./schema-definition/booking";
+export { bookings } from "./schema-definition/bookings";
 
 // course schema
-export { course } from "./schema-definition/course";
+export { courses } from "./schema-definition/courses";
 
 // rating schema
-export { rating } from "./schema-definition/rating";
+export { ratings } from "./schema-definition/ratings";

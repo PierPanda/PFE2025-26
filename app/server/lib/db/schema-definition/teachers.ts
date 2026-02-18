@@ -1,14 +1,14 @@
 import { pgTable, text, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
 
-export const teacher = pgTable("teacher", {
+export const teachers = pgTable("teacher", {
   id: text("id").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id),
   description: text("description"),
-  graduation: jsonb("graduation").default({}),
-  skill: text("skill"),
+  graduations: jsonb("graduations").default({}),
+  skills: text("skills"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
