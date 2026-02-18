@@ -1,4 +1,4 @@
-import { pgTable, text, numeric } from 'drizzle-orm/pg-core';
+import { pgTable, text, numeric, timestamp } from 'drizzle-orm/pg-core';
 import { course } from './course';
 import { learner } from './learner';
 
@@ -13,4 +13,6 @@ export const rating = pgTable('rating', {
   title: text('title').notNull(),
   description: text('description'),
   rate: numeric('rate').notNull(),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });

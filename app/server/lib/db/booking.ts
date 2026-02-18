@@ -1,21 +1,26 @@
-import { pgTable, text, timestamp, numeric } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, numeric, pgEnum } from 'drizzle-orm/pg-core';
 import { learner } from './learner';
 import { availability } from './availability';
+import { course } from './course';
+
+export const bookingStatus = pgEnum('booking_status', ['pending', 'confirmed', 'cancelled']);
 
 export const booking = pgTable('booking', {
   id: text('id').primaryKey(),
   courseId: text('courseId')
     .notNull()
-    .references(() => learner.id),
+    .references(() => course.id),
   availabilityId: text('availabilityId')
     .notNull()
     .references(() => availability.id),
   learnerId: text('learnerId')
     .notNull()
     .references(() => learner.id),
-  startTime: timestamp('startTime').notNull().defaultNow(),
-  endTime: timestamp('endTime').notNull().defaultNow(),
+  startTime: timestamp('startTime').notNull(),
+  endTime: timestamp('endTime').notNull(),
   priceAtBooking: numeric('priceAtBooking').notNull(),
-  status: text('status'),
+  status: bookingStatus('status').notNull(),
   paymentIntentId: text('paymentIntentId'),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });

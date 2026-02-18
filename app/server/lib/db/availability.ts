@@ -6,6 +6,8 @@ export const availability = pgTable('availability', {
   teacherId: text('teacherId')
     .notNull()
     .references(() => teacher.id),
-  startTime: timestamp('startTime').notNull().defaultNow(),
-  endTime: timestamp('endTime').notNull().defaultNow(),
+  startTime: timestamp('startTime').notNull(),
+  endTime: timestamp('endTime').notNull(),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });
