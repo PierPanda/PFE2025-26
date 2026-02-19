@@ -143,7 +143,7 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
 
             <Button
               type="submit"
-              size="md"
+              size="lg"
               isLoading={isLoading}
               disabled={isLoading}
               className="w-full relative overflow-hidden rounded-lg bg-linear-to-r from-blue-600 via-purple-600 to-indigo-600 text-white font-medium shadow-lg hover:shadow-xl transform transition-all duration-300 hover:-translate-y-0.5"
@@ -187,7 +187,7 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
 
           <Button
             size="md"
-            radius="md"
+            radius="lg"
             variant="bordered"
             onPress={async () => {
               const result = await loginWithGoogle("/");
@@ -197,7 +197,7 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
                 );
               }
             }}
-            className="w-full rounded-lg bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-700 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+            className="w-full bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-700 font-medium shadow-sm hover:shadow-md transition-all duration-200"
           >
             <div className="flex items-center justify-center gap-3">
               <Icon icon="flat-color-icons:google" width="18" height="18" />
