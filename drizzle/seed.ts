@@ -1,9 +1,11 @@
 import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
+import { eq } from "drizzle-orm";
 import * as schema from "~/server/lib/db/schema";
 import { auth } from "~/auth.server";
 import { ADMIN_USER, SEED_USERS } from "./seed.config";
+import { randomUUID } from "crypto";
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
@@ -18,8 +20,15 @@ const db = drizzle(client, { schema });
 const allUsers = [ADMIN_USER, ...SEED_USERS];
 const shouldReset = process.argv.includes("--reset");
 
-async function resetUsers() {
+async function resetDatabase() {
   console.log("Purge des tables...");
+  // Ordre important: supprimer les tables enfants d'abord
+  await db.delete(schema.ratings);
+  await db.delete(schema.bookings);
+  await db.delete(schema.availabilities);
+  await db.delete(schema.courses);
+  await db.delete(schema.teachers);
+  await db.delete(schema.learners);
   await db.delete(schema.session);
   await db.delete(schema.account);
   await db.delete(schema.verification);
@@ -27,12 +36,10 @@ async function resetUsers() {
   console.log("Tables purgees.\n");
 }
 
-async function seed() {
-  console.log("Demarrage du seeding...\n");
+async function seedUsers() {
+  console.log("=== Creation des utilisateurs ===\n");
 
-  if (shouldReset) {
-    await resetUsers();
-  }
+  const createdUsers: { email: string; id: string }[] = [];
 
   for (const userData of allUsers) {
     try {
@@ -46,16 +53,287 @@ async function seed() {
 
       if (result?.user) {
         console.log(`[OK] ${userData.name} cree (${userData.email})`);
+        createdUsers.push({ email: userData.email, id: result.user.id });
       }
     } catch (error: any) {
       const message = error?.message || error?.body?.message || String(error);
       if (message.includes("already") || message.includes("User")) {
         console.log(`[SKIP] ${userData.email} existe deja`);
+        const existingUser = await db
+          .select({ id: schema.user.id })
+          .from(schema.user)
+          .where(eq(schema.user.email, userData.email))
+          .limit(1);
+        if (existingUser[0]) {
+          createdUsers.push({ email: userData.email, id: existingUser[0].id });
+        }
       } else {
         console.error(`[ERR] ${userData.email}: ${message}`);
       }
     }
   }
+
+  return createdUsers;
+}
+
+async function seedTeachersAndLearners(users: { email: string; id: string }[]) {
+  console.log("\n=== Creation des profils teachers/learners ===\n");
+
+  const teacherIds: { email: string; teacherId: string }[] = [];
+  const learnerIds: { email: string; learnerId: string }[] = [];
+
+  for (const user of users) {
+    const isTeacher =
+      user.email === "demo@demo.com" || user.email === "admin@admin.com";
+    const isLearner =
+      user.email === "test@test.com" || user.email === "admin@admin.com";
+
+    if (isTeacher) {
+      const existingTeacher = await db
+        .select()
+        .from(schema.teachers)
+        .where(eq(schema.teachers.userId, user.id))
+        .limit(1);
+
+      if (existingTeacher.length === 0) {
+        const teacherId = randomUUID();
+        await db.insert(schema.teachers).values({
+          id: teacherId,
+          userId: user.id,
+          description:
+            user.email === "demo@demo.com"
+              ? "Professeur de musique passionné avec 10 ans d'expérience"
+              : "Administrateur et professeur polyvalent",
+          skills:
+            user.email === "demo@demo.com"
+              ? "Piano, Guitare, Solfège"
+              : "Piano, Guitare, Batterie, Chant",
+          graduations: {
+            diplomas: [
+              { name: "Conservatoire National", year: 2015 },
+              { name: "Master en Musicologie", year: 2017 },
+            ],
+          },
+        });
+        console.log(`[OK] Teacher profile cree pour ${user.email}`);
+        teacherIds.push({ email: user.email, teacherId });
+      } else {
+        console.log(`[SKIP] Teacher profile existe deja pour ${user.email}`);
+        teacherIds.push({
+          email: user.email,
+          teacherId: existingTeacher[0].id,
+        });
+      }
+    }
+
+    if (isLearner) {
+      const existingLearner = await db
+        .select()
+        .from(schema.learners)
+        .where(eq(schema.learners.userId, user.id))
+        .limit(1);
+
+      if (existingLearner.length === 0) {
+        const learnerId = randomUUID();
+        await db.insert(schema.learners).values({
+          id: learnerId,
+          userId: user.id,
+        });
+        console.log(`[OK] Learner profile cree pour ${user.email}`);
+        learnerIds.push({ email: user.email, learnerId });
+      } else {
+        console.log(`[SKIP] Learner profile existe deja pour ${user.email}`);
+        learnerIds.push({
+          email: user.email,
+          learnerId: existingLearner[0].id,
+        });
+      }
+    }
+  }
+
+  return { teacherIds, learnerIds };
+}
+
+async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
+  console.log("\n=== Creation des cours ===\n");
+
+  const courseData = [
+    {
+      teacherEmail: "demo@demo.com",
+      courses: [
+        {
+          title: "Initiation au Piano",
+          description:
+            "Cours pour débutants. Apprenez les bases du piano: posture, lecture de notes, premiers morceaux.",
+          duration: 60,
+          level: "debutant",
+          price: "35.00",
+          category: "" as const, // TODO: changer en "piano" après merge
+          isPublished: true,
+        },
+        {
+          title: "Piano Intermédiaire",
+          description:
+            "Perfectionnez votre technique pianistique. Travail sur les gammes, arpèges et morceaux classiques.",
+          duration: 60,
+          level: "intermediaire",
+          price: "45.00",
+          category: "" as const, // TODO: changer en "piano" après merge
+          isPublished: true,
+        },
+        {
+          title: "Guitare Acoustique Débutant",
+          description:
+            "Premiers pas à la guitare: accords de base, rythmes simples, chansons populaires.",
+          duration: 45,
+          level: "debutant",
+          price: "30.00",
+          category: "" as const, // TODO: changer en "guitare" après merge
+          isPublished: true,
+        },
+      ],
+    },
+    {
+      teacherEmail: "admin@admin.com",
+      courses: [
+        {
+          title: "Batterie - Les Fondamentaux",
+          description:
+            "Maîtrisez les rudiments de la batterie: coordination, rythmes de base, fills simples.",
+          duration: 60,
+          level: "debutant",
+          price: "40.00",
+          category: "" as const, // TODO: changer en "batterie" après merge
+          isPublished: true,
+        },
+        {
+          title: "Cours de Chant",
+          description:
+            "Développez votre voix: technique vocale, respiration, interprétation.",
+          duration: 45,
+          level: "tous_niveaux",
+          price: "38.00",
+          category: "" as const, // TODO: changer en "chant" après merge
+          isPublished: true,
+        },
+      ],
+    },
+  ];
+
+  const createdCourses: { courseId: string; teacherId: string }[] = [];
+
+  for (const teacherData of courseData) {
+    const teacher = teacherIds.find(
+      (t) => t.email === teacherData.teacherEmail,
+    );
+    if (!teacher) {
+      console.log(`[SKIP] Teacher ${teacherData.teacherEmail} non trouvé`);
+      continue;
+    }
+
+    for (const course of teacherData.courses) {
+      const existingCourse = await db
+        .select()
+        .from(schema.courses)
+        .where(eq(schema.courses.title, course.title))
+        .limit(1);
+
+      if (existingCourse.length === 0) {
+        const courseId = randomUUID();
+        await db.insert(schema.courses).values({
+          id: courseId,
+          teacherId: teacher.teacherId,
+          ...course,
+        });
+        console.log(`[OK] Cours "${course.title}" cree`);
+        createdCourses.push({ courseId, teacherId: teacher.teacherId });
+      } else {
+        console.log(`[SKIP] Cours "${course.title}" existe deja`);
+        createdCourses.push({
+          courseId: existingCourse[0].id,
+          teacherId: teacher.teacherId,
+        });
+      }
+    }
+  }
+
+  return createdCourses;
+}
+
+async function seedAvailabilities(
+  teacherIds: { email: string; teacherId: string }[],
+) {
+  console.log("\n=== Creation des disponibilites ===\n");
+
+  const now = new Date();
+  const availabilities: {
+    teacherId: string;
+    startTime: Date;
+    endTime: Date;
+  }[] = [];
+
+  for (const teacher of teacherIds) {
+    for (let day = 1; day <= 5; day++) {
+      const date = new Date(now);
+      date.setDate(date.getDate() + day);
+
+      const morningStart = new Date(date);
+      morningStart.setHours(10, 0, 0, 0);
+      const morningEnd = new Date(date);
+      morningEnd.setHours(12, 0, 0, 0);
+
+      const afternoonStart = new Date(date);
+      afternoonStart.setHours(14, 0, 0, 0);
+      const afternoonEnd = new Date(date);
+      afternoonEnd.setHours(18, 0, 0, 0);
+
+      availabilities.push(
+        {
+          teacherId: teacher.teacherId,
+          startTime: morningStart,
+          endTime: morningEnd,
+        },
+        {
+          teacherId: teacher.teacherId,
+          startTime: afternoonStart,
+          endTime: afternoonEnd,
+        },
+      );
+    }
+  }
+
+  let created = 0;
+  for (const availability of availabilities) {
+    const availabilityId = randomUUID();
+    await db.insert(schema.availabilities).values({
+      id: availabilityId,
+      ...availability,
+    });
+    created++;
+  }
+
+  console.log(`[OK] ${created} disponibilites creees`);
+}
+
+async function seed() {
+  console.log("Demarrage du seeding...\n");
+
+  if (shouldReset) {
+    await resetDatabase();
+  }
+
+  const users = await seedUsers();
+
+  const { teacherIds, learnerIds } = await seedTeachersAndLearners(users);
+
+  await seedCourses(teacherIds);
+
+  await seedAvailabilities(teacherIds);
+
+  console.log("\n=== Résumé ===");
+  console.log(`Utilisateurs: ${users.length}`);
+  console.log(`Teachers: ${teacherIds.length}`);
+  console.log(`Learners: ${learnerIds.length}`);
 }
 
 seed()
