@@ -166,9 +166,9 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             "Cours pour débutants. Apprenez les bases du piano: posture, lecture de notes, premiers morceaux.",
           duration: 60,
-          level: "debutant",
+          level: "débutant" as const,
           price: "35.00",
-          category: "" as const, // TODO: changer en "piano" après merge
+          category: "piano" as const,
           isPublished: true,
         },
         {
@@ -176,9 +176,9 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             "Perfectionnez votre technique pianistique. Travail sur les gammes, arpèges et morceaux classiques.",
           duration: 60,
-          level: "intermediaire",
+          level: "intermédiaire" as const,
           price: "45.00",
-          category: "" as const, // TODO: changer en "piano" après merge
+          category: "piano" as const,
           isPublished: true,
         },
         {
@@ -186,9 +186,9 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             "Premiers pas à la guitare: accords de base, rythmes simples, chansons populaires.",
           duration: 45,
-          level: "debutant",
+          level: "débutant" as const,
           price: "30.00",
-          category: "" as const, // TODO: changer en "guitare" après merge
+          category: "guitare" as const,
           isPublished: true,
         },
       ],
@@ -201,9 +201,9 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             "Maîtrisez les rudiments de la batterie: coordination, rythmes de base, fills simples.",
           duration: 60,
-          level: "debutant",
+          level: "débutant" as const,
           price: "40.00",
-          category: "" as const, // TODO: changer en "batterie" après merge
+          category: "batterie" as const,
           isPublished: true,
         },
         {
@@ -211,9 +211,9 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             "Développez votre voix: technique vocale, respiration, interprétation.",
           duration: 45,
-          level: "tous_niveaux",
+          level: "débutant" as const,
           price: "38.00",
-          category: "" as const, // TODO: changer en "chant" après merge
+          category: "chant" as const,
           isPublished: true,
         },
       ],
