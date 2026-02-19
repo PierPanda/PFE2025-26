@@ -11,39 +11,36 @@ import { teachers } from "./teachers";
 
 export const categoryValues = [
   "piano",
-  "guitar",
-  "violin",
-  "drums",
-  "bass",
+  "guitare",
+  "violon",
+  "batterie",
+  "basse",
   "saxophone",
-  "flute",
-  "trumpet",
-  "cello",
-  "ukulele",
-  "vocals",
-  "choir",
-  "songwriting",
-  "music-theory",
-  "ear-training",
-  "clarinet",
+  "flûte",
+  "trompette",
+  "violoncelle",
+  "ukulélé",
+  "chant",
+  "chorale",
+  "solfège",
+  "clarinette",
   "trombone",
-  "oboe",
-  "harp",
-  "accordion",
+  "hautbois",
+  "harpe",
+  "accordéon",
   "banjo",
-  "mandolin",
-  "percussion",
+  "mandoline",
+  "percussions",
   "dj",
-  "music-production",
-  "composition",
-  "sight-singing",
+  "production-musicale",
+  "autre",
 ] as const;
 
 export type CourseCategory = (typeof categoryValues)[number];
 
 export const category = pgEnum("category", categoryValues);
 
-export const levelValues = ["beginner", "intermediate", "advanced"] as const;
+export const levelValues = ["débutant", "intermédiaire", "avancé"] as const;
 
 export type CourseLevel = (typeof levelValues)[number];
 
