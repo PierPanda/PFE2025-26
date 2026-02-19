@@ -44,6 +44,7 @@ export default function Home() {
           <p className="text-gray-600">
             Vous êtes maintenant connecté à l'application.
           </p>
+          <a href="course/create">Créer un cours</a>
         </div>
       </main>
     </div>

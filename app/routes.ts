@@ -12,7 +12,10 @@ export default [
     route("/auth", "routes/auth/page.tsx"),
   ]),
 
-  layout("routes/layouts/AuthLayout.tsx", [index("routes/home.tsx")]),
+  layout("routes/layouts/AuthLayout.tsx", [
+    index("routes/home.tsx"),
+    route("/course/create", "routes/course/create.tsx"),
+  ]),
 
   route("*", "routes/$.tsx"),
 ] satisfies RouteConfig;
