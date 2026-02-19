@@ -143,10 +143,11 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
 
             <Button
               type="submit"
-              size="lg"
+              size="md"
+              radius="lg"
               isLoading={isLoading}
               disabled={isLoading}
-              className="w-full relative overflow-hidden rounded-lg bg-linear-to-r from-blue-600 via-purple-600 to-indigo-600 text-white font-medium shadow-lg hover:shadow-xl transform transition-all duration-300 hover:-translate-y-0.5"
+              className="w-full relative overflow-hidden bg-linear-to-r from-blue-600 via-purple-600 to-indigo-600 text-white font-medium shadow-lg hover:shadow-xl transform transition-all duration-300 hover:-translate-y-0.5"
             >
               <span className="relative z-10">
                 {isLoading ? "Connexion..." : "Se connecter"}
