@@ -5,6 +5,7 @@ import { z } from "zod";
 import { categoryValues, levelValues } from "~/types/course";
 import { auth } from "~/server/lib/auth.server";
 import { redirect, useLoaderData, useFetcher, Form } from "react-router";
+import { uuidv7 } from "uuidv7";
 import type { Route } from "./+types/create";
 import { createCourse } from "~/server/actions/course/create.actions.server";
 import { getTeacherByUserId } from "~/server/actions/teacher/get.server";
@@ -52,17 +53,14 @@ export async function loader({ request }: Route.LoaderArgs) {
 
     // Check if user is already a teacher
     const teacherResult = await getTeacherByUserId(session.user.id);
-    const isTeacher =
-      teacherResult.success &&
-      teacherResult.teacher &&
-      teacherResult.teacher.length > 0;
-    const teacher = isTeacher ? teacherResult.teacher![0] : null;
+    const teacher = teacherResult.success ? teacherResult.teacher : null;
+    const isTeacher = !!teacher;
 
     return { user: session.user, teacher, isTeacher };
   } catch (error) {
     console.error(
       "Error in create course loader (auth/session/teacher lookup):",
-      error
+      error,
     );
     throw redirect("/auth");
   }
@@ -82,16 +80,12 @@ export async function action({ request }: Route.ActionArgs) {
   const teacherResult = await getTeacherByUserId(session.user.id);
   let teacherId: string;
 
-  if (
-    teacherResult.success &&
-    teacherResult.teacher &&
-    teacherResult.teacher.length > 0
-  ) {
+  if (teacherResult.success && teacherResult.teacher) {
     // User is already a teacher
-    teacherId = teacherResult.teacher[0].id;
+    teacherId = teacherResult.teacher.id;
   } else {
     // Create teacher record for this user
-    const newTeacherId = crypto.randomUUID();
+    const newTeacherId = uuidv7();
     const teacherCreation = await createTeacher({
       id: newTeacherId,
       userId: session.user.id,
@@ -144,7 +138,7 @@ export default function CreateCourse() {
 
     const payload = {
       ...submitted,
-      id: crypto.randomUUID(),
+      id: uuidv7(),
       teacherId: teacher?.id ?? "pending",
       isPublished: published,
     };

@@ -11,7 +11,7 @@ export async function getTeacher(teacherId: string) {
 
     return {
       success: true,
-      teacher: result,
+      teacher: result[0] || null,
     };
   } catch (error) {
     console.error("Error fetching teacher:", error);
@@ -32,7 +32,7 @@ export async function getTeacherByUserId(userId: string) {
 
     return {
       success: true,
-      teacher: result,
+      teacher: result[0] || null,
     };
   } catch (error) {
     console.error("Error fetching teacher by user ID:", error);

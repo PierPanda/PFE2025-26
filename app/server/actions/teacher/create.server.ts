@@ -16,13 +16,14 @@ type CreateTeacherInput = Omit<NewTeacher, "createdAt" | "updatedAt">;
 
 export async function createTeacher(teacherData: CreateTeacherInput) {
   try {
-    const result = await db
+    const [createdTeacher] = await db
       .insert(teachers)
-      .values({ ...teacherData, createdAt: sql`NOW()`, updatedAt: sql`NOW()` });
+      .values({ ...teacherData, createdAt: sql`NOW()`, updatedAt: sql`NOW()` })
+      .returning();
     return {
       success: true,
       message: "Enseignant créé avec succès.",
-      teacher: result,
+      teacher: createdTeacher,
     };
   } catch (error) {
     console.error("Error creating teacher:", error);
