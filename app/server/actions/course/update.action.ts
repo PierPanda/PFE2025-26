@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { eq, sql } from "drizzle-orm";
-import { db } from "~/server/lib/db";
+import { db } from "~/server/lib/db/index.server";
 import { courses } from "~/server/lib/db/schema";
 import type { Course } from "~/types/course";
 
@@ -12,12 +12,16 @@ export const updateCourseSchema = z.object({
   price: z
     .number()
     .min(0, "Le prix doit être supérieur ou égal à 0.")
+    .transform((val) => val.toString())
     .optional(),
   isPublished: z.boolean().optional(),
   category: z.string().optional(),
 });
 
-export async function updateCourse(courseId: string, updatedCourse: Course) {
+export async function updateCourse(
+  courseId: string,
+  updatedCourse: Partial<Course>,
+) {
   try {
     const result = await db
       .update(courses)

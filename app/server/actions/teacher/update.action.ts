@@ -1,18 +1,18 @@
 import { z } from "zod";
 import { eq, sql } from "drizzle-orm";
-import { db } from "~/server/lib/db";
+import { db } from "~/server/lib/db/index.server";
 import { teachers } from "~/server/lib/db/schema";
 import type { Teacher } from "~/types/teacher";
 
 export const updateTeacherSchema = z.object({
   description: z.string().min(1, "La description est requise.").optional(),
-  graduation: z.record(z.string(), z.string()).optional(),
-  skill: z.string().min(1, "La compétence est requise.").optional(),
+  graduations: z.record(z.string(), z.string()).optional(),
+  skills: z.string().min(1, "La compétence est requise.").optional(),
 });
 
 export async function updateTeacher(
   teacherId: string,
-  updatedTeacher: Teacher,
+  updatedTeacher: Partial<Teacher>,
 ) {
   try {
     const result = await db

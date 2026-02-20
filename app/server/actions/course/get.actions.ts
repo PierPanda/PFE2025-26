@@ -1,5 +1,5 @@
 import { eq, and } from "drizzle-orm";
-import { db } from "~/server/lib/db";
+import { db } from "~/server/lib/db/index.server";
 import { courses } from "~/server/lib/db/schema";
 import type {
   CourseCategory,

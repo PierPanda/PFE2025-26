@@ -8,11 +8,8 @@ import {
   SelectItem,
   Textarea,
 } from "@heroui/react";
-import {
-  categoryValues,
-  levelValues,
-} from "~/server/lib/db/schema-definition/courses";
-import type { Course } from "~/types/course";
+import { categoryValues, levelValues } from "~/types/course";
+import type { CourseFormInput } from "./create";
 
 const categories = categoryValues.map((cat) => ({
   key: cat,
@@ -25,7 +22,7 @@ const levels = levelValues.map((level) => ({
 }));
 
 type CourseFormProps = {
-  values: Course | null;
+  values: CourseFormInput | null;
   errors: Record<string, string>;
 };
 
@@ -88,7 +85,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         label="Prix du cours"
         name="price"
         placeholder="Prix du cours en euros"
-        defaultValue={values?.price || 0}
+        defaultValue={values?.price ? Number(values.price) : 0}
       />
       <NumberInput
         isRequired

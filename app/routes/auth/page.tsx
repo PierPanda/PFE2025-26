@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@heroui/react";
 import type { LoaderFunctionArgs } from "react-router";
 import { redirect } from "react-router";
-import { auth } from "../../server/lib/auth";
+import { auth } from "~/server/lib/auth.server";
 import { LoginForm } from "./LoginForm";
 import { SignUpForm } from "./SignUpForm";
 

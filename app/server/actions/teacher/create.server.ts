@@ -1,20 +1,20 @@
 import { sql } from "drizzle-orm";
-import { db } from "~/server/lib/db";
+import { db } from "~/server/lib/db/index.server";
 import { teachers } from "~/server/lib/db/schema";
 import { z } from "zod";
-import type { Teacher } from "~/types/teacher";
+import type { NewTeacher } from "~/types/teacher";
 
 export const createTeacherSchema = z.object({
-  id: z.uuid().min(1, "L'ID est requis."),
+  id: z.string().uuid("L'ID est requis."),
   userId: z.string().min(1, "L'ID utilisateur est requis."),
-  description: z.string().min(1, "La description est requise."),
-  graduation: z.record(z.string(), z.string()).optional(),
-  skill: z.string().min(1, "La compétence est requise."),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  description: z.string().min(1, "La description est requise.").optional(),
+  graduations: z.record(z.string(), z.string()).optional(),
+  skills: z.string().min(1, "La compétence est requise.").optional(),
 });
 
-export async function createTeacher(teacherData: Teacher) {
+type CreateTeacherInput = Omit<NewTeacher, "createdAt" | "updatedAt">;
+
+export async function createTeacher(teacherData: CreateTeacherInput) {
   try {
     const result = await db
       .insert(teachers)

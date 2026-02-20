@@ -12,12 +12,12 @@ const envSchema = z.object({
 });
 
 const parsed = envSchema.safeParse({
-  BETTER_AUTH_URL: import.meta.env.VITE_BETTER_AUTH_URL,
-  BETTER_AUTH_SECRET: import.meta.env.VITE_BETTER_AUTH_SECRET,
-  DATABASE_URL: import.meta.env.VITE_DATABASE_URL,
-  NODE_ENV: import.meta.env.VITE_NODE_ENV || "development",
-  GOOGLE_CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET: import.meta.env.VITE_GOOGLE_CLIENT_SECRET,
+  BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+  BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+  DATABASE_URL: process.env.DATABASE_URL,
+  NODE_ENV: process.env.NODE_ENV || "development",
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 });
 
 if (!parsed.success) {

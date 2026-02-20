@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db } from "~/server/lib/db";
+import { db } from "~/server/lib/db/index.server";
 import { teachers } from "~/server/lib/db/schema";
 
 export async function getTeacher(teacherId: string) {
