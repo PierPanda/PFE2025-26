@@ -84,7 +84,6 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         label="Prix du cours"
         name="price"
         placeholder="Prix du cours en euros"
-        defaultValue={values?.price ? Number(values.price) : 0}
       />
       <NumberInput
         isRequired
@@ -92,7 +91,6 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         label="Durée du cours"
         name="duration"
         placeholder="Durée du cours en minutes"
-        defaultValue={values?.duration || 0}
       />
       <Button type="submit" variant="solid">
         Valider les données
