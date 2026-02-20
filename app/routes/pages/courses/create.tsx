@@ -7,9 +7,9 @@ import { auth } from "~/server/lib/auth.server";
 import { redirect, useLoaderData, useFetcher, Form } from "react-router";
 import { uuidv7 } from "uuidv7";
 import type { Route } from "./+types/create";
-import { createCourse } from "~/server/service/course/create.course.server";
-import { getTeacherByUserId } from "~/server/service/teacher/get.teacher.server";
-import { createTeacher } from "~/server/service/teacher/create.teacher";
+import { createCourse } from "~/services/courses/createCourse.server";
+import { getTeacherByUserId } from "~/services/teachers/getTeacher.server";
+import { createTeacher } from "~/services/teachers/createTeacher.server";
 
 // Schema for form validation (client-side)
 export const courseFormSchema = z.object({

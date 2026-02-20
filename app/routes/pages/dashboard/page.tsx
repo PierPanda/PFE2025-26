@@ -1,7 +1,7 @@
-import type { Route } from "./+types/home";
+import type { Route } from "./+types/page";
 import { redirect, Link } from "react-router";
 import { auth } from "~/server/lib/auth.server";
-import { UserProfile } from "../components/auth/UserProfile";
+import { UserProfile } from "~/components/auth/UserProfile";
 
 export async function loader({ request }: Route.LoaderArgs) {
   try {
@@ -44,7 +44,7 @@ export default function Home() {
           <p className="text-gray-600">
             Vous êtes maintenant connecté à l'application.
           </p>
-          <Link to="/course/create">Créer un cours</Link>
+          <Link to="/courses/create">Créer un cours</Link>
         </div>
       </main>
     </div>

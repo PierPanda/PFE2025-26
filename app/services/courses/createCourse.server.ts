@@ -1,10 +1,11 @@
 import { sql } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
 import * as schema from "~/server/lib/db/schema";
-import type { NewCourse } from "~/types/course";
+import type { CreateCourseInput } from "~/lib/validation";
 
-type CreateCourseInput = Omit<NewCourse, "createdAt" | "updatedAt">;
-
+/**
+ * Create a new course in database
+ */
 export async function createCourse(courseData: CreateCourseInput) {
   try {
     const [createdCourse] = await db

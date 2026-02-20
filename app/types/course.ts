@@ -8,4 +8,13 @@ export type {
   CourseLevel,
 } from "~/server/lib/db/schema-definition/courses";
 
-export { categoryValues, levelValues } from "~/server/lib/db/schema-definition/courses";
+export type CourseFilters = {
+  category?: string;
+  level?: string;
+  teacherId?: string;
+};
+
+export {
+  categoryValues,
+  levelValues,
+} from "~/server/lib/db/schema-definition/courses";

@@ -2,6 +2,9 @@ import { eq } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
 import * as schema from "~/server/lib/db/schema";
 
+/**
+ * Delete a teacher profile from database
+ */
 export async function deleteTeacher(teacherId: string) {
   try {
     await db.delete(schema.teachers).where(eq(schema.teachers.id, teacherId));

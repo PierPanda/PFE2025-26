@@ -2,6 +2,9 @@ import { eq } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
 import * as schema from "~/server/lib/db/schema";
 
+/**
+ * Get a single teacher by ID from database
+ */
 export async function getTeacher(teacherId: string) {
   try {
     const result = await db
@@ -23,6 +26,9 @@ export async function getTeacher(teacherId: string) {
   }
 }
 
+/**
+ * Get teacher by user ID from database
+ */
 export async function getTeacherByUserId(userId: string) {
   try {
     const result = await db
@@ -39,7 +45,7 @@ export async function getTeacherByUserId(userId: string) {
     return {
       success: false,
       error:
-        "Une erreur s'est produite lors de la récupération de l'enseignant par ID utilisateur.",
+        "Une erreur s'est produite lors de la récupération de l'enseignant.",
     };
   }
 }

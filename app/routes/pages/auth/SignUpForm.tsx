@@ -7,13 +7,8 @@ import {
   Avatar,
   Spacer,
   Progress,
-  Chip,
 } from "@heroui/react";
-import {
-  signUpWithEmail,
-  loginWithGoogle,
-  validatePassword,
-} from "~/server/service/auth";
+import { signUpWithEmail, loginWithGoogle } from "~/services/auth/auth";
 import { useNavigate } from "react-router";
 
 interface SignUpFormProps {
@@ -23,18 +18,7 @@ interface SignUpFormProps {
 export function SignUpForm({ onToggleForm }: SignUpFormProps) {
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState(0);
   const navigate = useNavigate();
-
-  const calculatePasswordStrength = (password: string) => {
-    const validation = validatePassword(password);
-    return validation.strength;
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const password = e.target.value;
-    setPasswordStrength(calculatePasswordStrength(password));
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,15 +37,6 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
       return;
     }
 
-    const passwordValidation = validatePassword(password);
-    if (!passwordValidation.isValid) {
-      setError(
-        passwordValidation.message || "Le mot de passe n'est pas valide",
-      );
-      setIsLoading(false);
-      return;
-    }
-
     const result = await signUpWithEmail(email, password, name);
 
     if (result.success) {
@@ -73,20 +48,6 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
     }
 
     setIsLoading(false);
-  };
-
-  const getPasswordStrengthColor = (strength: number) => {
-    if (strength <= 25) return "danger";
-    if (strength <= 50) return "warning";
-    if (strength <= 75) return "primary";
-    return "success";
-  };
-
-  const getPasswordStrengthText = (strength: number) => {
-    if (strength <= 25) return "Faible";
-    if (strength <= 50) return "Moyen";
-    if (strength <= 75) return "Fort";
-    return "Très fort";
   };
 
   return (
@@ -189,38 +150,9 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
                     name="password"
                     placeholder="Créez un mot de passe"
                     required
-                    onChange={handlePasswordChange}
                     className="flex-1 bg-transparent placeholder:text-gray-500 text-gray-900 outline-none text-base"
                   />
                 </div>
-
-                {passwordStrength > 0 && (
-                  <div className="space-y-0.5">
-                    <Progress
-                      value={passwordStrength}
-                      color={getPasswordStrengthColor(passwordStrength)}
-                      size="sm"
-                      className="w-full"
-                      classNames={{
-                        base: "bg-white/30 rounded-full overflow-hidden",
-                        indicator: "transition-all duration-300",
-                      }}
-                    />
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-600">
-                        Force: {getPasswordStrengthText(passwordStrength)}
-                      </span>
-                      <Chip
-                        size="sm"
-                        color={getPasswordStrengthColor(passwordStrength)}
-                        variant="flat"
-                        className="text-xs"
-                      >
-                        {passwordStrength}%
-                      </Chip>
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Confirm Password Input avec div flex */}

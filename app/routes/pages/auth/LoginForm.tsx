@@ -8,7 +8,7 @@ import {
   Spacer,
   Progress,
 } from "@heroui/react";
-import { loginWithEmail, loginWithGoogle } from "~/server/service/auth";
+import { loginWithEmail, loginWithGoogle } from "~/services/auth/auth";
 import { useNavigate } from "react-router";
 
 interface LoginFormProps {

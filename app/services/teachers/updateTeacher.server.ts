@@ -1,28 +1,26 @@
-import { z } from "zod";
 import { eq, sql } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
 import * as schema from "~/server/lib/db/schema";
-import type { Teacher } from "~/types/teacher";
+import type { UpdateTeacherInput } from "~/lib/validation";
 
-export const updateTeacherSchema = z.object({
-  description: z.string().min(1, "La description est requise.").optional(),
-  graduations: z.record(z.string(), z.string()).optional(),
-  skills: z.string().min(1, "La compétence est requise.").optional(),
-});
-
+/**
+ * Update an existing teacher profile in database
+ */
 export async function updateTeacher(
   teacherId: string,
-  updatedTeacher: Partial<Teacher>,
+  data: UpdateTeacherInput,
 ) {
   try {
-    const result = await db
+    const [updatedTeacher] = await db
       .update(schema.teachers)
-      .set({ ...updatedTeacher, updatedAt: sql`NOW()` })
-      .where(eq(schema.teachers.id, teacherId));
+      .set({ ...data, updatedAt: sql`NOW()` })
+      .where(eq(schema.teachers.id, teacherId))
+      .returning();
+
     return {
       success: true,
       message: "Enseignant mis à jour avec succès.",
-      teacher: result,
+      teacher: updatedTeacher,
     };
   } catch (error) {
     console.error("Error updating teacher:", error);
