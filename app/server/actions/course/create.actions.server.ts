@@ -7,15 +7,18 @@ type CreateCourseInput = Omit<NewCourse, "createdAt" | "updatedAt">;
 
 export async function createCourse(courseData: CreateCourseInput) {
   try {
-    const result = await db.insert(courses).values({
-      ...courseData,
-      createdAt: sql`NOW()`,
-      updatedAt: sql`NOW()`,
-    });
+    const [createdCourse] = await db
+      .insert(courses)
+      .values({
+        ...courseData,
+        createdAt: sql`NOW()`,
+        updatedAt: sql`NOW()`,
+      })
+      .returning();
     return {
       success: true,
       message: "Cours créé avec succès.",
-      course: result,
+      course: createdCourse,
     };
   } catch (error) {
     console.error("Error creating course:", error);
