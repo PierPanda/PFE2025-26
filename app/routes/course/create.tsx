@@ -142,7 +142,6 @@ export default function CreateCourse() {
     const payload = {
       ...submitted,
       id: crypto.randomUUID(),
-      // teacherId will be set/overridden by the server action
       teacherId: teacher?.id ?? "pending",
       isPublished: published,
     };
