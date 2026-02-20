@@ -1,13 +1,13 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import { teachers } from "~/server/lib/db/schema";
+import * as schema from "~/server/lib/db/schema";
 
 export async function getTeacher(teacherId: string) {
   try {
     const result = await db
       .select()
-      .from(teachers)
-      .where(eq(teachers.id, teacherId));
+      .from(schema.teachers)
+      .where(eq(schema.teachers.id, teacherId));
 
     return {
       success: true,
@@ -27,8 +27,8 @@ export async function getTeacherByUserId(userId: string) {
   try {
     const result = await db
       .select()
-      .from(teachers)
-      .where(eq(teachers.userId, userId));
+      .from(schema.teachers)
+      .where(eq(schema.teachers.userId, userId));
 
     return {
       success: true,

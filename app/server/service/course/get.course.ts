@@ -1,6 +1,6 @@
 import { eq, and } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import { courses } from "~/server/lib/db/schema";
+import * as schema from "~/server/lib/db/schema";
 import type {
   CourseCategory,
   CourseLevel,
@@ -10,8 +10,8 @@ export async function getCourseById(courseId: string) {
   try {
     const result = await db
       .select()
-      .from(courses)
-      .where(eq(courses.id, courseId));
+      .from(schema.courses)
+      .where(eq(schema.courses.id, courseId));
 
     return {
       success: true,
@@ -30,8 +30,8 @@ export async function getCoursesByTeacher(teacherId: string) {
   try {
     const result = await db
       .select()
-      .from(courses)
-      .where(eq(courses.teacherId, teacherId));
+      .from(schema.courses)
+      .where(eq(schema.courses.teacherId, teacherId));
 
     return {
       success: true,
@@ -54,11 +54,11 @@ export async function getCourses(
   try {
     const result = await db
       .select()
-      .from(courses)
+      .from(schema.courses)
       .where(
         and(
-          category ? eq(courses.category, category) : undefined,
-          level ? eq(courses.level, level) : undefined,
+          category ? eq(schema.courses.category, category) : undefined,
+          level ? eq(schema.courses.level, level) : undefined,
         ),
       );
 

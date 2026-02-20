@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import { teachers } from "~/server/lib/db/schema";
+import * as schema from "~/server/lib/db/schema";
 import { z } from "zod";
 import type { NewTeacher } from "~/types/teacher";
 
@@ -17,7 +17,7 @@ type CreateTeacherInput = Omit<NewTeacher, "createdAt" | "updatedAt">;
 export async function createTeacher(teacherData: CreateTeacherInput) {
   try {
     const [createdTeacher] = await db
-      .insert(teachers)
+      .insert(schema.teachers)
       .values({ ...teacherData, createdAt: sql`NOW()`, updatedAt: sql`NOW()` })
       .returning();
     return {

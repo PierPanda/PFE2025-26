@@ -13,7 +13,7 @@ import {
   signUpWithEmail,
   loginWithGoogle,
   validatePassword,
-} from "~/server/actions/auth.actions";
+} from "~/server/service/auth";
 import { useNavigate } from "react-router";
 
 interface SignUpFormProps {

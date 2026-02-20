@@ -1,4 +1,4 @@
-import { authClient } from "../lib/auth/client";
+import { authClient } from "~/server/lib/auth/client";
 
 /**
  * Server action for email/password login

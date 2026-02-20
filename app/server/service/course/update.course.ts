@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { eq, sql } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import { courses } from "~/server/lib/db/schema";
+import * as schema from "~/server/lib/db/schema";
 import type { Course } from "~/types/course";
 
 export const updateCourseSchema = z.object({
@@ -24,9 +24,9 @@ export async function updateCourse(
 ) {
   try {
     const result = await db
-      .update(courses)
+      .update(schema.courses)
       .set({ ...updatedCourse, updatedAt: sql`NOW()` })
-      .where(eq(courses.id, courseId));
+      .where(eq(schema.courses.id, courseId));
     return {
       success: true,
       message: "Cours mis à jour avec succès.",
