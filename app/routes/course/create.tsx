@@ -1,11 +1,10 @@
 import CourseForm from "./CourseForm";
-import { Form } from "@heroui/react";
 import { useState } from "react";
 import CourseValidation from "./CourseValidation";
 import { z } from "zod";
 import { categoryValues, levelValues } from "~/types/course";
 import { auth } from "~/server/lib/auth.server";
-import { redirect, useLoaderData, useFetcher } from "react-router";
+import { redirect, useLoaderData, useFetcher, Form } from "react-router";
 import type { Route } from "./+types/create";
 import { createCourse } from "~/server/actions/course/create.actions.server";
 import { getTeacherByUserId } from "~/server/actions/teacher/get.server";
