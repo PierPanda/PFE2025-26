@@ -20,7 +20,7 @@ export const courseFormSchema = z.object({
   price: z.coerce
     .number()
     .min(0, "Le prix doit être supérieur ou égal à 0.")
-    .transform((val) => val.toString()),
+    .transform((val: { toString: () => any }) => val.toString()),
   category: z.enum(categoryValues),
 });
 
@@ -35,7 +35,7 @@ export const createCourseSchema = z.object({
   price: z.coerce
     .number()
     .min(0, "Le prix doit être supérieur ou égal à 0.")
-    .transform((val) => val.toString()),
+    .transform((val: { toString: () => any }) => val.toString()),
   isPublished: z.coerce.boolean().default(false),
   category: z.enum(categoryValues),
 });
