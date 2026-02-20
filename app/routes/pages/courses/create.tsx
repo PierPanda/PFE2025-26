@@ -11,7 +11,6 @@ import { createCourse } from "~/services/courses/createCourse.server";
 import { getTeacherByUserId } from "~/services/teachers/getTeacher.server";
 import { createTeacher } from "~/services/teachers/createTeacher.server";
 
-// Schema for form validation (client-side)
 export const courseFormSchema = z.object({
   title: z.string().min(1, "Le titre est requis."),
   description: z.string().min(1, "La description est requise."),
@@ -24,7 +23,6 @@ export const courseFormSchema = z.object({
   category: z.enum(categoryValues),
 });
 
-// Full schema for server-side validation (includes generated fields)
 export const createCourseSchema = z.object({
   id: z.string().uuid("L'ID est requis."),
   teacherId: z.string().min(1, "L'ID enseignant est requis."),
@@ -51,7 +49,6 @@ export async function loader({ request }: Route.LoaderArgs) {
       throw redirect("/auth");
     }
 
-    // Check if user is already a teacher
     const teacherResult = await getTeacherByUserId(session.user.id);
     const teacher = teacherResult.success ? teacherResult.teacher : null;
     const isTeacher = !!teacher;
@@ -67,7 +64,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  // Verify authentication
   const session = await auth.api.getSession({ headers: request.headers });
   if (!session?.user) {
     return { success: false, error: "Non authentifié." };
@@ -76,15 +72,12 @@ export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
 
-  // Check if user is already a teacher
   const teacherResult = await getTeacherByUserId(session.user.id);
   let teacherId: string;
 
   if (teacherResult.success && teacherResult.teacher) {
-    // User is already a teacher
     teacherId = teacherResult.teacher.id;
   } else {
-    // Create teacher record for this user
     const newTeacherId = uuidv7();
     const teacherCreation = await createTeacher({
       id: newTeacherId,
@@ -100,7 +93,6 @@ export async function action({ request }: Route.ActionArgs) {
     teacherId = newTeacherId;
   }
 
-  // Override teacherId with the actual one
   const courseData = { ...data, teacherId };
 
   const parsed = createCourseSchema.safeParse(courseData);
@@ -123,7 +115,6 @@ export default function CreateCourse() {
 
     const formData = Object.fromEntries(new FormData(e.currentTarget));
 
-    // Validate form fields only (not generated fields like id, teacherId)
     const dataParsed = courseFormSchema.safeParse(formData);
     if (!dataParsed.success) {
       console.log("Validation errors:", dataParsed.error);
@@ -156,7 +147,7 @@ export default function CreateCourse() {
       <h1>
         {formValidated ? "Validation de mon cours" : "Création de mon cours"}
       </h1>
-      <Form className="w-full max-w-xs" onSubmit={onSubmit}>
+      <Form className="w-full max-w-xs gap-2" onSubmit={onSubmit}>
         {!formValidated && <CourseForm values={submitted} errors={{}} />}
         {formValidated && submitted && (
           <CourseValidation

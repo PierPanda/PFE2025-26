@@ -28,7 +28,7 @@ type CourseFormProps = {
 
 export default function CourseForm({ values, errors }: CourseFormProps) {
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <Input
         isRequired
         errorMessage={errors.title || "Veuillez renseigner un titre"}
@@ -67,7 +67,6 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           </SelectItem>
         ))}
       </Select>
-
       <Textarea
         isRequired
         className="max-w-xs"
@@ -98,6 +97,6 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
       <Button type="submit" variant="solid">
         Valider les données
       </Button>
-    </>
+    </div>
   );
 }
