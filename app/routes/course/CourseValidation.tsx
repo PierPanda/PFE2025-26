@@ -1,7 +1,8 @@
-import { Input, Button } from "@heroui/react";
+import { Input, NumberInput, Button } from "@heroui/react";
+import type { Course } from "~/types/course";
 
 type CourseValidationProps = {
-  values: Record<string, any>;
+  values: Course;
   createCourse: () => void;
 };
 
@@ -21,10 +22,14 @@ export default function CourseValidation({
       />
       <Input label="Niveau du cours" value={values.level || ""} readOnly />
       <Input label="Description" value={values.description || ""} readOnly />
-      <Input label="Prix du cours (€)" value={values.price || ""} readOnly />
-      <Input
+      <NumberInput
+        label="Prix du cours (€)"
+        value={values.price || 0}
+        readOnly
+      />
+      <NumberInput
         label="Durée du cours (minutes)"
-        value={values.duration || ""}
+        value={values.duration || 0}
         readOnly
       />
       <Button type="button" variant="bordered" onPress={createCourse}>

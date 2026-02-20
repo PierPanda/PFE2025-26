@@ -1,5 +1,6 @@
 import {
   Input,
+  NumberInput,
   Button,
   Autocomplete,
   AutocompleteItem,
@@ -7,21 +8,25 @@ import {
   SelectItem,
   Textarea,
 } from "@heroui/react";
+import {
+  categoryValues,
+  levelValues,
+} from "~/server/lib/db/schema-definition/courses";
+import type { Course } from "~/types/course";
 
-const categoryValues = [
-  { key: "guitare", label: "Guitare" },
-  { key: "piano", label: "Piano" },
-  { key: "violin", label: "Violon" },
-];
+const categories = categoryValues.map((cat) => ({
+  key: cat,
+  label: cat,
+}));
+console.log("Categories:", categories);
 
-const levelValues = [
-  { key: "beginner", label: "Débutant" },
-  { key: "intermediaire", label: "Intermédiaire" },
-  { key: "advanced", label: "Avancé" },
-];
+const levels = levelValues.map((level) => ({
+  key: level,
+  label: level,
+}));
 
 type CourseFormProps = {
-  values: Record<string, any>;
+  values: Course | null;
   errors: Record<string, string>;
 };
 
@@ -35,19 +40,21 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         name="title"
         placeholder="Cours de piano argentin"
         type="text"
-        defaultValue={values.title || ""}
+        defaultValue={values?.title || ""}
       />
       <Autocomplete
         isRequired
         className="max-w-xs"
-        defaultItems={categoryValues}
+        defaultItems={categories}
         label="Catégorie du cours"
         placeholder="Recherchez une catégorie"
         name="category"
-        defaultSelectedKey={values.category?.key || ""}
+        defaultSelectedKey={values?.category || ""}
       >
         {(item) => (
-          <AutocompleteItem key={item.key}>{item.label}</AutocompleteItem>
+          <AutocompleteItem key={item.key} className="capitalize">
+            {item.label}
+          </AutocompleteItem>
         )}
       </Autocomplete>
       <Select
@@ -56,10 +63,12 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         label="Niveau du cours"
         placeholder="Selectionne le niveau du cours"
         name="level"
-        defaultSelectedKeys={values.level ? [values.level] : []}
+        defaultSelectedKeys={values?.level ? [values.level] : []}
       >
-        {levelValues.map((levelItem) => (
-          <SelectItem key={levelItem.key}>{levelItem.label}</SelectItem>
+        {levels.map((levelItem) => (
+          <SelectItem key={levelItem.key} className="capitalize">
+            {levelItem.label}
+          </SelectItem>
         ))}
       </Select>
 
@@ -72,27 +81,25 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         errorMessage={
           errors.description || "Veuillez renseigner une description"
         }
-        defaultValue={values.description || ""}
+        defaultValue={values?.description || ""}
       />
-      <Input
+      <NumberInput
         isRequired
         errorMessage={errors.price || "Veuillez renseigner un prix valide"}
         label="Prix du cours"
         name="price"
         placeholder="Prix du cours en euros"
-        type="number"
-        defaultValue={values.price || ""}
+        defaultValue={values?.price || 0}
       />
-      <Input
+      <NumberInput
         isRequired
         errorMessage={errors.duration || "Veuillez renseigner une durée valide"}
         label="Durée du cours"
         name="duration"
         placeholder="Durée du cours en minutes"
-        type="number"
-        defaultValue={values.duration || ""}
+        defaultValue={values?.duration || 0}
       />
-      <Button type="submit" variant="bordered">
+      <Button type="submit" variant="solid">
         Valider les données
       </Button>
     </>

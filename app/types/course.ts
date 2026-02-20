@@ -1,4 +1,7 @@
-import type { CourseCategory } from "~/server/lib/db/schema-definition/courses";
+import type {
+  CourseCategory,
+  CourseLevel,
+} from "~/server/lib/db/schema-definition/courses";
 
 export type Course = {
   id: string;
@@ -6,8 +9,8 @@ export type Course = {
   title: string;
   description: string;
   duration: number;
-  level: string;
-  price: string;
+  level: CourseLevel;
+  price: number;
   isPublished: boolean;
   category: CourseCategory;
 };

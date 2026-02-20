@@ -3,7 +3,10 @@ import { db } from "~/server/lib/db";
 import { courses } from "~/server/lib/db/schema";
 import { z } from "zod";
 import type { Course } from "~/types/course";
-import { categoryValues } from "~/server/lib/db/schema-definition/courses";
+import {
+  categoryValues,
+  levelValues,
+} from "~/server/lib/db/schema-definition/courses";
 
 export const createCourseSchema = z.object({
   id: z.uuid().min(1, "L'ID est requis."),
@@ -11,7 +14,7 @@ export const createCourseSchema = z.object({
   title: z.string().min(1, "Le titre est requis."),
   description: z.string().min(1, "La description est requise."),
   duration: z.number().min(1, "La durée est requise."),
-  level: z.string().min(1, "Le niveau est requis."),
+  level: z.enum(levelValues),
   price: z.number().min(0, "Le prix doit être supérieur ou égal à 0."),
   isPublished: z.boolean().default(false),
   category: z.enum(categoryValues),
@@ -21,7 +24,12 @@ export async function createCourse(courseData: Course) {
   try {
     const result = await db
       .insert(courses)
-      .values({ ...courseData, createdAt: sql`NOW()`, updatedAt: sql`NOW()` });
+      .values({
+        ...courseData,
+        price: courseData.price.toString(),
+        createdAt: sql`NOW()`,
+        updatedAt: sql`NOW()`,
+      });
     return {
       success: true,
       message: "Cours créé avec succès.",
