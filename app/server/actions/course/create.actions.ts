@@ -13,23 +13,21 @@ export const createCourseSchema = z.object({
   teacherId: z.string().min(1, "L'ID enseignant est requis."),
   title: z.string().min(1, "Le titre est requis."),
   description: z.string().min(1, "La description est requise."),
-  duration: z.number().min(1, "La durée est requise."),
+  duration: z.coerce.number().min(1, "La durée est requise."),
   level: z.enum(levelValues),
-  price: z.number().min(0, "Le prix doit être supérieur ou égal à 0."),
+  price: z.coerce.number().min(0, "Le prix doit être supérieur ou égal à 0."),
   isPublished: z.boolean().default(false),
   category: z.enum(categoryValues),
 });
 
 export async function createCourse(courseData: Course) {
   try {
-    const result = await db
-      .insert(courses)
-      .values({
-        ...courseData,
-        price: courseData.price.toString(),
-        createdAt: sql`NOW()`,
-        updatedAt: sql`NOW()`,
-      });
+    const result = await db.insert(courses).values({
+      ...courseData,
+      price: courseData.price.toString(),
+      createdAt: sql`NOW()`,
+      updatedAt: sql`NOW()`,
+    });
     return {
       success: true,
       message: "Cours créé avec succès.",

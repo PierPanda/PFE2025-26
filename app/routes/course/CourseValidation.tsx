@@ -3,14 +3,13 @@ import type { Course } from "~/types/course";
 
 type CourseValidationProps = {
   values: Course;
-  createCourse: () => void;
+  createCourse: (published: boolean) => void;
 };
 
 export default function CourseValidation({
   values,
   createCourse,
 }: CourseValidationProps) {
-  console.log(values);
   return (
     <>
       <h1>Validation</h1>
@@ -32,9 +31,22 @@ export default function CourseValidation({
         value={values.duration || 0}
         readOnly
       />
-      <Button type="button" variant="bordered" onPress={createCourse}>
-        Créer le cours
-      </Button>
+      <div>
+        <Button
+          type="button"
+          variant="bordered"
+          onPress={() => createCourse(true)}
+        >
+          Publier le cours
+        </Button>
+        <Button
+          type="button"
+          variant="bordered"
+          onPress={() => createCourse(false)}
+        >
+          Enregistrer le cours en brouillon
+        </Button>
+      </div>
     </>
   );
 }

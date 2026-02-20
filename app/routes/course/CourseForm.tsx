@@ -18,7 +18,6 @@ const categories = categoryValues.map((cat) => ({
   key: cat,
   label: cat,
 }));
-console.log("Categories:", categories);
 
 const levels = levelValues.map((level) => ({
   key: level,
