@@ -305,11 +305,24 @@ async function seedAvailabilities(
   let created = 0;
   for (const availability of availabilities) {
     const availabilityId = randomUUID();
-    await db.insert(schema.availabilities).values({
-      id: availabilityId,
-      ...availability,
-    });
-    created++;
+    try {
+      await db.insert(schema.availabilities).values({
+        id: availabilityId,
+        ...availability,
+      });
+      created++;
+    } catch (error) {
+      console.error(
+        "[WARN] Echec de creation de la disponibilite",
+        {
+          availabilityId,
+          teacherId: availability.teacherId,
+          startTime: availability.startTime,
+          endTime: availability.endTime,
+        },
+        error,
+      );
+    }
   }
 
   console.log(`[OK] ${created} disponibilites creees`);
