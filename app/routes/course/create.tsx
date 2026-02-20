@@ -60,7 +60,11 @@ export async function loader({ request }: Route.LoaderArgs) {
     const teacher = isTeacher ? teacherResult.teacher![0] : null;
 
     return { user: session.user, teacher, isTeacher };
-  } catch {
+  } catch (error) {
+    console.error(
+      "Error in create course loader (auth/session/teacher lookup):",
+      error
+    );
     throw redirect("/auth");
   }
 }
