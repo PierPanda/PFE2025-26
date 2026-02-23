@@ -3,16 +3,16 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
 } from "react-router";
-import { authenticateUser } from "~/server/utils/authentify-user";
+import { authentifyUser } from "~/server/utils/authentify-user.server";
 import { createCourseSchema, updateCourseSchema } from "~/lib/validation";
-import { createCourse } from "~/services/courses/createCourse.server";
+import { createCourse } from "~/services/courses/create-course.server";
 import {
   getCourseById,
   getCoursesByTeacher,
-} from "~/services/courses/getCourse.server";
-import { getCourses } from "~/services/courses/getCourses.server";
-import { updateCourse } from "~/services/courses/updateCourse.server";
-import { deleteCourse } from "~/services/courses/deleteCourse.server";
+} from "~/services/courses/get-course.server";
+import { getCourses } from "~/services/courses/get-courses.server";
+import { updateCourse } from "~/services/courses/update-course.server";
+import { deleteCourse } from "~/services/courses/delete-course.server";
 import type {
   CourseCategory,
   CourseLevel,
@@ -45,7 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const { user } = await authenticateUser(request);
+  await authentifyUser(request);
 
   const method = request.method.toUpperCase();
 

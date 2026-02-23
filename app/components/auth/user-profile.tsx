@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { signOut } from "../../server/lib/auth/client";
-import { useAuth } from "../../hooks/useAuth";
+import { signOut } from "~/lib/auth-client";
+import { useAuth } from "~/hooks/use-auth";
 
 export function UserProfile() {
   const { user, isLoading } = useAuth();

@@ -3,63 +3,136 @@
 ## Stack technique
 
 - **Framework** : React Router v7 (mode SSR)
-- **UI** : HeroUI (basé sur NextUI)
+- **UI** : HeroUI (basé sur NextUI) + Tailwind CSS v4
 - **Base de données** : PostgreSQL avec Drizzle ORM
 - **Authentification** : Better Auth
-- **Validation** : Zod
+- **Validation** : Zod (centralisée dans `lib/validation.ts`)
+- **State management** : TanStack Query
 - **Langage** : TypeScript
 
 ---
 
-## Conventions de fichiers
+## Conventions de nommage
+
+### kebab-case obligatoire
+
+Tous les fichiers doivent être en kebab-case :
+
+```
+app/services/courses/create-course.server.ts
+app/components/auth/user-profile.tsx
+app/routes/pages/courses/course-form.tsx
+app/hooks/use-auth.ts
+```
 
 ### Fichiers serveur (`.server.ts`)
 
 Tout fichier contenant du code serveur doit être suffixé avec `.server.ts` :
 
 ```
-✅ db/index.server.ts
-✅ auth.server.ts
-✅ create.actions.server.ts
-✅ env.server.ts
-
-❌ db/index.ts (si contient accès DB)
-❌ auth.ts (si contient secrets)
+app/auth.server.ts
+app/server/utils/authentify-user.server.ts
+app/services/courses/create-course.server.ts
 ```
-
-### Quand utiliser `.server.ts`
-
-- Accès base de données (Drizzle)
-- Variables d'environnement (`process.env`)
-- Secrets et clés API
-- Actions serveur (mutations)
 
 ---
 
-## Structure des routes React Router
+## Structure des routes
+
+### Routes API (`routes/_api/`)
 
 ```tsx
-// Imports serveur OK dans loader/action
-import { auth } from "~/server/lib/auth.server";
-import { db } from "~/server/lib/db/index.server";
+// app/routes/_api/courses/route.tsx
+import { authentifyUser } from "~/server/utils/authentify-user.server";
+import { createCourseSchema, validateJsonBody } from "~/lib/validation";
 
-// Loader - données initiales
+// GET - Lecture
+export async function loader({ request }: LoaderFunctionArgs) {
+  // Pas d'auth nécessaire pour lecture publique
+  return getCourses();
+}
+
+// POST/PUT/DELETE - Mutations
+export async function action({ request }: ActionFunctionArgs) {
+  await authentifyUser(request); // Auth obligatoire
+  const data = await validateJsonBody(request, createCourseSchema);
+  return createCourse(data);
+}
+```
+
+### Pages (`routes/pages/`)
+
+```tsx
+// app/routes/pages/courses/create.tsx
+import { authentifyUser } from "~/server/utils/authentify-user.server";
+
 export async function loader({ request }: Route.LoaderArgs) {
-  const session = await auth.api.getSession({ headers: request.headers });
-  if (!session?.user) throw redirect("/auth");
+  const session = await authentifyUser(request, { redirectTo: "/auth" });
   return { user: session.user };
 }
 
-// Action - mutations (POST, PUT, DELETE)
-export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  // Validation et traitement
-  return { success: true };
+export default function CreateCourse() {
+  // Composant React (pas d'import .server.ts)
 }
+```
 
-// Composant - PAS d'import .server.ts
-export default function Page() {
-  return <div>...</div>;
+---
+
+## Authentification
+
+### Helper `authentifyUser`
+
+Utiliser dans **chaque loader** qui nécessite une auth :
+
+```tsx
+import { authentifyUser } from "~/server/utils/authentify-user.server";
+
+// Avec redirection
+const session = await authentifyUser(request, { redirectTo: "/auth" });
+
+// Sans redirection (retourne 401)
+const session = await authentifyUser(request);
+```
+
+### Ne PAS faire
+
+- Auth dans les layouts
+- `<Navigate />` ou `<Redirect />` côté client
+- Vérification auth côté client uniquement
+
+---
+
+## Validation centralisée
+
+### Fichier `lib/validation.ts`
+
+```tsx
+// Schémas
+export const createCourseSchema = z.object({...});
+export const updateCourseSchema = createCourseSchema.partial().extend({...});
+
+// Types inférés
+export type CreateCourseInput = z.infer<typeof createCourseSchema>;
+
+// Helpers
+export function validateSearchParams<T>(url: URL, schema: T);
+export async function validateFormData<T>(request: Request, schema: T);
+export async function validateJsonBody<T>(request: Request, schema: T);
+export function validateParams<T>(params: Record<string, string>, schema: T);
+```
+
+### Utilisation
+
+```tsx
+import {
+  createCourseSchema,
+  validateFormData,
+  type CreateCourseInput
+} from "~/lib/validation";
+
+export async function action({ request }: Route.ActionArgs) {
+  const data = await validateFormData(request, createCourseSchema);
+  // data est typé comme CreateCourseInput
 }
 ```
 
@@ -67,7 +140,7 @@ export default function Page() {
 
 ## Types Drizzle
 
-### Définir les types dans `/types`
+### Inférer depuis le schéma
 
 ```tsx
 // app/types/course.ts
@@ -77,92 +150,28 @@ export type Course = typeof courses.$inferSelect;
 export type NewCourse = typeof courses.$inferInsert;
 ```
 
-### Utiliser dans les actions
-
-```tsx
-import type { NewCourse } from "~/types/course";
-
-type CreateInput = Omit<NewCourse, "createdAt" | "updatedAt">;
-
-export async function createCourse(data: CreateInput) {
-  // ...
-}
-```
-
 ---
 
-## Actions serveur
+## TanStack Query
 
-### Structure d'une action
-
-```tsx
-// app/server/actions/course/create.actions.server.ts
-import { sql } from "drizzle-orm";
-import { db } from "~/server/lib/db/index.server";
-import { courses } from "~/server/lib/db/schema";
-import type { NewCourse } from "~/types/course";
-
-type CreateCourseInput = Omit<NewCourse, "createdAt" | "updatedAt">;
-
-export async function createCourse(data: CreateCourseInput) {
-  try {
-    const result = await db.insert(courses).values({
-      ...data,
-      createdAt: sql`NOW()`,
-      updatedAt: sql`NOW()`,
-    });
-    return { success: true, course: result };
-  } catch (error) {
-    console.error("Error:", error);
-    return { success: false, error: "Erreur lors de la création." };
-  }
-}
-```
-
----
-
-## Validation Zod
-
-### Schéma dans le fichier de route
+### Pour les appels API côté client
 
 ```tsx
-import { z } from "zod";
-import { categoryValues, levelValues } from "~/types/course";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
-export const createCourseSchema = z.object({
-  title: z.string().min(1, "Le titre est requis."),
-  duration: z.coerce.number().min(1),
-  level: z.enum(levelValues),
-  price: z.coerce.number().min(0).transform((v) => v.toString()),
-  category: z.enum(categoryValues),
+// Lecture
+const { data } = useQuery({
+  queryKey: ["courses"],
+  queryFn: () => fetch("/api/courses").then(r => r.json()),
 });
 
-export type CreateCourseInput = z.infer<typeof createCourseSchema>;
-```
-
----
-
-## Formulaires
-
-### Avec useFetcher (sans navigation)
-
-```tsx
-import { useFetcher } from "react-router";
-
-export default function Page() {
-  const fetcher = useFetcher();
-
-  const handleSubmit = (data: FormData) => {
-    fetcher.submit(data, { method: "post" });
-  };
-
-  return (
-    <>
-      {fetcher.data?.success && <p>Succès!</p>}
-      {fetcher.data?.error && <p>{fetcher.data.error}</p>}
-    </>
-  );
-}
+// Mutation
+const mutation = useMutation({
+  mutationFn: (data) => fetch("/api/courses", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }),
+});
 ```
 
 ---
@@ -171,68 +180,36 @@ export default function Page() {
 
 ```
 app/
-├── routes/           # Pages et routes
+├── auth.server.ts              # Config Better Auth (racine app/)
+├── lib/
+│   ├── auth-client.ts          # Client auth
+│   └── validation.ts           # Schémas Zod centralisés
+├── routes/
+│   ├── _api/                   # Routes API (loader/action)
+│   │   ├── auth/route.tsx
+│   │   ├── courses/route.tsx
+│   │   └── teachers/route.tsx
+│   ├── layouts/                # Layouts simples (pas d'auth)
+│   └── pages/                  # Pages UI
 ├── server/
-│   ├── lib/
-│   │   ├── db/
-│   │   │   ├── index.server.ts
-│   │   │   └── schema-definition/
-│   │   └── auth.server.ts
-│   ├── actions/      # Actions serveur (.server.ts)
+│   ├── lib/db/                 # Drizzle
 │   └── utils/
-│       └── env.server.ts
-├── types/            # Types inférés Drizzle
-└── components/       # Composants UI
+│       └── authentify-user.server.ts
+├── services/                   # Logique métier (kebab-case)
+├── types/
+├── components/
+└── hooks/
 ```
 
 ---
 
 ## Règles importantes
 
-1. **Ne jamais** importer de fichiers `.server.ts` dans les composants React
-2. **Toujours** utiliser `$inferSelect` et `$inferInsert` pour les types Drizzle
-3. **Toujours** suffixer les fichiers serveur avec `.server.ts`
-4. **Utiliser** les `loader` pour charger les données
-5. **Utiliser** les `action` pour les mutations
-6. **Valider** avec Zod avant d'appeler les actions serveur
-7. **Transformer** les types si nécessaire (ex: `price` number → string pour DB)
-
----
-
-## Exemples de code
-
-### Route complète
-
-```tsx
-// app/routes/course/create.tsx
-import { z } from "zod";
-import { redirect, useFetcher } from "react-router";
-import { auth } from "~/server/lib/auth.server";
-import { createCourse } from "~/server/actions/course/create.actions.server";
-import { levelValues, categoryValues } from "~/types/course";
-import type { Route } from "./+types/create";
-
-const schema = z.object({
-  title: z.string().min(1),
-  level: z.enum(levelValues),
-  category: z.enum(categoryValues),
-});
-
-export async function loader({ request }: Route.LoaderArgs) {
-  const session = await auth.api.getSession({ headers: request.headers });
-  if (!session?.user) throw redirect("/auth");
-  return { user: session.user };
-}
-
-export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const parsed = schema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return { success: false, errors: parsed.error.flatten() };
-  return await createCourse(parsed.data);
-}
-
-export default function CreateCourse() {
-  const fetcher = useFetcher();
-  // ...
-}
-```
+1. **kebab-case** pour tous les noms de fichiers
+2. **`.server.ts`** pour tout code serveur
+3. **`authentifyUser`** dans chaque loader protégé
+4. **Validation centralisée** dans `lib/validation.ts`
+5. **Pas d'auth dans les layouts**
+6. **Redirections côté serveur** uniquement
+7. **TanStack Query** pour les appels API côté client
+8. **Types Drizzle** inférés avec `$inferSelect`/`$inferInsert`

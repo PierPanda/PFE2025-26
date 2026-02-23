@@ -1,5 +1,5 @@
 // Auth service - Client-side authentication functions
-import { signIn, signOut, signUp, getSession } from "~/server/lib/auth/client";
+import { signIn, signOut, signUp, getSession } from "~/lib/auth-client";
 
 /**
  * Login with email and password

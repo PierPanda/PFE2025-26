@@ -1,20 +1,17 @@
-// API Route: /api/teachers
-// Handles CRUD operations for teachers
-
 import {
   data,
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
 } from "react-router";
-import { authenticateUser } from "~/server/utils/authentify-user";
+import { authentifyUser } from "~/server/utils/authentify-user.server";
 import { createTeacherSchema, updateTeacherSchema } from "~/lib/validation";
-import { createTeacher } from "~/services/teachers/createTeacher.server";
+import { createTeacher } from "~/services/teachers/create-teacher.server";
 import {
   getTeacher,
   getTeacherByUserId,
-} from "~/services/teachers/getTeacher.server";
-import { updateTeacher } from "~/services/teachers/updateTeacher.server";
-import { deleteTeacher } from "~/services/teachers/deleteTeacher.server";
+} from "~/services/teachers/get-teacher.server";
+import { updateTeacher } from "~/services/teachers/update-teacher.server";
+import { deleteTeacher } from "~/services/teachers/delete-teacher.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -38,7 +35,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const { user } = await authenticateUser(request);
+  await authentifyUser(request);
 
   const method = request.method.toUpperCase();
 

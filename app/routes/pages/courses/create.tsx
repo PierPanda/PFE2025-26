@@ -1,15 +1,15 @@
-import CourseForm from "./CourseForm";
+import CourseForm from "./course-form";
 import { useState } from "react";
-import CourseValidation from "./CourseValidation";
+import CourseValidation from "./course-validation";
 import { z } from "zod";
 import { categoryValues, levelValues } from "~/types/course";
-import { auth } from "~/server/lib/auth.server";
-import { redirect, useLoaderData, useFetcher, Form } from "react-router";
+import { authentifyUser } from "~/server/utils/authentify-user.server";
+import { useLoaderData, useFetcher, Form } from "react-router";
 import { uuidv7 } from "uuidv7";
 import type { Route } from "./+types/create";
-import { createCourse } from "~/services/courses/createCourse.server";
-import { getTeacherByUserId } from "~/services/teachers/getTeacher.server";
-import { createTeacher } from "~/services/teachers/createTeacher.server";
+import { createCourse } from "~/services/courses/create-course.server";
+import { getTeacherByUserId } from "~/services/teachers/get-teacher.server";
+import { createTeacher } from "~/services/teachers/create-teacher.server";
 
 export const courseFormSchema = z.object({
   title: z.string().min(1, "Le titre est requis."),
@@ -42,32 +42,17 @@ export type CourseFormInput = z.infer<typeof courseFormSchema>;
 export type CreateCourseInput = z.infer<typeof createCourseSchema>;
 
 export async function loader({ request }: Route.LoaderArgs) {
-  try {
-    const session = await auth.api.getSession({ headers: request.headers });
+  const session = await authentifyUser(request, { redirectTo: "/auth" });
 
-    if (!session?.user) {
-      throw redirect("/auth");
-    }
+  const teacherResult = await getTeacherByUserId(session.user.id);
+  const teacher = teacherResult.success ? teacherResult.teacher : null;
+  const isTeacher = !!teacher;
 
-    const teacherResult = await getTeacherByUserId(session.user.id);
-    const teacher = teacherResult.success ? teacherResult.teacher : null;
-    const isTeacher = !!teacher;
-
-    return { user: session.user, teacher, isTeacher };
-  } catch (error) {
-    console.error(
-      "Error in create course loader (auth/session/teacher lookup):",
-      error,
-    );
-    throw redirect("/auth");
-  }
+  return { user: session.user, teacher, isTeacher };
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  const session = await auth.api.getSession({ headers: request.headers });
-  if (!session?.user) {
-    return { success: false, error: "Non authentifié." };
-  }
+  const session = await authentifyUser(request);
 
   const formData = await request.formData();
   const data = Object.fromEntries(formData);

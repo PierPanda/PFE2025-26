@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Button } from "@heroui/react";
 import type { LoaderFunctionArgs } from "react-router";
 import { redirect } from "react-router";
-import { auth } from "~/server/lib/auth.server";
-import { LoginForm } from "./LoginForm";
-import { SignUpForm } from "./SignUpForm";
+import { auth } from "~/auth.server";
+import { LoginForm } from "./login-form";
+import { SignUpForm } from "./sign-up-form";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await auth.api.getSession({ headers: request.headers });

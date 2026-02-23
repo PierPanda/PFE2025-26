@@ -1,184 +1,291 @@
 # React Router v7 - Guide et Conventions
 
-## Conventions de fichiers serveur/client
+## Conventions de nommage
 
-### Suffixe `.server.ts`
+### kebab-case obligatoire
 
-Les fichiers contenant du code serveur uniquement **doivent** être suffixés avec `.server.ts`. Cela indique à Vite de les exclure du bundle client.
+Tous les fichiers doivent être nommés en kebab-case :
 
 ```
 app/
+├── services/
+│   └── courses/
+│       └── create-course.server.ts    ✅
+│       └── createCourse.server.ts     ❌
+├── components/
+│   └── auth/
+│       └── user-profile.tsx           ✅
+│       └── UserProfile.tsx            ❌
+├── hooks/
+│   └── use-auth.ts                    ✅
+│   └── useAuth.ts                     ❌
+```
+
+### Suffixe `.server.ts`
+
+Les fichiers contenant du code serveur **doivent** être suffixés avec `.server.ts` :
+
+```
+app/
+├── auth.server.ts                     ✅ Config Better Auth
 ├── server/
-│   ├── lib/
-│   │   ├── db/
-│   │   │   └── index.server.ts    ✅ Accès base de données
-│   │   └── auth.server.ts          ✅ Configuration auth
-│   └── actions/
-│       └── course/
-│           └── create.actions.server.ts  ✅ Actions serveur
+│   └── utils/
+│       └── authentify-user.server.ts  ✅ Helper auth
+├── services/
+│   └── courses/
+│       └── create-course.server.ts    ✅ Service métier
 ```
 
 ### Quand utiliser `.server.ts`
 
-- Accès à la base de données (`drizzle`, `prisma`, etc.)
+- Accès à la base de données (Drizzle)
 - Variables d'environnement serveur (`process.env`)
 - Secrets et clés API
 - Logique métier côté serveur
-
-### Erreur courante
-
-```
-Server-only module referenced by client
-'~/server/lib/db/index.server' imported by 'app/routes/...'
-```
-
-**Cause** : Un fichier client importe directement ou indirectement un module serveur.
-
-**Solution** : Suffixer le fichier avec `.server.ts` et s'assurer que les imports serveur ne sont utilisés que dans les `loader` et `action`.
 
 ---
 
 ## Structure des routes
 
-### Fichier de route type
+### Organisation des dossiers
+
+```
+app/routes/
+├── _api/                    # Routes API (loader/action uniquement)
+│   ├── auth/route.tsx       # Endpoints Better Auth
+│   ├── courses/route.tsx    # CRUD courses
+│   └── teachers/route.tsx   # CRUD teachers
+├── layouts/                 # Layouts simples (PAS d'auth)
+│   ├── auth-layout.tsx
+│   └── public-layout.tsx
+└── pages/                   # Pages UI
+    ├── auth/
+    │   ├── page.tsx
+    │   ├── login-form.tsx
+    │   └── sign-up-form.tsx
+    ├── courses/
+    │   ├── create.tsx
+    │   └── course-form.tsx
+    └── dashboard/
+        └── page.tsx
+```
+
+### Configuration (`routes.ts`)
 
 ```tsx
-// app/routes/example.tsx
+import { type RouteConfig, index, layout, route } from "@react-router/dev/routes";
 
-import type { Route } from "./+types/example";
+export default [
+  // Routes API
+  route("/api/auth/*", "routes/_api/auth/route.tsx"),
+  route("/api/courses", "routes/_api/courses/route.tsx"),
+  route("/api/teachers", "routes/_api/teachers/route.tsx"),
 
-// LOADER - S'exécute côté serveur avant le rendu
-export async function loader({ request }: Route.LoaderArgs) {
-  // ✅ Peut importer des modules .server.ts
-  // ✅ Accès à la base de données
-  // ✅ Vérification de session
-  return { data: "..." };
-}
+  // Pages publiques
+  layout("routes/layouts/public-layout.tsx", [
+    route("/auth", "routes/pages/auth/page.tsx"),
+  ]),
 
-// ACTION - S'exécute côté serveur lors d'une soumission de formulaire
-export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  // ✅ Peut importer des modules .server.ts
-  // ✅ Mutations base de données
-  return { success: true };
-}
-
-// COMPOSANT - S'exécute côté client ET serveur (SSR)
-export default function Example() {
-  // ❌ NE PAS importer de modules .server.ts ici
-  // ❌ NE PAS appeler de fonctions serveur directement
-  return <div>...</div>;
-}
+  // Pages authentifiées
+  layout("routes/layouts/auth-layout.tsx", [
+    index("routes/pages/dashboard/page.tsx"),
+    route("/courses/create", "routes/pages/courses/create.tsx"),
+  ]),
+] satisfies RouteConfig;
 ```
 
 ---
 
-## Loaders
+## Authentification
 
-### Utilisation
+### Helper `authentifyUser`
 
-Le `loader` s'exécute côté serveur avant le rendu du composant.
+**Toujours** utiliser `authentifyUser` dans les loaders protégés :
 
 ```tsx
-import { auth } from "~/server/lib/auth.server";
-import { redirect } from "react-router";
+import { authentifyUser } from "~/server/utils/authentify-user.server";
 import type { Route } from "./+types/page";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  // Vérifier l'authentification
-  const session = await auth.api.getSession({ headers: request.headers });
-
-  if (!session?.user) {
-    throw redirect("/auth");
-  }
-
-  // Retourner les données pour le composant
+  // Avec redirection automatique
+  const session = await authentifyUser(request, { redirectTo: "/auth" });
   return { user: session.user };
 }
 ```
 
-### Accéder aux données du loader
+### Dans les actions
 
 ```tsx
-import { useLoaderData } from "react-router";
+export async function action({ request }: Route.ActionArgs) {
+  // Sans redirection (retourne 401)
+  const session = await authentifyUser(request);
+  // ...
+}
+```
 
-export default function Page() {
-  const { user } = useLoaderData<typeof loader>();
-  return <div>Bonjour {user.name}</div>;
+### Ce qu'il ne faut PAS faire
+
+```tsx
+// ❌ Auth dans les layouts
+export function AuthLayout() {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/auth" />;
+}
+
+// ❌ Redirections côté client
+return <Navigate to="/auth" replace />;
+
+// ❌ Vérification auth directe dans loader
+const session = await auth.api.getSession({ headers: request.headers });
+if (!session) throw redirect("/auth");
+```
+
+---
+
+## Routes API
+
+### Structure type
+
+```tsx
+// app/routes/_api/courses/route.tsx
+import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from "react-router";
+import { authentifyUser } from "~/server/utils/authentify-user.server";
+import { createCourseSchema, validateJsonBody } from "~/lib/validation";
+import { createCourse } from "~/services/courses/create-course.server";
+import { getCourses } from "~/services/courses/get-courses.server";
+
+// GET - Lecture (peut être publique)
+export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const category = url.searchParams.get("category");
+  return getCourses(category);
+}
+
+// POST/PUT/DELETE - Mutations (auth obligatoire)
+export async function action({ request }: ActionFunctionArgs) {
+  await authentifyUser(request);
+
+  const method = request.method.toUpperCase();
+
+  switch (method) {
+    case "POST": {
+      const body = await validateJsonBody(request, createCourseSchema);
+      return createCourse(body);
+    }
+    // ...
+  }
 }
 ```
 
 ---
 
-## Actions
+## Validation centralisée
 
-### Utilisation basique
+### Fichier `lib/validation.ts`
+
+Tous les schémas Zod sont centralisés :
 
 ```tsx
-import { createCourse } from "~/server/actions/course/create.actions.server";
+// app/lib/validation.ts
+import { z } from "zod";
+import { categoryValues, levelValues } from "~/server/lib/db/schema-definition/courses";
+
+// Schémas
+export const courseFormSchema = z.object({
+  title: z.string().min(1, "Le titre est requis."),
+  description: z.string().min(1, "La description est requise."),
+  duration: z.coerce.number().min(1, "La durée est requise."),
+  level: z.enum(levelValues),
+  price: z.coerce.number().min(0).transform((val) => val.toString()),
+  category: z.enum(categoryValues),
+});
+
+export const createCourseSchema = courseFormSchema.extend({
+  id: z.string().uuid(),
+  teacherId: z.string().min(1),
+  isPublished: z.coerce.boolean().default(false),
+});
+
+// Types inférés
+export type CourseFormInput = z.infer<typeof courseFormSchema>;
+export type CreateCourseInput = z.infer<typeof createCourseSchema>;
+
+// Helpers de validation
+export function validateSearchParams<T extends z.ZodTypeAny>(url: URL, schema: T): z.infer<T>;
+export async function validateFormData<T extends z.ZodTypeAny>(request: Request, schema: T): Promise<z.infer<T>>;
+export async function validateJsonBody<T extends z.ZodTypeAny>(request: Request, schema: T): Promise<z.infer<T>>;
+export function validateParams<T extends z.ZodTypeAny>(params: Record<string, string | undefined>, schema: T): z.infer<T>;
+```
+
+### Utilisation
+
+```tsx
+import { createCourseSchema, validateFormData } from "~/lib/validation";
 
 export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData);
-
-  // Validation
-  const parsed = schema.safeParse(data);
-  if (!parsed.success) {
-    return { success: false, errors: parsed.error.flatten() };
-  }
-
-  // Appel de l'action serveur
-  const result = await createCourse(parsed.data);
-  return result;
-}
-```
-
-### Soumettre un formulaire
-
-#### Méthode 1 : Form natif React Router
-
-```tsx
-import { Form } from "react-router";
-
-export default function Page() {
-  return (
-    <Form method="post">
-      <input name="title" />
-      <button type="submit">Envoyer</button>
-    </Form>
-  );
-}
-```
-
-#### Méthode 2 : useFetcher (sans navigation)
-
-```tsx
-import { useFetcher } from "react-router";
-
-export default function Page() {
-  const fetcher = useFetcher();
-
-  const handleSubmit = () => {
-    const formData = new FormData();
-    formData.append("title", "Mon titre");
-    fetcher.submit(formData, { method: "post" });
-  };
-
-  return (
-    <div>
-      <button onClick={handleSubmit}>Envoyer</button>
-      {fetcher.data?.success && <p>Succès!</p>}
-      {fetcher.data?.error && <p>{fetcher.data.error}</p>}
-    </div>
-  );
+  const data = await validateFormData(request, createCourseSchema);
+  // data est typé automatiquement
+  return createCourse(data);
 }
 ```
 
 ---
 
-## Types inférés depuis Drizzle
+## TanStack Query
 
-### Définir les types dans `/types`
+### Configuration
+
+```tsx
+// app/root.tsx ou layout
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Outlet />
+    </QueryClientProvider>
+  );
+}
+```
+
+### Appels API côté client
+
+```tsx
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+// Lecture
+export function useCourses() {
+  return useQuery({
+    queryKey: ["courses"],
+    queryFn: () => fetch("/api/courses").then((r) => r.json()),
+  });
+}
+
+// Mutation
+export function useCreateCourse() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateCourseInput) =>
+      fetch("/api/courses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }).then((r) => r.json()),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["courses"] });
+    },
+  });
+}
+```
+
+---
+
+## Types Drizzle
+
+### Inférer depuis le schéma
 
 ```tsx
 // app/types/course.ts
@@ -188,43 +295,21 @@ export type Course = typeof courses.$inferSelect;
 export type NewCourse = typeof courses.$inferInsert;
 ```
 
-### Utiliser dans les actions serveur
-
-```tsx
-// app/server/actions/course/create.actions.server.ts
-import type { NewCourse } from "~/types/course";
-
-type CreateCourseInput = Omit<NewCourse, "createdAt" | "updatedAt">;
-
-export async function createCourse(data: CreateCourseInput) {
-  // ...
-}
-```
-
 ---
 
-## Validation avec Zod
+## Layouts
 
-### Schéma dans le fichier de route
+### Layouts simples (sans auth)
 
 ```tsx
-// app/routes/course/create.tsx
-import { z } from "zod";
-import { categoryValues, levelValues } from "~/types/course";
+// app/routes/layouts/auth-layout.tsx
+import { Outlet } from "react-router";
 
-export const createCourseSchema = z.object({
-  title: z.string().min(1, "Le titre est requis."),
-  description: z.string().min(1, "La description est requise."),
-  duration: z.coerce.number().min(1, "La durée est requise."),
-  level: z.enum(levelValues),
-  price: z.coerce
-    .number()
-    .min(0, "Le prix doit être positif.")
-    .transform((val) => val.toString()), // Transformer en string pour la DB
-  category: z.enum(categoryValues),
-});
-
-export type CreateCourseInput = z.infer<typeof createCourseSchema>;
+export default function AuthLayout() {
+  // PAS de vérification auth ici
+  // L'auth est gérée dans chaque loader avec authentifyUser
+  return <Outlet />;
+}
 ```
 
 ---
@@ -233,43 +318,69 @@ export type CreateCourseInput = z.infer<typeof createCourseSchema>;
 
 | Règle | Description |
 |-------|-------------|
-| `.server.ts` | Fichiers avec accès DB, env vars, secrets |
-| `loader` | Chargement de données côté serveur |
-| `action` | Mutations côté serveur (POST, PUT, DELETE) |
-| Composant | Pas d'import direct de modules serveur |
-| Types | Inférer depuis Drizzle avec `$inferSelect`/`$inferInsert` |
-| Validation | Zod dans le fichier de route si utilisé client + serveur |
+| **kebab-case** | Tous les fichiers en kebab-case |
+| **`.server.ts`** | Code serveur uniquement |
+| **`authentifyUser`** | Dans chaque loader protégé |
+| **Validation** | Centralisée dans `lib/validation.ts` |
+| **Routes API** | Dans `routes/_api/` avec loader/action |
+| **TanStack Query** | Pour les appels API côté client |
+| **Layouts** | Simples, sans vérification auth |
+| **Redirections** | Côté serveur uniquement |
 
 ---
 
-## Arborescence recommandée
+## Arborescence complète
 
 ```
 app/
+├── auth.server.ts                    # Config Better Auth
+├── root.tsx                          # Layout racine + ErrorBoundary
+├── routes.ts                         # Configuration des routes
+├── lib/
+│   ├── auth-client.ts                # Client auth
+│   └── validation.ts                 # Schémas Zod centralisés
 ├── routes/
-│   ├── course/
-│   │   ├── create.tsx        # Route + schema Zod
-│   │   ├── CourseForm.tsx    # Composant formulaire
-│   │   └── CourseValidation.tsx
-│   └── auth/
-│       └── page.tsx
+│   ├── _api/                         # Routes API
+│   │   ├── auth/route.tsx
+│   │   ├── courses/route.tsx
+│   │   └── teachers/route.tsx
+│   ├── layouts/                      # Layouts (kebab-case)
+│   │   ├── auth-layout.tsx
+│   │   └── public-layout.tsx
+│   └── pages/                        # Pages UI (kebab-case)
+│       ├── auth/
+│       │   ├── page.tsx
+│       │   ├── login-form.tsx
+│       │   └── sign-up-form.tsx
+│       ├── courses/
+│       │   ├── create.tsx
+│       │   ├── course-form.tsx
+│       │   └── course-validation.tsx
+│       └── dashboard/
+│           └── page.tsx
 ├── server/
 │   ├── lib/
-│   │   ├── db/
-│   │   │   ├── index.server.ts
-│   │   │   └── schema-definition/
-│   │   └── auth.server.ts
-│   ├── actions/
-│   │   ├── course/
-│   │   │   ├── create.actions.server.ts
-│   │   │   ├── update.actions.server.ts
-│   │   │   └── get.actions.server.ts
-│   │   └── teacher/
+│   │   └── db/
+│   │       ├── index.server.ts
+│   │       └── schema-definition/
 │   └── utils/
+│       ├── authentify-user.server.ts
 │       └── env.server.ts
+├── services/                         # Services métier (kebab-case)
+│   ├── courses/
+│   │   ├── create-course.server.ts
+│   │   ├── get-course.server.ts
+│   │   └── get-courses.server.ts
+│   └── teachers/
+│       ├── create-teacher.server.ts
+│       └── get-teacher.server.ts
 ├── types/
 │   ├── course.ts
-│   └── teacher.ts
-└── components/
-    └── ui/
+│   ├── teacher.ts
+│   └── api-route.ts
+├── components/
+│   └── auth/
+│       └── user-profile.tsx
+└── hooks/
+    └── use-auth.ts
 ```

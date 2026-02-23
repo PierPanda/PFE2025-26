@@ -4,7 +4,7 @@ import type { AuthState, User } from "../types/user";
 export function useAuth(): AuthState {
   try {
     const data = useLoaderData() as { user?: User };
-    
+
     return {
       user: data?.user || null,
       session: null,
@@ -13,7 +13,6 @@ export function useAuth(): AuthState {
       error: null,
     };
   } catch {
-    // Si on ne peut pas accéder aux données du loader, on est pas authentifié
     return {
       user: null,
       session: null,

@@ -1,20 +1,11 @@
 import type { Route } from "./+types/page";
-import { redirect, Link } from "react-router";
-import { auth } from "~/server/lib/auth.server";
-import { UserProfile } from "~/components/auth/UserProfile";
+import { Link } from "react-router";
+import { authentifyUser } from "~/server/utils/authentify-user.server";
+import { UserProfile } from "~/components/auth/user-profile";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  try {
-    const session = await auth.api.getSession({ headers: request.headers });
-
-    if (!session?.user) {
-      throw redirect("/auth");
-    }
-
-    return { user: session.user };
-  } catch {
-    throw redirect("/auth");
-  }
+  const session = await authentifyUser(request, { redirectTo: "/auth" });
+  return { user: session.user };
 }
 
 export function meta(_args: Route.MetaArgs) {

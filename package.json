@@ -6,7 +6,13 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc",
+    "typecheck": "react-router typegen && tsc --noEmit",
+    "lint": "oxlint --fix",
+    "lint:check": "oxlint",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -14,11 +20,17 @@
     "db:seed": "tsx drizzle/seed.ts",
     "db:reset": "tsx drizzle/seed.ts --reset"
   },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "oxlint --fix"
+    ]
+  },
   "dependencies": {
     "@heroui/react": "^2.8.8",
     "@neondatabase/serverless": "^1.0.2",
     "@react-router/node": "^7.13.0",
     "@react-router/serve": "^7.13.0",
+    "@tanstack/react-query": "^5.90.21",
     "bcryptjs": "^3.0.3",
     "better-auth": "^1.4.18",
     "dotenv": "^16.5.0",
@@ -39,10 +51,15 @@
     "@types/node": "^22",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
+    "@vitest/coverage-v8": "^4.0.18",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "oxlint": "^1.49.0",
     "tailwindcss": "^4.1.18",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "vite-tsconfig-paths": "^6.0.5"
+    "vite-tsconfig-paths": "^6.0.5",
+    "vitest": "^4.0.18"
   }
 }
