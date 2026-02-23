@@ -1,87 +1,157 @@
-# Welcome to React Router!
+# Maestro
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Plateforme de mise en relation entre enseignants et apprenants pour des cours de musique.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Stack technique
 
-## Features
+- **Framework**: React Router v7 (SSR)
+- **UI**: HeroUI + Tailwind CSS v4
+- **Base de données**: PostgreSQL + Drizzle ORM
+- **Authentification**: Better Auth
+- **Validation**: Zod
+- **State management**: TanStack Query
+- **Langage**: TypeScript
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## Prérequis
 
-## Getting Started
+- Node.js 20+
+- pnpm
+- Docker (pour PostgreSQL)
 
-### Installation
-
-Install the dependencies:
+## Installation
 
 ```bash
+# Installer les dépendances
 pnpm install
+
+# Lancer PostgreSQL avec Docker
+docker-compose up -d
+
+# Configurer les variables d'environnement
+cp .env.example .env
+
+# Appliquer les migrations
+pnpm db:push
+
+# (Optionnel) Seed la base de données
+pnpm db:seed
 ```
 
-### Development
-
-Start the development server with HMR:
+## Développement
 
 ```bash
-pnpm run dev
+# Lancer le serveur de développement
+pnpm dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+L'application sera disponible sur `http://localhost:5173`.
 
-## Building for Production
+## Scripts disponibles
 
-Create a production build:
+| Script | Description |
+|--------|-------------|
+| `pnpm dev` | Serveur de développement |
+| `pnpm build` | Build de production |
+| `pnpm start` | Serveur de production |
+| `pnpm typecheck` | Vérification TypeScript |
+| `pnpm lint` | Linter (oxlint) avec auto-fix |
+| `pnpm lint:check` | Linter sans auto-fix |
+| `pnpm test` | Tests (vitest) |
+| `pnpm test:coverage` | Tests avec couverture |
+| `pnpm db:generate` | Générer les migrations |
+| `pnpm db:push` | Appliquer le schéma |
+| `pnpm db:studio` | Interface Drizzle Studio |
 
-```bash
-pnpm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
+## Structure du projet
 
 ```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+app/
+├── auth.server.ts              # Configuration Better Auth
+├── lib/
+│   ├── auth-client.ts          # Client auth (côté client)
+│   └── validation.ts           # Schémas Zod centralisés
+├── routes/
+│   ├── _api/                   # Routes API
+│   │   ├── auth/route.tsx      # Endpoints Better Auth
+│   │   ├── courses/route.tsx   # CRUD courses
+│   │   └── teachers/route.tsx  # CRUD teachers
+│   ├── layouts/                # Layouts (kebab-case)
+│   │   ├── auth-layout.tsx
+│   │   └── public-layout.tsx
+│   └── pages/                  # Pages UI
+│       ├── auth/
+│       ├── courses/
+│       └── dashboard/
+├── server/
+│   ├── lib/db/                 # Drizzle ORM
+│   └── utils/
+│       ├── authentify-user.server.ts  # Helper auth
+│       └── env.server.ts
+├── services/                   # Services métier (kebab-case)
+│   ├── courses/
+│   └── teachers/
+├── types/
+│   └── api-route.ts            # Types API typés
+├── components/
+└── hooks/
 ```
 
-## Styling
+## Conventions
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+### Nommage des fichiers
 
----
+- **kebab-case** pour tous les fichiers : `create-course.server.ts`
+- **`.server.ts`** pour le code serveur uniquement
 
-Built with ❤️ using React Router.
+### Authentification
+
+Utiliser `authentifyUser` dans chaque loader :
+
+```tsx
+import { authentifyUser } from "~/server/utils/authentify-user.server";
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const session = await authentifyUser(request, { redirectTo: "/auth" });
+  return { user: session.user };
+}
+```
+
+### Validation
+
+Schémas centralisés dans `app/lib/validation.ts` :
+
+```tsx
+import { createCourseSchema, validateFormData } from "~/lib/validation";
+
+export async function action({ request }: Route.ActionArgs) {
+  const data = await validateFormData(request, createCourseSchema);
+  // ...
+}
+```
+
+### Routes API
+
+Structure loader/action pour les routes API :
+
+```tsx
+// GET → loader
+export async function loader({ request }: LoaderFunctionArgs) {
+  // Récupération de données
+}
+
+// POST/PUT/DELETE → action
+export async function action({ request }: ActionFunctionArgs) {
+  await authentifyUser(request);
+  // Mutation
+}
+```
+
+## Qualité de code
+
+- **Linting**: oxlint (pre-commit)
+- **Type checking**: TypeScript strict
+- **Pre-commit hooks**: husky + lint-staged
+
+## Licence
+
+Projet privé - ECV Digital 2025

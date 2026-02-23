@@ -1,9 +1,4 @@
-export type Teacher = {
-  id: string;
-  userId: string;
-  description?: string;
-  graduation?: Record<string, string>;
-  skill?: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+import { teachers } from "~/server/lib/db/schema-definition/teachers";
+
+export type Teacher = typeof teachers.$inferSelect;
+export type NewTeacher = typeof teachers.$inferInsert;

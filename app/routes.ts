@@ -6,13 +6,19 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
-  route("/api/auth/*", "routes/api/auth/$.tsx"),
+  // API Routes
+  route("/api/auth/*", "routes/_api/auth/route.tsx"),
+  route("/api/courses", "routes/_api/courses/route.tsx"),
+  route("/api/teachers", "routes/_api/teachers/route.tsx"),
 
-  layout("routes/layouts/PublicLayout.tsx", [
-    route("/auth", "routes/auth/page.tsx"),
+  // Public Pages
+  layout("routes/layouts/public-layout.tsx", [
+    route("/auth", "routes/pages/auth/page.tsx"),
   ]),
 
-  layout("routes/layouts/AuthLayout.tsx", [index("routes/home.tsx")]),
-
-  route("*", "routes/$.tsx"),
+  // Authenticated Pages
+  layout("routes/layouts/auth-layout.tsx", [
+    index("routes/pages/dashboard/page.tsx"),
+    route("/courses/create", "routes/pages/courses/create.tsx"),
+  ]),
 ] satisfies RouteConfig;
