@@ -7,14 +7,10 @@ import {
   Select,
   SelectItem,
   Textarea,
-} from '@heroui/react';
-import { categoryValues, levelValues } from '~/types/course';
-import type { CourseFormInput } from './create-course-form';
-
-const categories = categoryValues.map((cat) => ({
-  key: cat,
-  label: cat,
-}));
+} from "@heroui/react";
+import { levelValues } from "~/types/course";
+import { categoryOptions } from "~/server/lib/categories";
+import type { CourseFormInput } from "./create";
 
 const levels = levelValues.map((level) => ({
   key: level,
@@ -37,7 +33,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         name="title"
         placeholder="Ex : Cours de piano jazz"
         type="text"
-        defaultValue={values?.title || ''}
+        defaultValue={values?.title || ""}
         isInvalid={errors.title ? true : undefined}
         errorMessage={errors.title}
       />
@@ -51,7 +47,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Catégorie"
           placeholder="Instrument…"
           name="category"
-          defaultSelectedKey={values?.category || ''}
+          defaultSelectedKey={values?.category || ""}
           isInvalid={errors.category ? true : undefined}
           errorMessage={errors.category}
         >
@@ -91,7 +87,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         name="description"
         isInvalid={errors.description ? true : undefined}
         errorMessage={errors.description}
-        defaultValue={values?.description || ''}
+        defaultValue={values?.description || ""}
       />
 
       <div className="grid grid-cols-2 gap-4">
@@ -117,7 +113,11 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         />
       </div>
 
-      <Button type="submit" color="warning" className="mt-2 h-12 w-full rounded-xl font-semibold tracking-wide">
+      <Button
+        type="submit"
+        color="warning"
+        className="mt-2 h-12 w-full rounded-xl font-semibold tracking-wide"
+      >
         Continuer →
       </Button>
     </div>
