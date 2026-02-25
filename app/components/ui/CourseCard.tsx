@@ -111,6 +111,7 @@ export default function CourseCard({
                 {course.price} €
               </Chip>
             </div>
+            <div className="flex-col gap-2 flex course-end justify-between"></div>
           </CardFooter>
           <Button
             radius="sm"
