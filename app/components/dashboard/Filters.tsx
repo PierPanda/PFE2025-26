@@ -45,7 +45,7 @@ export function Filters({ searchParams, setSearchParams }: FiltersProps) {
   };
 
   return (
-    <div className="flex gap-4 mb-6">
+    <div className="flex gap-4 mb-6 items-center justify-center">
       <Autocomplete
         className="max-w-xs"
         defaultItems={categoryOptions}
