@@ -1,14 +1,17 @@
-import { Link } from 'react-router';
-import type { LoaderFunctionArgs } from 'react-router';
-import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { Link } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
+import { authentifyUser } from "~/server/utils/authentify-user.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await authentifyUser(request, { redirectTo: '/auth' });
+  await authentifyUser(request, { redirectTo: "/auth" });
   return {};
 }
 
 export function meta() {
-  return [{ title: 'Maestroo - Accueil' }, { name: 'description', content: 'Votre musique commence ici.' }];
+  return [
+    { title: "Maestroo - Accueil" },
+    { name: "description", content: "Votre musique commence ici." },
+  ];
 }
 
 export default function Home() {
