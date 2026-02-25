@@ -2,7 +2,7 @@ import CourseForm from "./course-form";
 import { useState } from "react";
 import CourseValidation from "./course-validation";
 import { z } from "zod";
-import { categoryValues, levelValues } from "~/types/course";
+import { levelValues } from "~/types/course";
 import { authentifyUser } from "~/server/utils/authentify-user.server";
 import { useLoaderData, useFetcher, Form } from "react-router";
 import { uuidv7 } from "uuidv7";
@@ -10,6 +10,7 @@ import type { Route } from "./+types/create";
 import { createCourse } from "~/services/courses/create-course.server";
 import { getTeacherByUserId } from "~/services/teachers/get-teacher.server";
 import { createTeacher } from "~/services/teachers/create-teacher.server";
+import { categoryValues } from "~/server/lib/categories";
 
 export const courseFormSchema = z.object({
   title: z.string().min(1, "Le titre est requis."),

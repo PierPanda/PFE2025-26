@@ -13,10 +13,8 @@ import {
 import { getCourses } from "~/services/courses/get-courses.server";
 import { updateCourse } from "~/services/courses/update-course.server";
 import { deleteCourse } from "~/services/courses/delete-course.server";
-import type {
-  CourseCategory,
-  CourseLevel,
-} from "~/server/lib/db/schema-definition/courses";
+import type { CourseLevel } from "~/server/lib/db/schema-definition/courses";
+import type { CourseCategory } from "~/types/course";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);

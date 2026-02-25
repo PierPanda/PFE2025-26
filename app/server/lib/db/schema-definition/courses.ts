@@ -8,35 +8,7 @@ import {
   pgEnum,
 } from "drizzle-orm/pg-core";
 import { teachers } from "./teachers";
-
-export const categoryValues = [
-  "piano",
-  "guitare",
-  "violon",
-  "batterie",
-  "basse",
-  "saxophone",
-  "flûte",
-  "trompette",
-  "violoncelle",
-  "ukulélé",
-  "chant",
-  "chorale",
-  "solfège",
-  "clarinette",
-  "trombone",
-  "hautbois",
-  "harpe",
-  "accordéon",
-  "banjo",
-  "mandoline",
-  "percussions",
-  "dj",
-  "production-musicale",
-  "autre",
-] as const;
-
-export type CourseCategory = (typeof categoryValues)[number];
+import { categoryValues } from "../../categories";
 
 export const category = pgEnum("category", categoryValues);
 

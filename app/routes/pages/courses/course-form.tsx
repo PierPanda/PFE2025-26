@@ -8,13 +8,9 @@ import {
   SelectItem,
   Textarea,
 } from "@heroui/react";
-import { categoryValues, levelValues } from "~/types/course";
+import { levelValues } from "~/types/course";
+import { categoryOptions } from "~/server/lib/categories";
 import type { CourseFormInput } from "./create";
-
-const categories = categoryValues.map((cat) => ({
-  key: cat,
-  label: cat,
-}));
 
 const levels = levelValues.map((level) => ({
   key: level,
@@ -41,16 +37,14 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
       <Autocomplete
         isRequired
         className="max-w-xs"
-        defaultItems={categories}
+        defaultItems={categoryOptions}
         label="Catégorie du cours"
         placeholder="Recherchez une catégorie"
         name="category"
         defaultSelectedKey={values?.category || ""}
       >
         {(item) => (
-          <AutocompleteItem key={item.key} className="capitalize">
-            {item.label}
-          </AutocompleteItem>
+          <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>
         )}
       </Autocomplete>
       <Select
