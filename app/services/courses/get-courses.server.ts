@@ -1,9 +1,9 @@
 import { eq, and } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
 
-import type { CourseLevel, CourseCategory } from "~/types/course";
 import { courses } from "~/server/lib/db/schema";
 import type { GetCoursesResponse } from "../types";
+import type { CourseLevel, CourseCategory } from "~/types/course";
 
 /**
  * Get all courses with optional filters and teacher info
