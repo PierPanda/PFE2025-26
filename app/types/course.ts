@@ -11,5 +11,3 @@ export type CourseFilters = {
   level?: string;
   teacherId?: string;
 };
-
-export { levelValues } from "~/server/lib/db/schema-definition/courses";

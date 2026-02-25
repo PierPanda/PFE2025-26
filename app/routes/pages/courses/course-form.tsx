@@ -8,14 +8,9 @@ import {
   SelectItem,
   Textarea,
 } from "@heroui/react";
-import { levelValues } from "~/types/course";
 import { categoryOptions } from "~/server/lib/categories";
+import { levelOptions } from "~/server/lib/levels";
 import type { CourseFormInput } from "./create";
-
-const levels = levelValues.map((level) => ({
-  key: level,
-  label: level,
-}));
 
 type CourseFormProps = {
   values: CourseFormInput | null;
@@ -55,10 +50,8 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         name="level"
         defaultSelectedKeys={values?.level ? [values.level] : []}
       >
-        {levels.map((levelItem) => (
-          <SelectItem key={levelItem.key} className="capitalize">
-            {levelItem.label}
-          </SelectItem>
+        {levelOptions.map((levelItem) => (
+          <SelectItem key={levelItem.value}>{levelItem.label}</SelectItem>
         ))}
       </Select>
       <Textarea

@@ -9,13 +9,9 @@ import {
 } from "drizzle-orm/pg-core";
 import { teachers } from "./teachers";
 import { categoryValues } from "../../categories";
+import { levelValues } from "../../levels";
 
 export const category = pgEnum("category", categoryValues);
-
-export const levelValues = ["débutant", "intermédiaire", "avancé"] as const;
-
-export type CourseLevel = (typeof levelValues)[number];
-
 export const courseLevel = pgEnum("courseLevel", levelValues);
 
 export const courses = pgTable("courses", {
