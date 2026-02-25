@@ -2,14 +2,10 @@ import { Button, Card, CardFooter, Image, Chip } from "@heroui/react";
 import { InlineIcon } from "@iconify/react";
 
 export default function CourseCard({ course }: { course: any }) {
-  console.log("Course reçue dans CourseCard :", course);
-  //   const { course, teachers } = course;
-  const urlImage = `app/assets/category/${course.category}.jpg`;
-  console.log("course reçues dans TeachercoursesComming :", course);
-  // Section Teacher : Cours à venir
+  const urlImage = `app/assets/categories/${course.category}.jpg`;
 
   return (
-    <li key={course.id} className="shrink-0">
+    <li key={course.id}>
       <Card isFooterBlurred className="border-none" radius="lg">
         <div className="relative">
           <Image
@@ -46,46 +42,32 @@ export default function CourseCard({ course }: { course: any }) {
               />
             </Chip>
           </div>
+          <Chip
+            className="text-tiny text-black bg-white text-center capitalize font-bold max-w-full absolute top-12 left-2 z-30 w-auto"
+            color="default"
+            radius="sm"
+            size="sm"
+            variant="flat"
+          >
+            {course.category}
+          </Chip>
         </div>
         <div className="flex flex-col absolute bottom-2 w-full z-10 right-2 left-2">
-          <p className="text-white font-bold text-2xl ml-4">{course.title}</p>
-          <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden before:rounded-xl rounded-large w-[calc(100%-16px)] px-2 py-2 shadow-small z-10 gap-2">
-            <div className="flex-1 flex flex-col">
-              <p className="text-white text-sm">{course.description}</p>
+          <CardFooter className="before:bg-white/10 border-white/20 border-1 overflow-hidden before:rounded-xl rounded-large w-[calc(100%-16px)] px-2 py-2 shadow-small z-10 gap-2">
+            <div className="flex-col gap-1 flex">
+              <p className="text-white font-bold text-lg">{course.title}</p>
+              <p className="text-white font-medium text-sm">
+                {course.teacherName}
+              </p>
             </div>
-            <div className="flex-col gap-2 flex course-end justify-between">
-              <Chip
-                className="text-tiny text-black bg-white text-center capitalize font-bold max-w-full"
-                color="default"
-                radius="sm"
-                size="sm"
-                variant="flat"
-              >
-                {course.category}
-              </Chip>
-              {/* {!teachers ? (
-                <Button
-                  className="text-tiny text-white bg-black/70 w-20 text-center"
-                  color="default"
-                  radius="sm"
-                  size="sm"
-                  variant="flat"
-                >
-                  Réserver
-                </Button>
-              ) : (
-                <Button
-                  className="text-tiny text-white bg-black/70 w-20 text-center"
-                  color="default"
-                  radius="sm"
-                  size="sm"
-                  variant="flat"
-                >
-                  Modifier
-                </Button>
-              )} */}
-            </div>
+            <div className="flex-col gap-2 flex course-end justify-between"></div>
           </CardFooter>
+          <Button
+            radius="sm"
+            className="mt-2 w-full z-20 bg-white text-black hover:bg-white/90"
+          >
+            Réserver le cours
+          </Button>
         </div>
       </Card>
     </li>
