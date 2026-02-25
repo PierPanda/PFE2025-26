@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { signOut } from "~/lib/auth-client";
 import { useAuth } from "~/hooks/use-auth";
+import { Button } from "@heroui/react";
+import { Icon } from "@iconify/react";
 
 export function UserProfile() {
   const { user, isLoading } = useAuth();
@@ -21,7 +23,7 @@ export function UserProfile() {
   };
 
   if (isLoading) {
-    return <div>Chargement...</div>;
+    return <Icon icon="lucide:loader-circle" className="animate-spin" />;
   }
 
   if (!user) {
@@ -29,25 +31,22 @@ export function UserProfile() {
   }
 
   return (
-    <div className="flex items-center space-x-4 p-4 rounded-lg">
-      {user.image && (
-        <img
-          src={user.image}
-          alt={user.name}
-          className="w-10 h-10 rounded-full"
-        />
-      )}
-      <div className="flex-1">
-        <p className="font-medium text-gray-900">{user.name}</p>
-        <p className="text-sm text-gray-600">{user.email}</p>
-      </div>
-      <button
-        onClick={handleSignOut}
+    <div className="flex items-center space-x-2">
+      <Link to="/profile">
+        <div className="w-10 h-10 rounded-xl text-gray-600 bg-gray-200 flex items-center justify-center hover:opacity-80">
+          <Icon icon="lucide:user" />
+        </div>
+      </Link>
+      <Button
+        variant="flat"
+        color="danger"
+        isIconOnly
+        onPress={handleSignOut}
         disabled={isSigningOut}
-        className="px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+        isLoading={isSigningOut}
       >
-        {isSigningOut ? "Déconnexion..." : "Se déconnecter"}
-      </button>
+        <Icon icon="lucide:log-out" />
+      </Button>
     </div>
   );
 }
