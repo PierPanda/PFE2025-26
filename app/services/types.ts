@@ -1,4 +1,12 @@
-import { user, teachers, learners, courses, availabilities, bookings, ratings } from '~/server/lib/db/schema';
+import {
+  user,
+  teachers,
+  learners,
+  courses,
+  availabilities,
+  bookings,
+  ratings,
+} from "~/server/lib/db/schema";
 
 /**
  * Base models inferred from Drizzle schema using $inferSelect
@@ -46,11 +54,19 @@ export type ServiceResponse<T> = ServiceSuccess<T> | ServiceError;
 /**
  * Specific response types for each service
  */
-export type GetCourseResponse = ServiceResponse<{ course: CourseWithTeacher | null }>;
-export type GetCoursesResponse = ServiceResponse<{ courses: CourseWithTeacher[] }>;
-export type GetCoursesByTeacherResponse = ServiceResponse<{ courses: DbCourse[] }>;
+export type GetCourseResponse = ServiceResponse<{
+  course: CourseWithTeacher | null;
+}>;
+export type GetCoursesResponse = ServiceResponse<{
+  courses: CourseWithTeacher[];
+}>;
+export type GetCoursesByTeacherResponse = ServiceResponse<{
+  courses: DbCourse[];
+}>;
 
-export type GetTeacherResponse = ServiceResponse<{ teacher: TeacherWithUserAndCourses | null }>;
+export type GetTeacherResponse = ServiceResponse<{
+  teacher: TeacherWithUserAndCourses | null;
+}>;
 
 export type CreateCourseResponse = ServiceResponse<{ course: DbCourse }>;
 export type UpdateCourseResponse = ServiceResponse<{ course: DbCourse }>;
