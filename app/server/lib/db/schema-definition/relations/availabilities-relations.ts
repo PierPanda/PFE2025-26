@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
-import { availabilities } from "./availabilities";
-import { teachers } from "./teachers";
-import { bookings } from "./bookings";
+import { availabilities } from "../availabilities";
+import { teachers } from "../teachers";
+import { bookings } from "../bookings";
 
 export const availabilitiesRelations = relations(
   availabilities,
@@ -11,5 +11,5 @@ export const availabilitiesRelations = relations(
       references: [teachers.id],
     }),
     bookings: many(bookings),
-  }),
+  })
 );
