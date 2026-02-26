@@ -1,12 +1,5 @@
-import type { Route } from "./+types/auth-layout";
 import { Outlet } from "react-router";
 import { UserProfile } from "~/components/auth/user-profile";
-import { authentifyUser } from "~/server/utils/authentify-user.server";
-
-export async function loader({ request }: Route.LoaderArgs) {
-  const session = await authentifyUser(request, { redirectTo: "/auth" });
-  return { user: session.user };
-}
 
 export default function AuthLayout() {
   return (

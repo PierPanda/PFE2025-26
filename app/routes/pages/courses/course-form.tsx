@@ -39,7 +39,9 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         defaultSelectedKey={values?.category || ""}
       >
         {(item) => (
-          <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>
+          <AutocompleteItem key={item.value} className="capitalize">
+            {item.label}
+          </AutocompleteItem>
         )}
       </Autocomplete>
       <Select
@@ -51,7 +53,9 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         defaultSelectedKeys={values?.level ? [values.level] : []}
       >
         {levelOptions.map((levelItem) => (
-          <SelectItem key={levelItem.value}>{levelItem.label}</SelectItem>
+          <SelectItem key={levelItem.value} className="capitalize">
+            {levelItem.label}
+          </SelectItem>
         ))}
       </Select>
       <Textarea

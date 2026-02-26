@@ -8,8 +8,8 @@ import {
   pgEnum,
 } from "drizzle-orm/pg-core";
 import { teachers } from "./teachers";
-import { categoryValues } from "../../categories";
-import { levelValues } from "../../levels";
+import { categoryValues } from "~/server/lib/categories";
+import { levelValues } from "~/server/lib/levels";
 
 export const category = pgEnum("category", categoryValues);
 export const courseLevel = pgEnum("courseLevel", levelValues);

@@ -3,6 +3,10 @@ import { courses } from "~/server/lib/db/schema-definition/courses";
 export type Course = typeof courses.$inferSelect;
 export type NewCourse = typeof courses.$inferInsert;
 
+export type CourseWithTeacherName = Course & {
+  teacherName: string;
+};
+
 export type CourseCategory = Course["category"];
 export type CourseLevel = Course["level"];
 

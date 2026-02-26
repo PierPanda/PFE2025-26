@@ -5,7 +5,7 @@ import CourseCard from "~/components/ui/CourseCard";
 import { Filters } from "~/components/dashboard/Filters";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  await authentifyUser(request, { redirectTo: "/auth" });
+  const session = await authentifyUser(request, { redirectTo: "/auth" });
 
   const url = new URL(request.url);
   const category = url.searchParams.get("category") ?? undefined;
@@ -14,9 +14,14 @@ export async function loader({ request }: Route.LoaderArgs) {
   const apiUrl = new URL("/api/courses", request.url);
   if (category) apiUrl.searchParams.append("category", category);
   if (level) apiUrl.searchParams.append("level", level);
-  const result = await fetch(apiUrl).then((res) => res.json());
+  const result = await fetch(apiUrl)
+    .then((res) => res.json())
+    .catch((error) => {
+      console.error("Error fetching courses:", error);
+      return { success: false, courses: [] };
+    });
 
-  return { courses: result.courses };
+  return { user: session.user, courses: result.courses };
 }
 
 export function meta(_args: Route.MetaArgs) {
