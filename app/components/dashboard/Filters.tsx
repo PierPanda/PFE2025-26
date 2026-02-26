@@ -40,7 +40,7 @@ export function Filters({ searchParams, setSearchParams }: FiltersProps) {
   const handleLevelChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     const next = new URLSearchParams(searchParams);
-    if (value) next.set("level", value);
+    if (value && value !== "all") next.set("level", value);
     else next.delete("level");
     setSearchParams(next);
   };
@@ -69,11 +69,14 @@ export function Filters({ searchParams, setSearchParams }: FiltersProps) {
         name="level"
         onChange={handleLevelChange}
       >
-        {levelOptions.map((levelItem: { value: string; label: string }) => (
-          <SelectItem key={levelItem.value} className="capitalize">
-            {levelItem.label}
-          </SelectItem>
-        ))}
+        <SelectItem key="all">Tous les niveaux</SelectItem>
+        <>
+          {levelOptions.map((levelItem: { value: string; label: string }) => (
+            <SelectItem key={levelItem.value} className="capitalize">
+              {levelItem.label}
+            </SelectItem>
+          ))}
+        </>
       </Select>
     </div>
   );
