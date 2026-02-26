@@ -64,7 +64,6 @@ export function Filters({ searchParams, setSearchParams }: FiltersProps) {
         )}
       </Autocomplete>
       <Select
-        isRequired
         className="max-w-xs"
         label="Filtrer par niveau"
         name="level"
