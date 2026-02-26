@@ -1,7 +1,7 @@
 export const levelOptions = [
-  { label: "Débutant", value: "debutant" },
-  { label: "Intermédiaire", value: "intermediaire" },
-  { label: "Avancé", value: "avance" },
+  { label: "débutant", value: "debutant" },
+  { label: "intermédiaire", value: "intermediaire" },
+  { label: "avancé", value: "avance" },
 ] as const;
 
 export const levelValues = levelOptions.map(

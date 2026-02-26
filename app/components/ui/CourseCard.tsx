@@ -1,12 +1,16 @@
 import { Button, Card, CardFooter, Image, Chip } from "@heroui/react";
 import { InlineIcon } from "@iconify/react";
-import type { Course } from "~/types/course";
+import type { CourseWithTeacherName } from "~/types/course";
 
-export default function CourseCard({ course }: { course: Course }) {
-  const urlImage = `app/assets/categories/${course.category}.jpg`;
+export default function CourseCard({
+  course,
+}: {
+  course: CourseWithTeacherName;
+}) {
+  const urlImage = `~/assets/categories/${course.category}.jpg`;
 
   return (
-    <li key={course.id} className="shrink-0">
+    <li key={course.id} className="list-none">
       <Card isFooterBlurred className="border-none" radius="lg">
         <div className="relative">
           <Image

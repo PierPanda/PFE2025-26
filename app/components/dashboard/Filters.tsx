@@ -7,6 +7,7 @@ import {
 import type { Key } from "react";
 import { categoryOptions } from "~/server/lib/categories";
 import { levelOptions } from "~/server/lib/levels";
+import type { ChangeEvent } from "react";
 
 type FiltersProps = {
   searchParams: URLSearchParams;
@@ -36,7 +37,7 @@ export function Filters({ searchParams, setSearchParams }: FiltersProps) {
     setCategoryParam(value);
   };
 
-  const handleLevelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleLevelChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     const next = new URLSearchParams(searchParams);
     if (value) next.set("level", value);
@@ -57,7 +58,9 @@ export function Filters({ searchParams, setSearchParams }: FiltersProps) {
         onSelectionChange={handleCategorySelection}
       >
         {(item) => (
-          <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>
+          <AutocompleteItem key={item.value} className="capitalize">
+            {item.label}
+          </AutocompleteItem>
         )}
       </Autocomplete>
       <Select
@@ -68,7 +71,9 @@ export function Filters({ searchParams, setSearchParams }: FiltersProps) {
         onChange={handleLevelChange}
       >
         {levelOptions.map((levelItem: { value: string; label: string }) => (
-          <SelectItem key={levelItem.value}>{levelItem.label}</SelectItem>
+          <SelectItem key={levelItem.value} className="capitalize">
+            {levelItem.label}
+          </SelectItem>
         ))}
       </Select>
     </div>
