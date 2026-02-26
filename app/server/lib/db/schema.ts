@@ -29,16 +29,16 @@ export {
   userRelations,
   sessionRelations,
   accountRelations,
-} from "./schema-definition/relations/auth-relations";
+} from "./schema-definition/auth-relations";
 
-export { teachersRelations } from "./schema-definition/relations/teachers-relations";
+export { teachersRelations } from "./schema-definition/teachers-relations";
 
-export { learnersRelations } from "./schema-definition/relations/learners-relations";
+export { learnersRelations } from "./schema-definition/learners-relations";
 
-export { coursesRelations } from "./schema-definition/relations/courses-relations";
+export { coursesRelations } from "./schema-definition/courses-relations";
 
-export { availabilitiesRelations } from "./schema-definition/relations/availabilities-relations";
+export { availabilitiesRelations } from "./schema-definition/availabilities-relations";
 
-export { bookingsRelations } from "./schema-definition/relations/bookings-relations";
+export { bookingsRelations } from "./schema-definition/bookings-relations";
 
-export { ratingsRelations } from "./schema-definition/relations/ratings-relations";
+export { ratingsRelations } from "./schema-definition/ratings-relations";
