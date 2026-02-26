@@ -23,3 +23,22 @@ export { courses, category } from "./schema-definition/courses";
 
 // rating schema
 export { ratings } from "./schema-definition/ratings";
+
+// relations
+export {
+  userRelations,
+  sessionRelations,
+  accountRelations,
+} from "./schema-definition/relations/auth-relations";
+
+export { teachersRelations } from "./schema-definition/relations/teachers-relations";
+
+export { learnersRelations } from "./schema-definition/relations/learners-relations";
+
+export { coursesRelations } from "./schema-definition/relations/courses-relations";
+
+export { availabilitiesRelations } from "./schema-definition/relations/availabilities-relations";
+
+export { bookingsRelations } from "./schema-definition/relations/bookings-relations";
+
+export { ratingsRelations } from "./schema-definition/relations/ratings-relations";
