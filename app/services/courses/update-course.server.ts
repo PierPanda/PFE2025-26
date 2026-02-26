@@ -1,17 +1,21 @@
 import { eq, sql } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import * as schema from "~/server/lib/db/schema";
+import { courses } from "~/server/lib/db/schema";
 import type { UpdateCourseInput } from "~/lib/validation";
+import type { UpdateCourseResponse } from "../types";
 
 /**
  * Update an existing course in database
  */
-export async function updateCourse(courseId: string, data: UpdateCourseInput) {
+export async function updateCourse(
+  courseId: string,
+  data: UpdateCourseInput
+): Promise<UpdateCourseResponse> {
   try {
     const [updatedCourse] = await db
-      .update(schema.courses)
+      .update(courses)
       .set({ ...data, updatedAt: sql`NOW()` })
-      .where(eq(schema.courses.id, courseId))
+      .where(eq(courses.id, courseId))
       .returning();
 
     return {

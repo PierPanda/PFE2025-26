@@ -1,13 +1,15 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import * as schema from "~/server/lib/db/schema";
+import { courses } from "~/server/lib/db/schema";
+import type { DeleteCourseResponse } from "../types";
 
 /**
  * Delete a course from database
  */
-export async function deleteCourse(courseId: string) {
+export async function deleteCourse(courseId: string): Promise<DeleteCourseResponse> {
   try {
-    await db.delete(schema.courses).where(eq(schema.courses.id, courseId));
+    await db.delete(courses).where(eq(courses.id, courseId));
+
     return {
       success: true,
       message: "Cours supprimé avec succès.",

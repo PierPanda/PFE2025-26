@@ -1,28 +1,33 @@
 import { eq, and } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import * as schema from "~/server/lib/db/schema";
+import { courses } from "~/server/lib/db/schema";
 import type {
   CourseCategory,
   CourseLevel,
 } from "~/server/lib/db/schema-definition/courses";
+import type { GetCoursesResponse } from "../types";
 
 /**
- * Get all courses with optional filters from database
+ * Get all courses with optional filters and teacher info
  */
 export async function getCourses(
   category?: CourseCategory,
-  level?: CourseLevel,
-) {
+  level?: CourseLevel
+): Promise<GetCoursesResponse> {
   try {
-    const result = await db
-      .select()
-      .from(schema.courses)
-      .where(
-        and(
-          category ? eq(schema.courses.category, category) : undefined,
-          level ? eq(schema.courses.level, level) : undefined,
-        ),
-      );
+    const result = await db.query.courses.findMany({
+      where: and(
+        category ? eq(courses.category, category) : undefined,
+        level ? eq(courses.level, level) : undefined
+      ),
+      with: {
+        teacher: {
+          with: {
+            user: true,
+          },
+        },
+      },
+    });
 
     return {
       success: true,
