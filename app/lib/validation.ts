@@ -6,7 +6,7 @@ import { categoryValues } from "~/server/lib/categories";
  * Schémas de validation communs pour les routes API
  */
 
-export const uuidSchema = z.uuid("ID invalide");
+export const uuidSchema = z.string().uuid("ID invalide");
 
 export const paginationQuerySchema = z.object({
   page: z
