@@ -1,20 +1,21 @@
 import { eq, sql } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import * as schema from "~/server/lib/db/schema";
+import { teachers } from "~/server/lib/db/schema";
 import type { UpdateTeacherInput } from "~/lib/validation";
+import type { UpdateTeacherResponse } from "../types";
 
 /**
  * Update an existing teacher profile in database
  */
 export async function updateTeacher(
   teacherId: string,
-  data: UpdateTeacherInput,
-) {
+  data: UpdateTeacherInput
+): Promise<UpdateTeacherResponse> {
   try {
     const [updatedTeacher] = await db
-      .update(schema.teachers)
+      .update(teachers)
       .set({ ...data, updatedAt: sql`NOW()` })
-      .where(eq(schema.teachers.id, teacherId))
+      .where(eq(teachers.id, teacherId))
       .returning();
 
     return {

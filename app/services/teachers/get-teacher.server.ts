@@ -1,20 +1,24 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import * as schema from "~/server/lib/db/schema";
+import { teachers } from "~/server/lib/db/schema";
+import type { GetTeacherResponse } from "../types";
 
 /**
- * Get a single teacher by ID from database
+ * Get a single teacher by ID with user info and courses
  */
-export async function getTeacher(teacherId: string) {
+export async function getTeacher(teacherId: string): Promise<GetTeacherResponse> {
   try {
-    const result = await db
-      .select()
-      .from(schema.teachers)
-      .where(eq(schema.teachers.id, teacherId));
+    const teacher = await db.query.teachers.findFirst({
+      where: eq(teachers.id, teacherId),
+      with: {
+        user: true,
+        courses: true,
+      },
+    });
 
     return {
       success: true,
-      teacher: result[0] || null,
+      teacher: teacher ?? null,
     };
   } catch (error) {
     console.error("Error fetching teacher:", error);
@@ -27,18 +31,23 @@ export async function getTeacher(teacherId: string) {
 }
 
 /**
- * Get teacher by user ID from database
+ * Get teacher by user ID with user info and courses
  */
-export async function getTeacherByUserId(userId: string) {
+export async function getTeacherByUserId(
+  userId: string
+): Promise<GetTeacherResponse> {
   try {
-    const result = await db
-      .select()
-      .from(schema.teachers)
-      .where(eq(schema.teachers.userId, userId));
+    const teacher = await db.query.teachers.findFirst({
+      where: eq(teachers.userId, userId),
+      with: {
+        user: true,
+        courses: true,
+      },
+    });
 
     return {
       success: true,
-      teacher: result[0] || null,
+      teacher: teacher ?? null,
     };
   } catch (error) {
     console.error("Error fetching teacher by user ID:", error);
