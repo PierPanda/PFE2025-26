@@ -18,6 +18,13 @@ export async function updateCourse(
       .where(eq(courses.id, courseId))
       .returning();
 
+    if (!updatedCourse) {
+      return {
+        success: false,
+        error: "Cours introuvable.",
+      };
+    }
+
     return {
       success: true,
       message: "Cours mis à jour avec succès.",
