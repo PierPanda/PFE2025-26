@@ -18,6 +18,12 @@ export async function updateTeacher(
       .where(eq(teachers.id, teacherId))
       .returning();
 
+    if (!updatedTeacher) {
+      return {
+        success: false,
+        error: "Enseignant introuvable pour l'identifiant fourni.",
+      };
+    }
     return {
       success: true,
       message: "Enseignant mis à jour avec succès.",
