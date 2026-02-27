@@ -24,6 +24,12 @@ export async function updateCourse(
         error: "Cours introuvable.",
       };
     }
+    if (!updatedCourse) {
+      return {
+        success: false,
+        error: "Cours introuvable.",
+      };
+    }
 
     return {
       success: true,
