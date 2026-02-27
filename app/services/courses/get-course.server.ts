@@ -1,20 +1,30 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import * as schema from "~/server/lib/db/schema";
+import { courses } from "~/server/lib/db/schema";
+import type {
+  GetCourseResponse,
+  GetCoursesByTeacherResponse,
+} from "../types";
 
 /**
- * Get a single course by ID from database
+ * Get a single course by ID with teacher and user info
  */
-export async function getCourseById(courseId: string) {
+export async function getCourseById(courseId: string): Promise<GetCourseResponse> {
   try {
-    const result = await db
-      .select()
-      .from(schema.courses)
-      .where(eq(schema.courses.id, courseId));
+    const course = await db.query.courses.findFirst({
+      where: eq(courses.id, courseId),
+      with: {
+        teacher: {
+          with: {
+            user: true,
+          },
+        },
+      },
+    });
 
     return {
       success: true,
-      course: result[0] || null,
+      course: course ?? null,
     };
   } catch (error) {
     console.error("Error fetching course:", error);
@@ -28,12 +38,13 @@ export async function getCourseById(courseId: string) {
 /**
  * Get courses by teacher ID
  */
-export async function getCoursesByTeacher(teacherId: string) {
+export async function getCoursesByTeacher(
+  teacherId: string
+): Promise<GetCoursesByTeacherResponse> {
   try {
-    const result = await db
-      .select()
-      .from(schema.courses)
-      .where(eq(schema.courses.teacherId, teacherId));
+    const result = await db.query.courses.findMany({
+      where: eq(courses.teacherId, teacherId),
+    });
 
     return {
       success: true,

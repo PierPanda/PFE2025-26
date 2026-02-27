@@ -1,13 +1,17 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/server/lib/db/index.server";
-import * as schema from "~/server/lib/db/schema";
+import { teachers } from "~/server/lib/db/schema";
+import type { DeleteTeacherResponse } from "../types";
 
 /**
  * Delete a teacher profile from database
  */
-export async function deleteTeacher(teacherId: string) {
+export async function deleteTeacher(
+  teacherId: string
+): Promise<DeleteTeacherResponse> {
   try {
-    await db.delete(schema.teachers).where(eq(schema.teachers.id, teacherId));
+    await db.delete(teachers).where(eq(teachers.id, teacherId));
+
     return {
       success: true,
       message: "Enseignant supprimé avec succès.",
