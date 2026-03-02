@@ -1,7 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["oxc", "eslint", "import", "typescript", "react", "react-perf"],
-  "jsPlugins": ["./.oxlint/react-import-plugin.js"],
   "ignorePatterns": ["node_modules", "build", ".react-router", "dist"],
   "categories": {
     "correctness": "error",
@@ -25,7 +24,6 @@
     "react/no-string-refs": "error",
     "react/no-unsafe": "error",
     "react/react-in-jsx-scope": "off",
-    "react/void-dom-elements-no-children": "error",
-    "maestroo-react-imports/namespace-only": "warn"
+    "react/void-dom-elements-no-children": "error"
   }
 }
