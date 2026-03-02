@@ -424,6 +424,105 @@ async function seedBookings(
   return created;
 }
 
+async function seedRatings(
+  courses: { courseId: string; teacherId: string }[],
+  learnerIds: { email: string; learnerId: string }[],
+): Promise<number> {
+  console.log("\n=== Creation des notes (ratings) ===\n");
+
+  if (learnerIds.length === 0 || courses.length === 0) {
+    console.log("[SKIP] Pas assez de données pour créer des notes");
+    return 0;
+  }
+
+  const ratingTitles = [
+    "Excellent professeur",
+    "Très bon cours",
+    "Cours informatif",
+    "Recommandé",
+    "Très utile",
+    "Bonne pédagogie",
+    "Professeur patient",
+    "Contenu intéressant",
+  ];
+
+  const ratingDescriptions = [
+    "Un excellent cours, très bien expliqué et adapté à mon niveau.",
+    "Le professeur est très engageant et explique très bien. Vivement recommandé!",
+    "J'ai beaucoup appris pendant ce cours. Merci!",
+    "Cours de qualité avec un très bon professeur.",
+    "Parfait pour débuter. Très constructif et motivant.",
+    "Une belle expérience d'apprentissage.",
+    "Le professeur est attentif aux questions et très professionnel.",
+    "Contenu très complet et bien structuré.",
+    "J'ai vraiment apprécié ce cours. À refaire!",
+    "Excellent rapport qualité-prix.",
+  ];
+
+  let created = 0;
+
+  // Créer des ratings pour certains courses
+  for (let i = 0; i < courses.length; i++) {
+    const course = courses[i];
+
+    // Pour chaque cours, créer 2-4 ratings avec différents learners
+    const numRatings = Math.floor(Math.random() * 3) + 2;
+
+    for (let j = 0; j < numRatings && j < learnerIds.length; j++) {
+      const learnerIdx = (i + j) % learnerIds.length;
+      const learner = learnerIds[learnerIdx];
+
+      // Ne pas créer de rating si le learner est le professeur du cours
+      const courseDetail = await db
+        .select()
+        .from(schema.courses)
+        .where(eq(schema.courses.id, course.courseId))
+        .limit(1);
+
+      if (
+        courseDetail[0]?.teacherId === course.teacherId &&
+        learner.email === "admin@admin.com"
+      ) {
+        continue;
+      }
+
+      const title =
+        ratingTitles[Math.floor(Math.random() * ratingTitles.length)];
+      const description =
+        ratingDescriptions[
+          Math.floor(Math.random() * ratingDescriptions.length)
+        ];
+      const rate = (Math.floor(Math.random() * 5) + 1).toString(); // Note de 1 à 5
+
+      const rating: typeof schema.ratings.$inferInsert = {
+        id: randomUUID(),
+        courseId: course.courseId,
+        learnerId: learner.learnerId,
+        title,
+        description,
+        rate,
+      };
+
+      try {
+        await db.insert(schema.ratings).values(rating);
+        created++;
+      } catch (error) {
+        console.error(
+          "[WARN] Echec de creation de la note",
+          {
+            courseId: rating.courseId,
+            learnerId: rating.learnerId,
+          },
+          error,
+        );
+      }
+    }
+  }
+
+  console.log(`[OK] ${created} notes creees`);
+  return created;
+}
+
 async function seed() {
   console.log("Demarrage du seeding...\n");
 
@@ -441,6 +540,8 @@ async function seed() {
 
   const bookings = await seedBookings(courses, availabilities, learnerIds);
 
+  const ratings = await seedRatings(courses, learnerIds);
+
   console.log("\n=== Résumé ===");
   console.log(`Utilisateurs: ${users.length}`);
   console.log(`Teachers: ${teacherIds.length}`);
@@ -448,6 +549,7 @@ async function seed() {
   console.log(`Cours: ${courses.length}`);
   console.log(`Disponibilites: ${availabilities.length}`);
   console.log(`Reservations: ${bookings}`);
+  console.log(`Notes: ${ratings}`);
 }
 
 seed()
