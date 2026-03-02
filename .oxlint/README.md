@@ -28,8 +28,8 @@ Enforces a consistent React import pattern across the codebase by requiring name
 The plugin is automatically loaded via `.oxlintrc.json` and will:
 
 1. Detect non-namespace React imports
-2. Report errors during linting
-3. Auto-fix issues when running `pnpm lint --fix`
+2. Report warnings during linting
+3. Guide developers to use namespace imports manually
 
 ### Configuration
 
@@ -46,7 +46,7 @@ The plugin is automatically loaded via `.oxlintrc.json` and will:
 
 This plugin uses Oxlint's optimized JS plugin API:
 
-- `defineRule` and `definePlugin` from `oxlint` package
+- `defineRule` and `definePlugin` from `oxlint/plugins-dev` package
 - `createOnce` for better performance (rule is initialized once)
 - Compatible with both Oxlint and ESLint
 - Supports auto-fixing via the `fix` function

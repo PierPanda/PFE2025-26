@@ -2,7 +2,7 @@ import { definePlugin, defineRule } from "oxlint/plugins-dev";
 
 const rule = defineRule({
   meta: {
-    type: "problem",
+    type: "suggestion",
     docs: {
       description:
         'Enforce namespace import for React (import * as React from "react")',
@@ -13,10 +13,7 @@ const rule = defineRule({
         'Use namespace import instead: import * as React from "react"',
       namedImport:
         'Use namespace import instead: import * as React from "react"',
-      noReactImport:
-        'React must be imported as: import * as React from "react"',
     },
-    fixable: "code",
   },
 
   createOnce(context) {
@@ -42,18 +39,6 @@ const rule = defineRule({
           context.report({
             node,
             messageId: "defaultImport",
-            fix(fixer) {
-              const importText = context.sourceCode.getText(node);
-              const isTypeImport = importText.startsWith("import type");
-
-              if (isTypeImport) {
-                return fixer.replaceText(
-                  node,
-                  "import type * as React from 'react';",
-                );
-              }
-              return fixer.replaceText(node, "import * as React from 'react';");
-            },
           });
           return;
         }
@@ -66,18 +51,6 @@ const rule = defineRule({
           context.report({
             node,
             messageId: "namedImport",
-            fix(fixer) {
-              const importText = context.sourceCode.getText(node);
-              const isTypeImport = importText.startsWith("import type");
-
-              if (isTypeImport) {
-                return fixer.replaceText(
-                  node,
-                  "import type * as React from 'react';",
-                );
-              }
-              return fixer.replaceText(node, "import * as React from 'react';");
-            },
           });
         }
       },
