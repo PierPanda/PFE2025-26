@@ -303,6 +303,13 @@ async function seedAvailabilities(
   }
 
   let created = 0;
+  const createdAvailabilities: {
+    id: string;
+    teacherId: string;
+    startTime: Date;
+    endTime: Date;
+  }[] = [];
+
   for (const availability of availabilities) {
     const availabilityId = randomUUID();
     try {
@@ -311,6 +318,10 @@ async function seedAvailabilities(
         ...availability,
       });
       created++;
+      createdAvailabilities.push({
+        id: availabilityId,
+        ...availability,
+      });
     } catch (error) {
       console.error(
         "[WARN] Echec de creation de la disponibilite",
@@ -326,6 +337,91 @@ async function seedAvailabilities(
   }
 
   console.log(`[OK] ${created} disponibilites creees`);
+  return createdAvailabilities;
+}
+
+async function seedBookings(
+  courses: { courseId: string; teacherId: string }[],
+  availabilities: {
+    id: string;
+    teacherId: string;
+    startTime: Date;
+    endTime: Date;
+  }[],
+  learnerIds: { email: string; learnerId: string }[],
+): Promise<number> {
+  console.log("\n=== Creation des reservations (bookings) ===\n");
+
+  if (learnerIds.length === 0) {
+    console.log("[SKIP] Aucun learner disponible pour les reservations");
+    return 0;
+  }
+
+  const statuses: Array<"pending" | "confirmed" | "cancelled"> = [
+    "pending",
+    "confirmed",
+    "cancelled",
+  ];
+  let created = 0;
+
+  // Récupérer les détails des courses pour avoir les prix
+  const courseDetails = await Promise.all(
+    courses.map(async (course) => {
+      const detail = await db
+        .select()
+        .from(schema.courses)
+        .where(eq(schema.courses.id, course.courseId))
+        .limit(1);
+      return { ...course, ...detail[0] };
+    }),
+  );
+
+  // Créer des bookings pour chaque combination de cours et créneau disponible
+  for (let i = 0; i < courseDetails.length; i++) {
+    const courseDetail = courseDetails[i];
+
+    // Prendre les disponibilités du professeur du cours
+    const teacherAvailabilities = availabilities.filter(
+      (a) => a.teacherId === courseDetail.teacherId,
+    );
+
+    // Pour chaque disponibilité, créer des réservations avec différents learners
+    for (let j = 0; j < teacherAvailabilities.length && j < 3; j++) {
+      const availability = teacherAvailabilities[j];
+      const learnerIdx = (i + j) % learnerIds.length; // Distribuer sur les learners
+      const learner = learnerIds[learnerIdx];
+
+      const booking: typeof schema.bookings.$inferInsert = {
+        id: randomUUID(),
+        courseId: courseDetail.courseId,
+        availabilityId: availability.id,
+        learnerId: learner.learnerId,
+        startTime: new Date(availability.startTime),
+        endTime: new Date(availability.endTime),
+        priceAtBooking: courseDetail.price,
+        status: statuses[Math.floor(Math.random() * statuses.length)],
+        paymentIntentId: Math.random() > 0.3 ? `pi_${randomUUID()}` : undefined,
+      };
+
+      try {
+        await db.insert(schema.bookings).values(booking);
+        created++;
+      } catch (error) {
+        console.error(
+          "[WARN] Echec de creation du booking",
+          {
+            courseId: booking.courseId,
+            learnerId: booking.learnerId,
+            availabilityId: booking.availabilityId,
+          },
+          error,
+        );
+      }
+    }
+  }
+
+  console.log(`[OK] ${created} reservations creees`);
+  return created;
 }
 
 async function seed() {
@@ -339,14 +435,19 @@ async function seed() {
 
   const { teacherIds, learnerIds } = await seedTeachersAndLearners(users);
 
-  await seedCourses(teacherIds);
+  const courses = await seedCourses(teacherIds);
 
-  await seedAvailabilities(teacherIds);
+  const availabilities = await seedAvailabilities(teacherIds);
+
+  const bookings = await seedBookings(courses, availabilities, learnerIds);
 
   console.log("\n=== Résumé ===");
   console.log(`Utilisateurs: ${users.length}`);
   console.log(`Teachers: ${teacherIds.length}`);
   console.log(`Learners: ${learnerIds.length}`);
+  console.log(`Cours: ${courses.length}`);
+  console.log(`Disponibilites: ${availabilities.length}`);
+  console.log(`Reservations: ${bookings}`);
 }
 
 seed()
