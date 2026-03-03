@@ -166,7 +166,7 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             "Cours pour débutants. Apprenez les bases du piano: posture, lecture de notes, premiers morceaux.",
           duration: 60,
-          level: "débutant" as const,
+          level: "debutant" as const,
           price: "35.00",
           category: "piano" as const,
           isPublished: true,
@@ -176,7 +176,7 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             "Perfectionnez votre technique pianistique. Travail sur les gammes, arpèges et morceaux classiques.",
           duration: 60,
-          level: "intermédiaire" as const,
+          level: "intermediaire" as const,
           price: "45.00",
           category: "piano" as const,
           isPublished: true,
@@ -186,7 +186,7 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             "Premiers pas à la guitare: accords de base, rythmes simples, chansons populaires.",
           duration: 45,
-          level: "débutant" as const,
+          level: "debutant" as const,
           price: "30.00",
           category: "guitare" as const,
           isPublished: true,
@@ -201,7 +201,7 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             "Maîtrisez les rudiments de la batterie: coordination, rythmes de base, fills simples.",
           duration: 60,
-          level: "débutant" as const,
+          level: "debutant" as const,
           price: "40.00",
           category: "batterie" as const,
           isPublished: true,
@@ -211,7 +211,7 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             "Développez votre voix: technique vocale, respiration, interprétation.",
           duration: 45,
-          level: "débutant" as const,
+          level: "debutant" as const,
           price: "38.00",
           category: "chant" as const,
           isPublished: true,
