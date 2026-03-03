@@ -24,7 +24,7 @@ export default function CourseValidation({ values, createCourse, onBack }: Cours
         {fields.map(({ label, value }) => (
           <div key={label} className="flex items-start justify-between border-b border-zinc-800 py-3 last:border-0">
             <span className="w-24 shrink-0 text-sm text-zinc-500">{label}</span>
-            <span className="text-right text-sm capitalize text-zinc-100">{value}</span>
+            <span className="text-right text-sm text-zinc-900">{value}</span>
           </div>
         ))}
       </div>
