@@ -65,11 +65,6 @@ export function Filters({
     setSearchParams(next);
   };
 
-  console.log("Selected filters:", {
-    minPrice,
-    maxPrice,
-  });
-
   return (
     <div className="flex gap-4 mb-6 items-center justify-center">
       <Autocomplete
