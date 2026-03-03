@@ -1,48 +1,58 @@
-import { Input, NumberInput, Button } from "@heroui/react";
-import type { CourseFormInput } from "./create";
+import { Button } from '@heroui/react';
+import type { CourseFormInput } from './create-course-form';
+import { formatPrice, formatDuration } from '~/lib/utils';
 
 type CourseValidationProps = {
   values: CourseFormInput;
   createCourse: (published: boolean) => void;
+  onBack: () => void;
 };
 
-export default function CourseValidation({
-  values,
-  createCourse,
-}: CourseValidationProps) {
+export default function CourseValidation({ values, createCourse, onBack }: CourseValidationProps) {
+  const fields = [
+    { label: 'Titre', value: values.title },
+    { label: 'Catégorie', value: values.category },
+    { label: 'Niveau', value: values.level },
+    { label: 'Description', value: values.description },
+    { label: 'Prix', value: formatPrice(values.price) },
+    { label: 'Durée', value: formatDuration(values.duration) },
+  ];
+
   return (
-    <>
-      <h1>Validation</h1>
-      <Input label="Titre du cours" value={values.title || ""} readOnly />
-      <Input
-        label="Catégorie du cours"
-        value={values.category || ""}
-        readOnly
-      />
-      <Input label="Niveau du cours" value={values.level || ""} readOnly />
-      <Input label="Description" value={values.description || ""} readOnly />
-      <Input label="Prix du cours (€)" value={values.price || "0"} readOnly />
-      <NumberInput
-        label="Durée du cours (minutes)"
-        value={values.duration || 0}
-        readOnly
-      />
-      <div>
+    <div className="flex flex-col gap-6">
+      <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 px-5 py-1">
+        {fields.map(({ label, value }) => (
+          <div key={label} className="flex items-start justify-between border-b border-zinc-800 py-3 last:border-0">
+            <span className="w-24 shrink-0 text-sm text-zinc-500">{label}</span>
+            <span className="text-right text-sm capitalize text-zinc-100">{value}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-3">
         <Button
           type="button"
-          variant="bordered"
+          color="warning"
+          className="h-12 w-full rounded-xl font-bold"
           onPress={() => createCourse(true)}
         >
           Publier le cours
         </Button>
         <Button
           type="button"
-          variant="bordered"
+          className="h-12 w-full rounded-xl bg-brand-secondary font-semibold text-white"
           onPress={() => createCourse(false)}
         >
-          Enregistrer le cours en brouillon
+          Enregistrer en brouillon
         </Button>
+        <button
+          type="button"
+          onClick={onBack}
+          className="mt-1 text-center text-sm text-zinc-500 transition-colors hover:text-white"
+        >
+          ← Modifier les informations
+        </button>
       </div>
-    </>
+    </div>
   );
 }

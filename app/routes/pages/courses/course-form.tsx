@@ -7,9 +7,9 @@ import {
   Select,
   SelectItem,
   Textarea,
-} from "@heroui/react";
-import { categoryValues, levelValues } from "~/types/course";
-import type { CourseFormInput } from "./create";
+} from '@heroui/react';
+import { categoryValues, levelValues } from '~/types/course';
+import type { CourseFormInput } from './create-course-form';
 
 const categories = categoryValues.map((cat) => ({
   key: cat,
@@ -28,72 +28,89 @@ type CourseFormProps = {
 
 export default function CourseForm({ values, errors }: CourseFormProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       <Input
         isRequired
-        errorMessage={errors.title || "Veuillez renseigner un titre"}
+        color="warning"
+        variant="bordered"
         label="Titre du cours"
         name="title"
-        placeholder="Cours de piano argentin"
+        placeholder="Ex : Cours de piano jazz"
         type="text"
-        defaultValue={values?.title || ""}
+        defaultValue={values?.title || ''}
+        errorMessage={errors.title}
       />
-      <Autocomplete
-        isRequired
-        className="max-w-xs"
-        defaultItems={categories}
-        label="Catégorie du cours"
-        placeholder="Recherchez une catégorie"
-        name="category"
-        defaultSelectedKey={values?.category || ""}
-      >
-        {(item) => (
-          <AutocompleteItem key={item.key} className="capitalize">
-            {item.label}
-          </AutocompleteItem>
-        )}
-      </Autocomplete>
-      <Select
-        isRequired
-        className="max-w-xs"
-        label="Niveau du cours"
-        placeholder="Selectionne le niveau du cours"
-        name="level"
-        defaultSelectedKeys={values?.level ? [values.level] : []}
-      >
-        {levels.map((levelItem) => (
-          <SelectItem key={levelItem.key} className="capitalize">
-            {levelItem.label}
-          </SelectItem>
-        ))}
-      </Select>
+
+      <div className="grid grid-cols-2 gap-4">
+        <Autocomplete
+          isRequired
+          color="warning"
+          variant="bordered"
+          defaultItems={categories}
+          label="Catégorie"
+          placeholder="Instrument…"
+          name="category"
+          defaultSelectedKey={values?.category || ''}
+        >
+          {(item) => (
+            <AutocompleteItem key={item.key} className="capitalize">
+              {item.label}
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+
+        <Select
+          isRequired
+          color="warning"
+          variant="bordered"
+          label="Niveau"
+          placeholder="Choisir…"
+          name="level"
+          defaultSelectedKeys={values?.level ? [values.level] : []}
+        >
+          {levels.map((levelItem) => (
+            <SelectItem key={levelItem.key} className="capitalize">
+              {levelItem.label}
+            </SelectItem>
+          ))}
+        </Select>
+      </div>
+
       <Textarea
         isRequired
-        className="max-w-xs"
+        color="warning"
+        variant="bordered"
+        minRows={3}
         label="Description"
-        placeholder="Écrire une courte description"
+        placeholder="Décrivez votre cours en quelques mots…"
         name="description"
-        errorMessage={
-          errors.description || "Veuillez renseigner une description"
-        }
-        defaultValue={values?.description || ""}
+        errorMessage={errors.description}
+        defaultValue={values?.description || ''}
       />
-      <NumberInput
-        isRequired
-        errorMessage={errors.price || "Veuillez renseigner un prix valide"}
-        label="Prix du cours"
-        name="price"
-        placeholder="Prix du cours en euros"
-      />
-      <NumberInput
-        isRequired
-        errorMessage={errors.duration || "Veuillez renseigner une durée valide"}
-        label="Durée du cours"
-        name="duration"
-        placeholder="Durée du cours en minutes"
-      />
-      <Button type="submit" variant="solid">
-        Valider les données
+
+      <div className="grid grid-cols-2 gap-4">
+        <NumberInput
+          isRequired
+          color="warning"
+          variant="bordered"
+          label="Prix (€)"
+          name="price"
+          placeholder="0"
+          errorMessage={errors.price}
+        />
+        <NumberInput
+          isRequired
+          color="warning"
+          variant="bordered"
+          label="Durée (min)"
+          name="duration"
+          placeholder="60"
+          errorMessage={errors.duration}
+        />
+      </div>
+
+      <Button type="submit" color="warning" className="mt-2 h-12 w-full rounded-xl font-semibold tracking-wide">
+        Continuer →
       </Button>
     </div>
   );
