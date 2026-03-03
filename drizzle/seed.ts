@@ -4,6 +4,8 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from '~/server/lib/db/schema';
 import { auth } from '~/auth.server';
 import { ADMIN_USER, SEED_USERS } from './seed.config';
+import { randomUUID } from 'crypto';
+import { eq } from 'drizzle-orm';
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
@@ -18,7 +20,7 @@ const db = drizzle(client, { schema });
 const allUsers = [ADMIN_USER, ...SEED_USERS];
 const shouldReset = process.argv.includes('--reset');
 
-async function resetUsers() {
+async function resetDatabase() {
   console.log('Purge des tables...');
   await db.delete(schema.session);
   await db.delete(schema.account);
@@ -27,7 +29,7 @@ async function resetUsers() {
   console.log('Tables purgees.\n');
 }
 
-async function seed() {
+async function seedUsers() {
   console.log('Demarrage du seeding...\n');
 
   const createdUsers: { email: string; id: string }[] = [];
@@ -68,16 +70,14 @@ async function seed() {
 }
 
 async function seedTeachersAndLearners(users: { email: string; id: string }[]) {
-  console.log("\n=== Creation des profils teachers/learners ===\n");
+  console.log('\n=== Creation des profils teachers/learners ===\n');
 
   const teacherIds: { email: string; teacherId: string }[] = [];
   const learnerIds: { email: string; learnerId: string }[] = [];
 
   for (const user of users) {
-    const isTeacher =
-      user.email === "demo@demo.com" || user.email === "admin@admin.com";
-    const isLearner =
-      user.email === "test@test.com" || user.email === "admin@admin.com";
+    const isTeacher = user.email === 'demo@demo.com' || user.email === 'admin@admin.com';
+    const isLearner = user.email === 'test@test.com' || user.email === 'admin@admin.com';
 
     if (isTeacher) {
       const existingTeacher = await db
@@ -92,17 +92,14 @@ async function seedTeachersAndLearners(users: { email: string; id: string }[]) {
           id: teacherId,
           userId: user.id,
           description:
-            user.email === "demo@demo.com"
+            user.email === 'demo@demo.com'
               ? "Professeur de musique passionné avec 10 ans d'expérience"
-              : "Administrateur et professeur polyvalent",
-          skills:
-            user.email === "demo@demo.com"
-              ? "Piano, Guitare, Solfège"
-              : "Piano, Guitare, Batterie, Chant",
+              : 'Administrateur et professeur polyvalent',
+          skills: user.email === 'demo@demo.com' ? 'Piano, Guitare, Solfège' : 'Piano, Guitare, Batterie, Chant',
           graduations: {
             diplomas: [
-              { name: "Conservatoire National", year: 2015 },
-              { name: "Master en Musicologie", year: 2017 },
+              { name: 'Conservatoire National', year: 2015 },
+              { name: 'Master en Musicologie', year: 2017 },
             ],
           },
         });
@@ -146,65 +143,62 @@ async function seedTeachersAndLearners(users: { email: string; id: string }[]) {
 }
 
 async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
-  console.log("\n=== Creation des cours ===\n");
+  console.log('\n=== Creation des cours ===\n');
 
   const courseData = [
     {
-      teacherEmail: "demo@demo.com",
+      teacherEmail: 'demo@demo.com',
       courses: [
         {
-          title: "Initiation au Piano",
+          title: 'Initiation au Piano',
           description:
-            "Cours pour débutants. Apprenez les bases du piano: posture, lecture de notes, premiers morceaux.",
+            'Cours pour débutants. Apprenez les bases du piano: posture, lecture de notes, premiers morceaux.',
           duration: 60,
-          level: "débutant" as const,
-          price: "35.00",
-          category: "piano" as const,
+          level: 'débutant' as const,
+          price: '35.00',
+          category: 'piano' as const,
           isPublished: true,
         },
         {
-          title: "Piano Intermédiaire",
+          title: 'Piano Intermédiaire',
           description:
-            "Perfectionnez votre technique pianistique. Travail sur les gammes, arpèges et morceaux classiques.",
+            'Perfectionnez votre technique pianistique. Travail sur les gammes, arpèges et morceaux classiques.',
           duration: 60,
-          level: "intermédiaire" as const,
-          price: "45.00",
-          category: "piano" as const,
+          level: 'intermédiaire' as const,
+          price: '45.00',
+          category: 'piano' as const,
           isPublished: true,
         },
         {
-          title: "Guitare Acoustique Débutant",
-          description:
-            "Premiers pas à la guitare: accords de base, rythmes simples, chansons populaires.",
+          title: 'Guitare Acoustique Débutant',
+          description: 'Premiers pas à la guitare: accords de base, rythmes simples, chansons populaires.',
           duration: 45,
-          level: "débutant" as const,
-          price: "30.00",
-          category: "guitare" as const,
+          level: 'débutant' as const,
+          price: '30.00',
+          category: 'guitare' as const,
           isPublished: true,
         },
       ],
     },
     {
-      teacherEmail: "admin@admin.com",
+      teacherEmail: 'admin@admin.com',
       courses: [
         {
-          title: "Batterie - Les Fondamentaux",
-          description:
-            "Maîtrisez les rudiments de la batterie: coordination, rythmes de base, fills simples.",
+          title: 'Batterie - Les Fondamentaux',
+          description: 'Maîtrisez les rudiments de la batterie: coordination, rythmes de base, fills simples.',
           duration: 60,
-          level: "débutant" as const,
-          price: "40.00",
-          category: "batterie" as const,
+          level: 'débutant' as const,
+          price: '40.00',
+          category: 'batterie' as const,
           isPublished: true,
         },
         {
-          title: "Cours de Chant",
-          description:
-            "Développez votre voix: technique vocale, respiration, interprétation.",
+          title: 'Cours de Chant',
+          description: 'Développez votre voix: technique vocale, respiration, interprétation.',
           duration: 45,
-          level: "débutant" as const,
-          price: "38.00",
-          category: "chant" as const,
+          level: 'débutant' as const,
+          price: '38.00',
+          category: 'chant' as const,
           isPublished: true,
         },
       ],
@@ -214,9 +208,7 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
   const createdCourses: { courseId: string; teacherId: string }[] = [];
 
   for (const teacherData of courseData) {
-    const teacher = teacherIds.find(
-      (t) => t.email === teacherData.teacherEmail,
-    );
+    const teacher = teacherIds.find((t) => t.email === teacherData.teacherEmail);
     if (!teacher) {
       console.log(`[SKIP] Teacher ${teacherData.teacherEmail} non trouvé`);
       continue;
@@ -251,10 +243,8 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
   return createdCourses;
 }
 
-async function seedAvailabilities(
-  teacherIds: { email: string; teacherId: string }[],
-) {
-  console.log("\n=== Creation des disponibilites ===\n");
+async function seedAvailabilities(teacherIds: { email: string; teacherId: string }[]) {
+  console.log('\n=== Creation des disponibilites ===\n');
 
   const now = new Date();
   const availabilities: {
@@ -315,7 +305,7 @@ async function seedAvailabilities(
       });
     } catch (error) {
       console.error(
-        "[WARN] Echec de creation de la disponibilite",
+        '[WARN] Echec de creation de la disponibilite',
         {
           availabilityId,
           teacherId: availability.teacherId,
@@ -341,28 +331,20 @@ async function seedBookings(
   }[],
   learnerIds: { email: string; learnerId: string }[],
 ): Promise<number> {
-  console.log("\n=== Creation des reservations (bookings) ===\n");
+  console.log('\n=== Creation des reservations (bookings) ===\n');
 
   if (learnerIds.length === 0) {
-    console.log("[SKIP] Aucun learner disponible pour les reservations");
+    console.log('[SKIP] Aucun learner disponible pour les reservations');
     return 0;
   }
 
-  const statuses: Array<"pending" | "confirmed" | "cancelled"> = [
-    "pending",
-    "confirmed",
-    "cancelled",
-  ];
+  const statuses: Array<'pending' | 'confirmed' | 'cancelled'> = ['pending', 'confirmed', 'cancelled'];
   let created = 0;
 
   // Récupérer les détails des courses pour avoir les prix
   const courseDetails = await Promise.all(
     courses.map(async (course) => {
-      const detail = await db
-        .select()
-        .from(schema.courses)
-        .where(eq(schema.courses.id, course.courseId))
-        .limit(1);
+      const detail = await db.select().from(schema.courses).where(eq(schema.courses.id, course.courseId)).limit(1);
       return { ...course, ...detail[0] };
     }),
   );
@@ -372,9 +354,7 @@ async function seedBookings(
     const courseDetail = courseDetails[i];
 
     // Prendre les disponibilités du professeur du cours
-    const teacherAvailabilities = availabilities.filter(
-      (a) => a.teacherId === courseDetail.teacherId,
-    );
+    const teacherAvailabilities = availabilities.filter((a) => a.teacherId === courseDetail.teacherId);
 
     // Pour chaque disponibilité, créer des réservations avec différents learners
     for (let j = 0; j < teacherAvailabilities.length && j < 3; j++) {
@@ -399,7 +379,7 @@ async function seedBookings(
         created++;
       } catch (error) {
         console.error(
-          "[WARN] Echec de creation du booking",
+          '[WARN] Echec de creation du booking',
           {
             courseId: booking.courseId,
             learnerId: booking.learnerId,
@@ -419,35 +399,35 @@ async function seedRatings(
   courses: { courseId: string; teacherId: string }[],
   learnerIds: { email: string; learnerId: string }[],
 ): Promise<number> {
-  console.log("\n=== Creation des notes (ratings) ===\n");
+  console.log('\n=== Creation des notes (ratings) ===\n');
 
   if (learnerIds.length === 0 || courses.length === 0) {
-    console.log("[SKIP] Pas assez de données pour créer des notes");
+    console.log('[SKIP] Pas assez de données pour créer des notes');
     return 0;
   }
 
   const ratingTitles = [
-    "Excellent professeur",
-    "Très bon cours",
-    "Cours informatif",
-    "Recommandé",
-    "Très utile",
-    "Bonne pédagogie",
-    "Professeur patient",
-    "Contenu intéressant",
+    'Excellent professeur',
+    'Très bon cours',
+    'Cours informatif',
+    'Recommandé',
+    'Très utile',
+    'Bonne pédagogie',
+    'Professeur patient',
+    'Contenu intéressant',
   ];
 
   const ratingDescriptions = [
-    "Un excellent cours, très bien expliqué et adapté à mon niveau.",
-    "Le professeur est très engageant et explique très bien. Vivement recommandé!",
+    'Un excellent cours, très bien expliqué et adapté à mon niveau.',
+    'Le professeur est très engageant et explique très bien. Vivement recommandé!',
     "J'ai beaucoup appris pendant ce cours. Merci!",
-    "Cours de qualité avec un très bon professeur.",
-    "Parfait pour débuter. Très constructif et motivant.",
+    'Cours de qualité avec un très bon professeur.',
+    'Parfait pour débuter. Très constructif et motivant.',
     "Une belle expérience d'apprentissage.",
-    "Le professeur est attentif aux questions et très professionnel.",
-    "Contenu très complet et bien structuré.",
+    'Le professeur est attentif aux questions et très professionnel.',
+    'Contenu très complet et bien structuré.',
     "J'ai vraiment apprécié ce cours. À refaire!",
-    "Excellent rapport qualité-prix.",
+    'Excellent rapport qualité-prix.',
   ];
 
   let created = 0;
@@ -470,19 +450,12 @@ async function seedRatings(
         .where(eq(schema.courses.id, course.courseId))
         .limit(1);
 
-      if (
-        courseDetail[0]?.teacherId === course.teacherId &&
-        learner.email === "admin@admin.com"
-      ) {
+      if (courseDetail[0]?.teacherId === course.teacherId && learner.email === 'admin@admin.com') {
         continue;
       }
 
-      const title =
-        ratingTitles[Math.floor(Math.random() * ratingTitles.length)];
-      const description =
-        ratingDescriptions[
-          Math.floor(Math.random() * ratingDescriptions.length)
-        ];
+      const title = ratingTitles[Math.floor(Math.random() * ratingTitles.length)];
+      const description = ratingDescriptions[Math.floor(Math.random() * ratingDescriptions.length)];
       const rate = (Math.floor(Math.random() * 5) + 1).toString(); // Note de 1 à 5
 
       const rating: typeof schema.ratings.$inferInsert = {
@@ -499,7 +472,7 @@ async function seedRatings(
         created++;
       } catch (error) {
         console.error(
-          "[WARN] Echec de creation de la note",
+          '[WARN] Echec de creation de la note',
           {
             courseId: rating.courseId,
             learnerId: rating.learnerId,
@@ -515,7 +488,7 @@ async function seedRatings(
 }
 
 async function seed() {
-  console.log("Demarrage du seeding...\n");
+  console.log('Demarrage du seeding...\n');
 
   if (shouldReset) {
     await resetDatabase();
@@ -533,7 +506,7 @@ async function seed() {
 
   const ratings = await seedRatings(courses, learnerIds);
 
-  console.log("\n=== Résumé ===");
+  console.log('\n=== Résumé ===');
   console.log(`Utilisateurs: ${users.length}`);
   console.log(`Teachers: ${teacherIds.length}`);
   console.log(`Learners: ${learnerIds.length}`);

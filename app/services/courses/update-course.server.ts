@@ -21,12 +21,6 @@ export async function updateCourse(courseId: string, data: UpdateCourseInput): P
         error: 'Cours introuvable.',
       };
     }
-    if (!updatedCourse) {
-      return {
-        success: false,
-        error: 'Cours introuvable.',
-      };
-    }
 
     return {
       success: true,
