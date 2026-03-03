@@ -4,7 +4,6 @@ import type { CourseWithTeacher } from "~/services/types";
 
 export default function CourseCard({ course }: { course: CourseWithTeacher }) {
   const urlImage = `app/assets/categories/${course.category}.jpg`;
-  console.log(course);
   return (
     <li key={course.id} className="shrink-0">
       <Card
