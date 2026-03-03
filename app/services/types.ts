@@ -54,11 +54,20 @@ export type ServiceResponse<T> = ServiceSuccess<T> | ServiceError;
 /**
  * Specific response types for each service
  */
-export type GetCourseResponse = ServiceResponse<{ course: CourseWithTeacher | null }>;
-export type GetCoursesResponse = ServiceResponse<{ courses: CourseWithTeacher[] }>;
-export type GetCoursesByTeacherResponse = ServiceResponse<{ courses: DbCourse[] }>;
+export type GetCourseResponse = ServiceResponse<{
+  course: CourseWithTeacher | null;
+}>;
+export type GetCoursesResponse = ServiceResponse<{
+  courses: CourseWithTeacher[];
+  filters?: { minPrice: number; maxPrice: number };
+}>;
+export type GetCoursesByTeacherResponse = ServiceResponse<{
+  courses: DbCourse[];
+}>;
 
-export type GetTeacherResponse = ServiceResponse<{ teacher: TeacherWithUserAndCourses | null }>;
+export type GetTeacherResponse = ServiceResponse<{
+  teacher: TeacherWithUserAndCourses | null;
+}>;
 
 export type CreateCourseResponse = ServiceResponse<{ course: DbCourse }>;
 export type UpdateCourseResponse = ServiceResponse<{ course: DbCourse }>;
