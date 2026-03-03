@@ -38,6 +38,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         placeholder="Ex : Cours de piano jazz"
         type="text"
         defaultValue={values?.title || ''}
+        isInvalid={!!errors.title}
         errorMessage={errors.title}
       />
 
@@ -84,6 +85,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         label="Description"
         placeholder="Décrivez votre cours en quelques mots…"
         name="description"
+        isInvalid={!!errors.description}
         errorMessage={errors.description}
         defaultValue={values?.description || ''}
       />
@@ -96,6 +98,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Prix (€)"
           name="price"
           placeholder="0"
+          isInvalid={!!errors.price}
           errorMessage={errors.price}
         />
         <NumberInput
@@ -105,6 +108,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Durée (min)"
           name="duration"
           placeholder="60"
+          isInvalid={!!errors.duration}
           errorMessage={errors.duration}
         />
       </div>

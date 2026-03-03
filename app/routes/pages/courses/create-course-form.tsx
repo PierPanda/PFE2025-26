@@ -64,6 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function CreateCourse() {
   const [submitted, setSubmitted] = useState<CourseFormInput | null>(null);
   const [formValidated, setFormValidated] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const { teacher } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
 
@@ -74,9 +75,11 @@ export default function CreateCourse() {
 
     const dataParsed = courseFormSchema.safeParse(formData);
     if (!dataParsed.success) {
-      console.log('Validation errors:', dataParsed.error);
+      const fieldErrors = dataParsed.error.flatten().fieldErrors;
+      setFormErrors(Object.fromEntries(Object.entries(fieldErrors).map(([key, msgs]) => [key, msgs?.[0] ?? ''])));
       return;
     }
+    setFormErrors({});
     setSubmitted(dataParsed.data);
     setFormValidated(true);
   };
@@ -147,7 +150,7 @@ export default function CreateCourse() {
         {/* Carte formulaire */}
         <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-lg shadow-black/5">
           <Form className="w-full" onSubmit={onSubmit}>
-            {!formValidated && <CourseForm values={submitted} errors={{}} />}
+            {!formValidated && <CourseForm values={submitted} errors={formErrors} />}
             {formValidated && submitted && (
               <CourseValidation
                 values={submitted}
