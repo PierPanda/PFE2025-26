@@ -20,7 +20,7 @@ export default function CourseValidation({ values, createCourse, onBack }: Cours
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 px-5 py-1">
+      <div className="rounded-xl border border-brand/20 bg-brand/10 px-5 py-1">
         {fields.map(({ label, value }) => (
           <div key={label} className="flex items-start justify-between border-b border-zinc-800 py-3 last:border-0">
             <span className="w-24 shrink-0 text-sm text-zinc-500">{label}</span>

@@ -3,8 +3,8 @@ import type { LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await authentifyUser(request, { redirectTo: '/auth' });
-  return { user: session.user };
+  await authentifyUser(request, { redirectTo: '/auth' });
+  return {};
 }
 
 export function meta() {

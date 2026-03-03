@@ -1,8 +1,6 @@
 import CourseForm from './course-form';
 import { useState } from 'react';
 import CourseValidation from './course-validation';
-import { z } from 'zod';
-import { categoryValues, levelValues } from '~/types/course';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { useLoaderData, useFetcher, Form } from 'react-router';
 import type { LoaderFunctionArgs, ActionFunctionArgs } from 'react-router';
@@ -11,36 +9,9 @@ import { createCourse } from '~/services/courses/create-course.server';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
 import { createTeacher } from '~/services/teachers/create-teacher.server';
 import { cn } from '~/lib/utils';
-
-export const courseFormSchema = z.object({
-  title: z.string().min(1, 'Le titre est requis.'),
-  description: z.string().min(1, 'La description est requise.'),
-  duration: z.coerce.number().min(1, 'La durée est requise.'),
-  level: z.enum(levelValues),
-  price: z.coerce
-    .number()
-    .min(0, 'Le prix doit être supérieur ou égal à 0.')
-    .transform((val: { toString: () => any }) => val.toString()),
-  category: z.enum(categoryValues),
-});
-
-export const createCourseSchema = z.object({
-  id: z.uuid("L'ID est requis."),
-  teacherId: z.string().min(1, "L'ID enseignant est requis."),
-  title: z.string().min(1, 'Le titre est requis.'),
-  description: z.string().min(1, 'La description est requise.'),
-  duration: z.coerce.number().min(1, 'La durée est requise.'),
-  level: z.enum(levelValues),
-  price: z.coerce
-    .number()
-    .min(0, 'Le prix doit être supérieur ou égal à 0.')
-    .transform((val: { toString: () => any }) => val.toString()),
-  isPublished: z.coerce.boolean().default(false),
-  category: z.enum(categoryValues),
-});
-
-export type CourseFormInput = z.infer<typeof courseFormSchema>;
-export type CreateCourseInput = z.infer<typeof createCourseSchema>;
+import { courseFormSchema, createCourseSchema } from '~/lib/validation';
+import type { CourseFormInput, CreateCourseInput } from '~/lib/validation';
+export type { CourseFormInput, CreateCourseInput };
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
@@ -129,26 +100,24 @@ export default function CreateCourse() {
   };
 
   return (
-    <div className="dark min-h-screen bg-black px-4 py-14">
+    <div className="min-h-screen bg-brand/10 px-4 py-14">
       <div className="mx-auto max-w-lg">
-        {/* En-tête */}
         <div className="mb-10 text-center">
           <p className="mb-1 text-xs font-semibold tracking-[0.3em] text-brand uppercase">VOTRE MUSIQUE COMMENCE ICI</p>
-          <h1 className="text-4xl font-bold text-white">{formValidated ? 'Vérification' : 'Nouveau cours'}</h1>
+          <h1 className="text-4xl font-bold text-gray-900">{formValidated ? 'Vérification' : 'Nouveau cours'}</h1>
         </div>
 
-        {/* Indicateur d'étapes */}
         <div className="mb-10 flex items-start justify-center gap-1">
           <div className="flex flex-col items-center gap-1.5">
             <div
               className={cn(
                 'flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-all duration-300',
-                !formValidated ? 'bg-brand text-black' : 'bg-zinc-700 text-zinc-400',
+                !formValidated ? 'bg-brand text-black' : 'bg-gray-200 text-gray-500',
               )}
             >
               {formValidated ? '✓' : '1'}
             </div>
-            <span className={cn('text-xs font-medium', !formValidated ? 'text-brand' : 'text-zinc-500')}>
+            <span className={cn('text-xs font-medium', !formValidated ? 'text-brand' : 'text-gray-400')}>
               Informations
             </span>
           </div>
@@ -156,7 +125,7 @@ export default function CreateCourse() {
           <div
             className={cn(
               'mx-3 mt-4 h-0.5 w-16 rounded-full transition-colors duration-300',
-              formValidated ? 'bg-brand' : 'bg-zinc-700',
+              formValidated ? 'bg-brand' : 'bg-gray-200',
             )}
           />
 
@@ -164,19 +133,19 @@ export default function CreateCourse() {
             <div
               className={cn(
                 'flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-all duration-300',
-                formValidated ? 'bg-brand text-black' : 'border-2 border-zinc-700 bg-black text-zinc-500',
+                formValidated ? 'bg-brand/10 text-brand' : 'bg-brand/10 text-gray-400',
               )}
             >
               2
             </div>
-            <span className={cn('text-xs font-medium', formValidated ? 'text-brand' : 'text-zinc-500')}>
+            <span className={cn('text-xs font-medium', formValidated ? 'text-brand' : 'text-gray-400')}>
               Validation
             </span>
           </div>
         </div>
 
         {/* Carte formulaire */}
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8 shadow-2xl shadow-black/60">
+        <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-lg shadow-black/5">
           <Form className="w-full" onSubmit={onSubmit}>
             {!formValidated && <CourseForm values={submitted} errors={{}} />}
             {formValidated && submitted && (
@@ -189,12 +158,12 @@ export default function CreateCourse() {
           </Form>
 
           {fetcher.data?.success && (
-            <div className="mt-6 rounded-xl border border-emerald-800/50 bg-emerald-950 p-4 text-center text-sm text-emerald-400">
+            <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-center text-sm text-emerald-700">
               Cours créé avec succès !
             </div>
           )}
           {fetcher.data?.error && (
-            <div className="mt-6 rounded-xl border border-red-900/50 bg-red-950 p-4 text-center text-sm text-red-400">
+            <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-center text-sm text-red-600">
               {fetcher.data.error}
             </div>
           )}

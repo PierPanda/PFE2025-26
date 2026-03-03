@@ -7,22 +7,22 @@ import {
   ScrollRestoration,
   useNavigate,
   useHref,
-} from "react-router";
-import { HeroUIProvider } from "@heroui/react";
+} from 'react-router';
+import type { LinksFunction } from 'react-router';
+import { HeroUIProvider } from '@heroui/react';
 
-import type { Route } from "./+types/root";
-import "./app.css";
+import './app.css';
 
-export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+export const links: LinksFunction = () => [
+  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
+    rel: 'preconnect',
+    href: 'https://fonts.gstatic.com',
+    crossOrigin: 'anonymous',
   },
   {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    rel: 'stylesheet',
+    href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap',
   },
 ];
 
@@ -53,18 +53,16 @@ export default function App() {
   );
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
+export function ErrorBoundary({ error }: { error: unknown }) {
+  let message = 'Oops!';
   let details = "Une erreur inattendue s'est produite.";
   let stack: string | undefined;
   let is404 = false;
 
   if (isRouteErrorResponse(error)) {
     is404 = error.status === 404;
-    message = is404 ? "404" : "Erreur";
-    details = is404
-      ? "La page que vous recherchez n'existe pas."
-      : error.statusText || details;
+    message = is404 ? '404' : 'Erreur';
+    details = is404 ? "La page que vous recherchez n'existe pas." : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
@@ -76,9 +74,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         <div className="max-w-md w-full text-center">
           <div className="mb-8">
             <h1 className="text-6xl font-bold text-gray-300 mb-4">404</h1>
-            <h2 className="text-2xl font-semibold text-gray-700 mb-2">
-              Page non trouvée
-            </h2>
+            <h2 className="text-2xl font-semibold text-gray-700 mb-2">Page non trouvée</h2>
             <p className="text-gray-600">{details}</p>
           </div>
           <div className="space-y-4">

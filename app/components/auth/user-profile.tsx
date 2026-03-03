@@ -37,11 +37,9 @@ export function UserProfile() {
       <DropdownMenu
         aria-label="Menu utilisateur"
         onAction={(key) => {
-          if (key === 'profile') navigate('/profile');
           if (key === 'logout') handleSignOut();
         }}
       >
-        <DropdownItem key="profile">Mon profil</DropdownItem>
         <DropdownItem key="logout" color="danger" className="text-danger">
           Déconnexion
         </DropdownItem>
