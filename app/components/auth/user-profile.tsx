@@ -19,11 +19,11 @@ export function UserProfile() {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <button className="flex items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-gray-100">
+        <button className="flex items-center gap-2 rounded-lg p-2 py-1 transition-colors hover:bg-brand/20">
           {user.image ? (
-            <img src={user.image} alt={user.name} className="h-8 w-8 rounded-full object-cover ring-2 ring-brand" />
+            <img src={user.image} alt={user.name} className="h-6 w-6 rounded-full object-cover ring-2 ring-brand" />
           ) : (
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-black">
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-black">
               {user.name.charAt(0).toUpperCase()}
             </div>
           )}
