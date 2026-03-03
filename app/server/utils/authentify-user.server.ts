@@ -1,31 +1,25 @@
-import { auth } from "~/auth.server";
-import { redirect, href } from "react-router";
+import { auth } from '~/auth.server';
+import { redirect, href } from 'react-router';
 
 type AuthentifyUserOptions = {
   redirectTo?: string;
 };
 
-/**
- * Vérifie l'authentification de l'utilisateur.
- * À utiliser dans chaque loader qui nécessite une authentification.
- *
- * @param request - La requête HTTP
- * @param options - Options de configuration
- * @returns La session de l'utilisateur authentifié
- * @throws Redirect vers la page de login ou Response 401
- */
+const SESSION_CACHE = Symbol('session');
 
-export async function authentifyUser(
-  request: Request,
-  { redirectTo }: AuthentifyUserOptions = {},
-) {
-  const session = await auth.api.getSession({ headers: request.headers });
+export async function authentifyUser(request: Request, { redirectTo }: AuthentifyUserOptions = {}) {
+  const cached = (request as any)[SESSION_CACHE];
+  const session = cached ?? (await auth.api.getSession({ headers: request.headers }));
+
+  if (!cached) {
+    (request as any)[SESSION_CACHE] = session;
+  }
 
   if (!session?.user) {
     if (redirectTo) {
-      throw redirect(href(redirectTo as "/auth"));
+      throw redirect(href(redirectTo as '/auth'));
     }
-    throw new Response("Non authentifié", { status: 401 });
+    throw new Response('Non authentifié', { status: 401 });
   }
 
   return session;
