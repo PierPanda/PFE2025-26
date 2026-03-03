@@ -1,12 +1,9 @@
-import { courses } from "~/server/lib/db/schema-definition/courses";
+import { courses } from '~/server/lib/db/schema-definition/courses';
 
 export type Course = typeof courses.$inferSelect;
 export type NewCourse = typeof courses.$inferInsert;
 
-export type {
-  CourseCategory,
-  CourseLevel,
-} from "~/server/lib/db/schema-definition/courses";
+export type { CourseCategory, CourseLevel } from '~/server/lib/db/schema-definition/courses';
 
 export type CourseFilters = {
   category?: string;
@@ -14,7 +11,4 @@ export type CourseFilters = {
   teacherId?: string;
 };
 
-export {
-  categoryValues,
-  levelValues,
-} from "~/server/lib/db/schema-definition/courses";
+export { categoryValues, levelValues } from '~/server/lib/db/schema-definition/courses';

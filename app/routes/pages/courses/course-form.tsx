@@ -38,7 +38,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         placeholder="Ex : Cours de piano jazz"
         type="text"
         defaultValue={values?.title || ''}
-        isInvalid={!!errors.title}
+        isInvalid={errors.title ? true : undefined}
         errorMessage={errors.title}
       />
 
@@ -52,6 +52,8 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           placeholder="Instrument…"
           name="category"
           defaultSelectedKey={values?.category || ''}
+          isInvalid={errors.category ? true : undefined}
+          errorMessage={errors.category}
         >
           {(item) => (
             <AutocompleteItem key={item.key} className="capitalize">
@@ -68,6 +70,8 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           placeholder="Choisir…"
           name="level"
           defaultSelectedKeys={values?.level ? [values.level] : []}
+          isInvalid={errors.level ? true : undefined}
+          errorMessage={errors.level}
         >
           {levels.map((levelItem) => (
             <SelectItem key={levelItem.key} className="capitalize">
@@ -85,7 +89,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         label="Description"
         placeholder="Décrivez votre cours en quelques mots…"
         name="description"
-        isInvalid={!!errors.description}
+        isInvalid={errors.description ? true : undefined}
         errorMessage={errors.description}
         defaultValue={values?.description || ''}
       />
@@ -98,7 +102,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Prix (€)"
           name="price"
           placeholder="0"
-          isInvalid={!!errors.price}
+          isInvalid={errors.price ? true : undefined}
           errorMessage={errors.price}
         />
         <NumberInput
@@ -108,7 +112,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Durée (min)"
           name="duration"
           placeholder="60"
-          isInvalid={!!errors.duration}
+          isInvalid={errors.duration ? true : undefined}
           errorMessage={errors.duration}
         />
       </div>

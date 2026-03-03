@@ -1,8 +1,8 @@
-import type { Register } from "react-router";
+import type { Register } from 'react-router';
 
 type ApiRoutePaths = {
-  [K in keyof Register["routeFiles"]]: K extends `routes/_api/${string}/route.ts`
-    ? Register["routeFiles"][K] extends { page: infer P }
+  [K in keyof Register['routeFiles']]: K extends `routes/_api/${string}/route.ts`
+    ? Register['routeFiles'][K] extends { page: infer P }
       ? P extends string
         ? P extends `/api/${infer Path}`
           ? Path
@@ -10,11 +10,11 @@ type ApiRoutePaths = {
         : never
       : never
     : never;
-}[keyof Register["routeFiles"]];
+}[keyof Register['routeFiles']];
 
 type ApiRouteId<P extends ApiRoutePaths> = {
-  [K in keyof Register["routeFiles"]]: K extends `routes/_api/${string}/route.ts`
-    ? Register["routeFiles"][K] extends { page: infer PageUnion; id: infer ID }
+  [K in keyof Register['routeFiles']]: K extends `routes/_api/${string}/route.ts`
+    ? Register['routeFiles'][K] extends { page: infer PageUnion; id: infer ID }
       ? PageUnion extends string
         ? PageUnion extends `/api/${P}`
           ? ID
@@ -22,10 +22,9 @@ type ApiRouteId<P extends ApiRoutePaths> = {
         : never
       : never
     : never;
-}[keyof Register["routeFiles"]];
+}[keyof Register['routeFiles']];
 
-type ApiRoute<P extends ApiRoutePaths> =
-  Register["routeModules"][ApiRouteId<P>];
+type ApiRoute<P extends ApiRoutePaths> = Register['routeModules'][ApiRouteId<P>];
 
 type ApiRouteQueryResult<P extends ApiRoutePaths> =
   ApiRoute<P> extends {
@@ -48,10 +47,4 @@ type ApiRouteActionInput<P extends ApiRoutePaths> =
     ? I
     : unknown;
 
-export type {
-  ApiRoute,
-  ApiRouteQueryResult,
-  ApiRouteMutationResult,
-  ApiRoutePaths,
-  ApiRouteActionInput,
-};
+export type { ApiRoute, ApiRouteQueryResult, ApiRouteMutationResult, ApiRoutePaths, ApiRouteActionInput };

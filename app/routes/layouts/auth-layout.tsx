@@ -11,8 +11,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function AuthLayout() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-50 bg-brand/10 p-2">
+    <div className="min-h-screen bg-brand/10">
+      <header className="sticky top-0 z-50 bg-white p-2">
         <div className="flex h-16 w-full items-center justify-between px-12">
           <Link to="/" className="shrink-0">
             <img src={logo} alt="Maestroo" className="h-9 w-auto" />

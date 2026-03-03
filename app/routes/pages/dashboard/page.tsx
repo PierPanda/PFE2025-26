@@ -14,7 +14,7 @@ export function meta() {
 export default function Home() {
   return (
     <main className="mx-auto max-w-7xl px-6 py-10">
-      <div className="rounded-2xl bg-white p-8 shadow-sm">
+      <div className="rounded-2xl bg-brand/10 p-8 shadow-sm">
         <h2 className="mb-2 text-2xl font-bold text-gray-900">Bienvenue !</h2>
         <p className="text-gray-500">Votre musique commence ici.</p>
         <Link

@@ -1,5 +1,5 @@
-import { auth } from "~/auth.server";
-import { redirect, href } from "react-router";
+import { auth } from '~/auth.server';
+import { redirect, href } from 'react-router';
 
 type AuthentifyUserOptions = {
   redirectTo?: string;
@@ -15,17 +15,14 @@ type AuthentifyUserOptions = {
  * @throws Redirect vers la page de login ou Response 401
  */
 
-export async function authentifyUser(
-  request: Request,
-  { redirectTo }: AuthentifyUserOptions = {},
-) {
+export async function authentifyUser(request: Request, { redirectTo }: AuthentifyUserOptions = {}) {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session?.user) {
     if (redirectTo) {
-      throw redirect(href(redirectTo as "/auth"));
+      throw redirect(href(redirectTo as '/auth'));
     }
-    throw new Response("Non authentifié", { status: 401 });
+    throw new Response('Non authentifié', { status: 401 });
   }
 
   return session;

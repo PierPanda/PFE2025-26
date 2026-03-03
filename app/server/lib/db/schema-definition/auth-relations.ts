@@ -1,7 +1,7 @@
-import { relations } from "drizzle-orm";
-import { user, session, account } from "./auth-schema";
-import { teachers } from "./teachers";
-import { learners } from "./learners";
+import { relations } from 'drizzle-orm';
+import { user, session, account } from './auth-schema';
+import { teachers } from './teachers';
+import { learners } from './learners';
 
 export const userRelations = relations(user, ({ many, one }) => ({
   sessions: many(session),

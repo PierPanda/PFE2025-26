@@ -1,5 +1,5 @@
 // Auth service - Client-side authentication functions
-import { signIn, signOut, signUp, getSession } from "~/lib/auth-client";
+import { signIn, signOut, signUp, getSession } from '~/lib/auth-client';
 
 /**
  * Login with email and password
@@ -14,7 +14,7 @@ export async function loginWithEmail(email: string, password: string) {
     if (result.error) {
       return {
         success: false,
-        error: result.error.message || "Erreur de connexion",
+        error: result.error.message || 'Erreur de connexion',
       };
     }
 
@@ -23,7 +23,7 @@ export async function loginWithEmail(email: string, password: string) {
       user: result.data?.user,
     };
   } catch (error) {
-    console.error("Login error:", error);
+    console.error('Login error:', error);
     return {
       success: false,
       error: "Une erreur s'est produite lors de la connexion.",
@@ -34,17 +34,17 @@ export async function loginWithEmail(email: string, password: string) {
 /**
  * Login with Google OAuth
  */
-export async function loginWithGoogle(callbackURL: string = "/") {
+export async function loginWithGoogle(callbackURL: string = '/') {
   try {
     const result = await signIn.social({
-      provider: "google",
+      provider: 'google',
       callbackURL,
     });
 
     if (result.error) {
       return {
         success: false,
-        error: result.error.message || "Erreur de connexion Google",
+        error: result.error.message || 'Erreur de connexion Google',
       };
     }
 
@@ -52,7 +52,7 @@ export async function loginWithGoogle(callbackURL: string = "/") {
       success: true,
     };
   } catch (error) {
-    console.error("Google login error:", error);
+    console.error('Google login error:', error);
     return {
       success: false,
       error: "Une erreur s'est produite lors de la connexion Google.",
@@ -63,11 +63,7 @@ export async function loginWithGoogle(callbackURL: string = "/") {
 /**
  * Register with email and password
  */
-export async function registerWithEmail(
-  email: string,
-  password: string,
-  name: string,
-) {
+export async function registerWithEmail(email: string, password: string, name: string) {
   try {
     const result = await signUp.email({
       email,
@@ -87,7 +83,7 @@ export async function registerWithEmail(
       user: result.data?.user,
     };
   } catch (error) {
-    console.error("Registration error:", error);
+    console.error('Registration error:', error);
     return {
       success: false,
       error: "Une erreur s'est produite lors de l'inscription.",
@@ -106,7 +102,7 @@ export async function logout() {
     await signOut();
     return { success: true };
   } catch (error) {
-    console.error("Logout error:", error);
+    console.error('Logout error:', error);
     return {
       success: false,
       error: "Une erreur s'est produite lors de la déconnexion.",
@@ -125,7 +121,7 @@ export async function getCurrentSession() {
       session: session.data,
     };
   } catch (error) {
-    console.error("Get session error:", error);
+    console.error('Get session error:', error);
     return {
       success: false,
       session: null,
