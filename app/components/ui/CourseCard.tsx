@@ -1,125 +1,43 @@
-import { Button, Card, CardFooter, Image, Chip } from "@heroui/react";
+import { Card, CardBody, Image, Chip } from "@heroui/react";
 import { InlineIcon } from "@iconify/react";
-import type { CourseWithTeacherName } from "~/types/course";
+import type { CourseWithTeacher } from "~/services/types";
 
-export default function CourseCard({
-  course,
-}: {
-  course: CourseWithTeacherName;
-}) {
-  const urlImage = `~/assets/categories/${course.category}.jpg`;
-
+export default function CourseCard({ course }: { course: CourseWithTeacher }) {
+  const urlImage = `app/assets/categories/${course.category}.jpg`;
+  console.log(course);
   return (
-    <li key={course.id} className="list-none">
-      <Card isFooterBlurred className="border-none" radius="lg">
+    <li key={course.id} className="shrink-0">
+      <Card
+        className="border-none bg-white max-w-80 h-full p-2"
+        radius="lg"
+        shadow="lg"
+      >
         <div className="relative">
           <Image
             alt="Courses image"
-            className="object-cover"
-            height={280}
+            className="object-cover rounded-t-lg"
+            height={150}
             src={urlImage}
-            width={380}
+            width={350}
           />
-          <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/50 to-black/10 z-10" />
-          <div className="flex absolute top-2 z-30 w-full justify-between px-2 gap-2">
-            <Chip
-              className="text-tiny text-black bg-white text-center font-semibold"
-              color="default"
-              radius="sm"
-              size="sm"
-              variant="flat"
-            >
-              {course.price} €
-            </Chip>
-            <Chip
-              className="text-tiny text-white text-center w-auto"
-              color="default"
-              radius="sm"
-              size="sm"
-              variant="flat"
-            >
-              {course.duration} min
-              <InlineIcon
-                icon="lucide:clock"
-                className="inline-block ml-1"
-                width={16}
-                height={16}
-              />
-            </Chip>
-          </div>
-          <div className="absolute top-12 left-2 z-30 flex gap-2">
-            <Chip
-              className="text-tiny text-black bg-white text-center capitalize font-bold max-w-full"
-              color="default"
-              radius="sm"
-              size="sm"
-              variant="flat"
-            >
-              {course.category}
-            </Chip>
-            {course.level ? (
-              <Chip
-                className="text-tiny text-white text-center capitalize"
-                color="default"
-                radius="sm"
-                size="sm"
-                variant="flat"
-              >
-                {course.level}
-              </Chip>
-            ) : null}
-          </div>
-        </div>
-        <div className="flex flex-col absolute bottom-2 w-full z-10 right-2 left-2">
-          <div className="px-2 pb-2">
-            <p className="text-white font-bold text-2xl leading-tight">
-              {course.title}
-            </p>
-            <p className="text-white/80 text-sm mt-1">
-              {course.teacherName ?? "Enseignant à venir"}
-            </p>
-          </div>
-          <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden before:rounded-xl rounded-large w-[calc(100%-16px)] px-2 py-2 shadow-small z-10 gap-3">
-            <div className="flex-1 flex flex-col min-w-0">
-              <p className="text-white text-sm line-clamp-2">
-                {course.description}
-              </p>
-            </div>
-            <div className="flex-col gap-2 flex items-end justify-between">
-              <Chip
-                className="text-tiny text-white text-center w-auto"
-                color="default"
-                radius="sm"
-                size="sm"
-                variant="flat"
-              >
-                {course.duration} min
-                <InlineIcon
-                  icon="lucide:clock"
-                  className="inline-block ml-1"
-                  width={16}
-                  height={16}
-                />
-              </Chip>
-              <Chip
-                className="text-tiny text-black bg-white text-center font-bold max-w-full"
-                color="default"
-                radius="sm"
-                size="sm"
-                variant="flat"
-              >
-                {course.price} €
-              </Chip>
-            </div>
-            <div className="flex-col gap-2 flex course-end justify-between"></div>
-          </CardFooter>
-          <Button
-            radius="sm"
-            className="mt-2 w-full z-20 bg-white text-black hover:bg-white/90"
+          <Chip
+            className="absolute top-3 right-3 text-sm font-bold z-10 text-white bg-amber-400"
+            radius="lg"
+            startContent={<InlineIcon icon="mdi:clock-outline" width="18" />}
           >
-            Réserver le cours
-          </Button>
+            60 min
+          </Chip>
         </div>
+        <CardBody>
+          <p className="text-3xl font-bold text-black mb-2">{course.price}€</p>
+          <p className="text-amber-400 font-semibold text-sm uppercase mb-1">
+            {course.teacher.user.name}
+          </p>
+          <h3 className="text-orange-500 font-bold text-2xl mb-2">
+            {course.title}
+          </h3>
+          <p className="text-gray-700 text-sm">{course.description}</p>
+        </CardBody>
       </Card>
     </li>
   );
