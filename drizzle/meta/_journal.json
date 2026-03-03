@@ -15,6 +15,13 @@
       "when": 1771412483558,
       "tag": "0001_cool_doomsday",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772563672207,
+      "tag": "0002_furry_senator_kelly",
+      "breakpoints": true
     }
   ]
 }

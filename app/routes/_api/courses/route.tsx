@@ -17,12 +17,16 @@ import type { CourseCategory, CourseLevel } from "~/types/course";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
+
   const courseId = url.searchParams.get("id");
   const teacherId = url.searchParams.get("teacherId");
+
   const category = url.searchParams.get("category") as
     | CourseCategory
     | undefined;
   const level = url.searchParams.get("level") as CourseLevel | undefined;
+  const minPrice = url.searchParams.get("minPrice") || undefined;
+  const maxPrice = url.searchParams.get("maxPrice") || undefined;
 
   if (courseId) {
     const result = await getCourseById(courseId);
@@ -37,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return result;
   }
 
-  const result = await getCourses(category, level);
+  const result = await getCourses(category, level, minPrice, maxPrice);
   return result;
 }
 

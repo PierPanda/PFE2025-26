@@ -12,10 +12,14 @@ export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const category = url.searchParams.get("category") ?? undefined;
   const level = url.searchParams.get("level") ?? undefined;
+  const minPrice = url.searchParams.get("minPrice") ?? undefined;
+  const maxPrice = url.searchParams.get("maxPrice") ?? undefined;
 
   const apiUrl = new URL("/api/courses", request.url);
   if (category) apiUrl.searchParams.append("category", category);
   if (level) apiUrl.searchParams.append("level", level);
+  if (minPrice) apiUrl.searchParams.append("minPrice", minPrice);
+  if (maxPrice) apiUrl.searchParams.append("maxPrice", maxPrice);
   const result = await fetch(apiUrl)
     .then((res) => res.json())
     .catch((error) => {
@@ -23,7 +27,11 @@ export async function loader({ request }: Route.LoaderArgs) {
       return { success: false, courses: [] };
     });
 
-  return { user: session.user, courses: result.courses };
+  return {
+    user: session.user,
+    courses: result.courses,
+    filters: result.filters,
+  };
 }
 
 export function meta() {
@@ -35,8 +43,10 @@ export function meta() {
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { courses } = useLoaderData();
-  console.log("Courses loaded:", courses);
+  const { courses, filters } = useLoaderData();
+  const minPrice = filters?.minPrice ?? 0;
+  const maxPrice = filters?.maxPrice ?? 1000;
+
   return (
     <main className="mx-auto max-w-7xl px-6 py-10">
       <div className="rounded-2xl bg-brand/10 p-8 shadow-sm">
@@ -50,7 +60,12 @@ export default function Home() {
         </Link>
       </div>
       <>
-      <Filters searchParams={searchParams} setSearchParams={setSearchParams} />
+      <Filters
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+      />
       {courses?.length === 0 ? (
         <p className="text-center text-gray-500">
           Aucun cours disponible pour le moment.

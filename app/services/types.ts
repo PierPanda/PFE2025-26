@@ -59,6 +59,7 @@ export type GetCourseResponse = ServiceResponse<{
 }>;
 export type GetCoursesResponse = ServiceResponse<{
   courses: CourseWithTeacher[];
+  filters?: { minPrice: number; maxPrice: number };
 }>;
 export type GetCoursesByTeacherResponse = ServiceResponse<{
   courses: DbCourse[];
