@@ -1,6 +1,9 @@
 import { type RouteConfig, index, layout, route } from '@react-router/dev/routes';
 
 export default [
+  // Ignore Chrome DevTools well-known probe
+  route('/.well-known/*', 'routes/_api/well-known/route.tsx'),
+
   // API Routes
   route('/api/auth/*', 'routes/_api/auth/route.tsx'),
   route('/api/courses', 'routes/_api/courses/route.tsx'),
