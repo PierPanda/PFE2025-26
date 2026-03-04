@@ -1,12 +1,10 @@
-import { Outlet, Link } from 'react-router';
+import { Outlet } from 'react-router';
 import type { LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
-import { UserProfile } from '~/components/auth/user-profile';
-import logo from '~/assets/images/LOGO_MAESTROO.png';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
-  return { user: session.user };
+  return { user: session.user, session: session.session };
 }
 
 export default function AuthLayout() {
