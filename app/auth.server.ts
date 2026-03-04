@@ -1,12 +1,12 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "~/server/lib/db/index.server";
-import * as schema from "~/server/lib/db/schema";
-import { env } from "~/server/utils/env.server";
+import { betterAuth } from 'better-auth';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { db } from '~/server/lib/db/index.server';
+import * as schema from '~/server/lib/db/schema';
+import { env } from '~/server/utils/env.server';
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: "pg",
+    provider: 'pg',
     schema,
   }),
   emailAndPassword: {
@@ -16,9 +16,9 @@ export const auth = betterAuth({
   },
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
-  basePath: "/api/auth",
+  basePath: '/api/auth',
   logger: {
-    level: "debug",
+    level: 'debug',
   },
   session: {
     cookieCache: {

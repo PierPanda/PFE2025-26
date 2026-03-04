@@ -9,7 +9,7 @@
     "typecheck": "react-router typegen && tsc --noEmit",
     "lint": "oxlint --fix",
     "lint:check": "oxlint",
-    "format": "oxfmt --check .",
+    "format": "oxfmt .",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
