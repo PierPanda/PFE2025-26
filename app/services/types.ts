@@ -1,12 +1,4 @@
-import {
-  user,
-  teachers,
-  learners,
-  courses,
-  availabilities,
-  bookings,
-  ratings,
-} from "~/server/lib/db/schema";
+import { user, teachers, learners, courses, availabilities, bookings, ratings } from '~/server/lib/db/schema';
 
 /**
  * Base models inferred from Drizzle schema using $inferSelect
@@ -67,6 +59,14 @@ export type GetCoursesByTeacherResponse = ServiceResponse<{
 
 export type GetTeacherResponse = ServiceResponse<{
   teacher: TeacherWithUserAndCourses | null;
+}>;
+
+export type GetAppStatsResponse = ServiceResponse<{
+  stats: {
+    coursesCount: number;
+    teachersCount: number;
+    learnersCount: number;
+  };
 }>;
 
 export type CreateCourseResponse = ServiceResponse<{ course: DbCourse }>;
