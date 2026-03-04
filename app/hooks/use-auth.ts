@@ -1,24 +1,14 @@
-import { useLoaderData } from "react-router";
-import type { AuthState, User } from "../types/user";
+import { useRouteLoaderData } from 'react-router';
+import type { AuthState, Session, User } from '../types/user';
 
 export function useAuth(): AuthState {
-  try {
-    const data = useLoaderData() as { user?: User };
+  const data = useRouteLoaderData('routes/layouts/auth-layout') as { user?: User; session?: Session } | undefined;
 
-    return {
-      user: data?.user || null,
-      session: null,
-      isLoading: false,
-      isAuthenticated: !!data?.user,
-      error: null,
-    };
-  } catch {
-    return {
-      user: null,
-      session: null,
-      isLoading: false,
-      isAuthenticated: false,
-      error: null,
-    };
-  }
+  return {
+    user: data?.user ?? null,
+    session: data?.session ?? null,
+    isLoading: false,
+    isAuthenticated: !!data?.user,
+    error: null,
+  };
 }
