@@ -1,6 +1,8 @@
-import { Outlet } from 'react-router';
+import { Outlet, Link } from 'react-router';
 import type { LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { UserProfile } from '~/components/auth/user-profile';
+import logo from '~/assets/images/logo.png';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
