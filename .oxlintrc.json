@@ -6,12 +6,18 @@
     "correctness": "error",
     "suspicious": "warn"
   },
+  "settings": {
+    "oxc/simple_case_formatter": {
+      "quote_style": "double"
+    }
+  },
   "rules": {
     "import/no-unassigned-import": "off",
     "no-nested-ternary": "error",
     "no-unused-vars": "warn",
     "no-console": "off",
     "eqeqeq": "error",
+    "quotes": ["error", "double", { "avoidEscape": true }],
     "react/jsx-key": "error",
     "react/jsx-no-duplicate-props": "error",
     "react/jsx-no-undef": "error",
