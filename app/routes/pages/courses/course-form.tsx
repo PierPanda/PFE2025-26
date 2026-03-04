@@ -7,10 +7,10 @@ import {
   Select,
   SelectItem,
   Textarea,
-} from "@heroui/react";
-import { categoryOptions } from "~/server/lib/categories";
-import { levelOptions } from "~/server/lib/levels";
-import type { CourseFormInput } from "./create";
+} from '@heroui/react';
+import { categoryOptions } from '~/server/lib/categories';
+import { levelOptions } from '~/server/lib/levels';
+import type { CourseFormInput } from './create-course-form';
 
 type CourseFormProps = {
   values: CourseFormInput | null;
@@ -28,7 +28,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         name="title"
         placeholder="Ex : Cours de piano jazz"
         type="text"
-        defaultValue={values?.title || ""}
+        defaultValue={values?.title || ''}
         isInvalid={errors.title ? true : undefined}
         errorMessage={errors.title}
       />
@@ -38,16 +38,16 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           isRequired
           color="warning"
           variant="bordered"
-          defaultItems={categories}
+          defaultItems={categoryOptions}
           label="Catégorie"
           placeholder="Instrument…"
           name="category"
-          defaultSelectedKey={values?.category || ""}
+          defaultSelectedKey={values?.category || ''}
           isInvalid={errors.category ? true : undefined}
           errorMessage={errors.category}
         >
           {(item) => (
-            <AutocompleteItem key={item.key} className="capitalize">
+            <AutocompleteItem key={item.value} className="capitalize">
               {item.label}
             </AutocompleteItem>
           )}
@@ -64,8 +64,8 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           isInvalid={errors.level ? true : undefined}
           errorMessage={errors.level}
         >
-          {levels.map((levelItem) => (
-            <SelectItem key={levelItem.key} className="capitalize">
+          {levelOptions.map((levelItem) => (
+            <SelectItem key={levelItem.value} className="capitalize">
               {levelItem.label}
             </SelectItem>
           ))}
@@ -82,7 +82,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         name="description"
         isInvalid={errors.description ? true : undefined}
         errorMessage={errors.description}
-        defaultValue={values?.description || ""}
+        defaultValue={values?.description || ''}
       />
 
       <div className="grid grid-cols-2 gap-4">
@@ -108,11 +108,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         />
       </div>
 
-      <Button
-        type="submit"
-        color="warning"
-        className="mt-2 h-12 w-full rounded-xl font-semibold tracking-wide"
-      >
+      <Button type="submit" color="warning" className="mt-2 h-12 w-full rounded-xl font-semibold tracking-wide">
         Continuer →
       </Button>
     </div>
