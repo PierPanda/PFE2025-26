@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { categoryValues, levelValues } from '~/server/lib/db/schema-definition/courses';
+import { levelValues } from '~/server/lib/levels';
+import { categoryValues } from '~/server/lib/categories';
 
 /**
  * Schémas de validation communs pour les routes API

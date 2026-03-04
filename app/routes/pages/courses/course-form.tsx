@@ -8,18 +8,8 @@ import {
   SelectItem,
   Textarea,
 } from '@heroui/react';
-import { categoryValues, levelValues } from '~/types/course';
+import { categoryOptions, levelOptions } from '~/lib/constant';
 import type { CourseFormInput } from './create-course-form';
-
-const categories = categoryValues.map((cat) => ({
-  key: cat,
-  label: cat,
-}));
-
-const levels = levelValues.map((level) => ({
-  key: level,
-  label: level,
-}));
 
 type CourseFormProps = {
   values: CourseFormInput | null;
@@ -47,7 +37,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           isRequired
           color="warning"
           variant="bordered"
-          defaultItems={categories}
+          defaultItems={categoryOptions}
           label="Catégorie"
           placeholder="Instrument…"
           name="category"
@@ -56,7 +46,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           errorMessage={errors.category}
         >
           {(item) => (
-            <AutocompleteItem key={item.key} className="capitalize">
+            <AutocompleteItem key={item.value} className="capitalize">
               {item.label}
             </AutocompleteItem>
           )}
@@ -73,8 +63,8 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           isInvalid={errors.level ? true : undefined}
           errorMessage={errors.level}
         >
-          {levels.map((levelItem) => (
-            <SelectItem key={levelItem.key} className="capitalize">
+          {levelOptions.map((levelItem) => (
+            <SelectItem key={levelItem.value} className="capitalize">
               {levelItem.label}
             </SelectItem>
           ))}

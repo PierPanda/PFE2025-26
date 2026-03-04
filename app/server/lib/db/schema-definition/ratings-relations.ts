@@ -1,7 +1,7 @@
-import { relations } from 'drizzle-orm';
-import { ratings } from './ratings';
-import { courses } from './courses';
-import { learners } from './learners';
+import { relations } from "drizzle-orm";
+import { ratings } from "./ratings";
+import { courses } from "./courses";
+import { learners } from "./learners";
 
 export const ratingsRelations = relations(ratings, ({ one }) => ({
   course: one(courses, {
