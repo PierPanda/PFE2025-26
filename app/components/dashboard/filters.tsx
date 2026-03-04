@@ -11,8 +11,7 @@ import {
   Chip,
 } from '@heroui/react';
 import type { Key } from 'react';
-import { categoryOptions } from '~/server/lib/categories';
-import { levelOptions } from '~/server/lib/levels';
+import { categoryOptions, levelOptions } from '~/lib/constant';
 import type { ChangeEvent } from 'react';
 import { InlineIcon } from '@iconify/react';
 import type { NavigateOptions } from 'react-router';

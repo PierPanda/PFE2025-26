@@ -5,51 +5,27 @@ import { useLoaderData, useSearchParams } from 'react-router';
 import CourseCard from '~/components/ui/course-card';
 import Filters from '~/components/dashboard/filters';
 import Banner from '~/components/dashboard/banner';
+import { getCourses } from '~/services/courses/get-courses.server';
+import { getAppStats } from '~/services/stats/get-app-stats.server';
+import type { CourseWithTeacher } from '~/services/types';
+import type { CourseCategory, CourseLevel } from '~/types/course';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
 
   const url = new URL(request.url);
-  const category = url.searchParams.get('category') ?? undefined;
-  const level = url.searchParams.get('level') ?? undefined;
+  const category = (url.searchParams.get('category') as CourseCategory | undefined) ?? undefined;
+  const level = (url.searchParams.get('level') as CourseLevel | undefined) ?? undefined;
   const minPrice = url.searchParams.get('minPrice') ?? undefined;
   const maxPrice = url.searchParams.get('maxPrice') ?? undefined;
 
-  const apiUrl = new URL('/api/courses', request.url);
-  if (category) apiUrl.searchParams.append('category', category);
-  if (level) apiUrl.searchParams.append('level', level);
-  if (minPrice) apiUrl.searchParams.append('minPrice', minPrice);
-  if (maxPrice) apiUrl.searchParams.append('maxPrice', maxPrice);
-
-  const statsApiUrl = new URL('/api/stats', request.url);
-
-  const [result, statsResult] = await Promise.all([
-    fetch(apiUrl)
-      .then((res) => res.json())
-      .catch((error) => {
-        console.error('Error fetching courses:', error);
-        return { success: false, courses: [] };
-      }),
-    fetch(statsApiUrl)
-      .then((res) => res.json())
-      .catch((error) => {
-        console.error('Error fetching stats:', error);
-        return {
-          success: false,
-          stats: { coursesCount: 0, teachersCount: 0, learnersCount: 0 },
-        };
-      }),
-  ]);
+  const [result, statsResult] = await Promise.all([getCourses(category, level, minPrice, maxPrice), getAppStats()]);
 
   return {
     user: session.user,
-    courses: result.courses,
-    filters: result.filters,
-    stats: statsResult.stats ?? {
-      coursesCount: 0,
-      teachersCount: 0,
-      learnersCount: 0,
-    },
+    courses: result.success ? result.courses : [],
+    filters: result.success ? result.filters : undefined,
+    stats: statsResult.success ? statsResult.stats : { coursesCount: 0, teachersCount: 0, learnersCount: 0 },
   };
 }
 
@@ -91,7 +67,7 @@ export default function Home() {
               <p className="py-10 text-center text-default-500">Aucun cours disponible pour le moment.</p>
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {courses.map((course: any) => (
+                {courses.map((course: CourseWithTeacher) => (
                   <CourseCard key={course.id} course={course} />
                 ))}
               </ul>

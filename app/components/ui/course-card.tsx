@@ -3,9 +3,9 @@ import { InlineIcon } from '@iconify/react';
 import type { CourseWithTeacher } from '~/services/types';
 
 export default function CourseCard({ course }: { course: CourseWithTeacher }) {
-  const urlImage = `app/assets/categories/${course.category}.jpg`;
+  const urlImage = `/categories/${course.category}.jpg`;
   return (
-    <li key={course.id} className="shrink-0">
+    <li className="shrink-0">
       <Card className="border-none bg-white max-w-80 h-full p-2" radius="lg" shadow="sm">
         <div className="relative">
           <Image alt="Courses image" className="object-cover rounded-t-lg" height={150} src={urlImage} width={350} />
@@ -14,7 +14,7 @@ export default function CourseCard({ course }: { course: CourseWithTeacher }) {
             radius="lg"
             startContent={<InlineIcon icon="mdi:clock-outline" width="18" />}
           >
-            60 min
+            {course.duration} min
           </Chip>
         </div>
         <CardBody>

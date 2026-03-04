@@ -8,8 +8,7 @@ import {
   SelectItem,
   Textarea,
 } from '@heroui/react';
-import { categoryOptions } from '~/server/lib/categories';
-import { levelOptions } from '~/server/lib/levels';
+import { categoryOptions, levelOptions } from '~/lib/constant';
 import type { CourseFormInput } from './create-course-form';
 
 type CourseFormProps = {

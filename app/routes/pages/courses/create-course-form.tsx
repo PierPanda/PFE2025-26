@@ -65,7 +65,7 @@ export default function CreateCourse() {
   const [submitted, setSubmitted] = useState<CourseFormInput | null>(null);
   const [formValidated, setFormValidated] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  const { teacher } = useLoaderData<typeof loader>();
+  useLoaderData<typeof loader>();
   const fetcher = useFetcher();
 
   const onSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -90,7 +90,6 @@ export default function CreateCourse() {
     const payload = {
       ...submitted,
       id: uuidv7(),
-      teacherId: teacher?.id ?? 'pending',
       isPublished: published,
     };
 
