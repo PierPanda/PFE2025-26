@@ -3,9 +3,10 @@ import type { Route } from './+types/page';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { getCoursesByTeacher } from '~/services/courses/get-courses.server';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
-import CardCourse from '~/components/ui/CardCourse';
-import UserProfile from '~/components/profile/UserProfile';
+import CardCourse from '~/components/ui/card-course';
+import UserProfile from '~/components/profile/user-profile';
 import { Button } from '@heroui/react';
+import { InlineIcon } from '@iconify/react';
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
@@ -20,32 +21,45 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function Page() {
-  const { user, courses } = useLoaderData<typeof loader>();
+  const { user, teacher, courses } = useLoaderData<typeof loader>();
 
   return (
-    <>
-      <section className="w-auto flex flex-col items-center justify-center h-auto px-30 py-30 gap-30">
-        <UserProfile user={user} />
-      </section>
-      <section className="w-auto flex flex-col items-center justify-center h-auto gap-4 py-4 px-30">
-        <div className="flex flex-col bg-blue-100 rounded-2xl p-4 gap-4 w-full overflow-hidden">
-          <div className="flex justify-between">
-            <h3 className="text-3xl font-bold">Mes cours</h3>
+    <main className="px-10 py-8 flex flex-col gap-6">
+      <div className="flex flex-col bg-amber-50 rounded-2xl p-6 w-full">
+        <UserProfile user={user} teacher={teacher} />
+      </div>
+
+      <div className="flex flex-col bg-amber-50 rounded-2xl p-6 gap-4 w-full overflow-hidden">
+        <div className="flex items-center justify-between">
+          <h3 className="text-2xl font-bold">Mes cours</h3>
+          {courses.length > 0 ? (
             <Link to="/courses/create">
-              <Button radius="sm" color="primary">
-                Ajouter un nouveau cours
+              <Button isIconOnly size="sm" color="warning" className="text-white">
+                <InlineIcon icon="mdi:plus" width="20" />
+              </Button>
+            </Link>
+          ) : null}
+        </div>
+
+        {courses.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <p className="text-gray-500 mb-4">Vous n'avez pas encore de cours.</p>
+            <Link to="/courses/create">
+              <Button size="sm" color="warning" variant="flat">
+                Créer mon premier cours
               </Button>
             </Link>
           </div>
-          <div className="rounded-2xl w-full overflow-scroll">
-            <ul className="flex gap-4 w-screen overflow-x-auto h-auto overflow-scroll scrollbar-hid">
+        ) : (
+          <div className="w-full overflow-x-auto">
+            <ul className="flex gap-4 pb-2">
               {courses.map((course) => (
                 <CardCourse key={course.id} course={course} />
               ))}
             </ul>
           </div>
-        </div>
-      </section>
-    </>
+        )}
+      </div>
+    </main>
   );
 }

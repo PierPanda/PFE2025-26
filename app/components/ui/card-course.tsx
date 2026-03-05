@@ -4,7 +4,6 @@ import { InlineIcon } from '@iconify/react';
 export default function CardCourses({ course }: { course: any }) {
   const urlImage = `/categories/${course.category}.jpg`;
 
-  // Générer les étoiles de notation
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, index) => (
       <InlineIcon
@@ -18,7 +17,7 @@ export default function CardCourses({ course }: { course: any }) {
 
   return (
     <li key={course.id} className="shrink-0">
-      <Card className="border-none bg-white max-w-80 h-full p-2" radius="lg" shadow="lg">
+      <Card className="border-none bg-white max-w-80 h-full p-2 shadow-sm" radius="lg" shadow="none">
         <div className="relative">
           <Image alt="Courses image" className="object-cover rounded-t-lg" height={150} src={urlImage} width={350} />
           <Chip
@@ -26,7 +25,7 @@ export default function CardCourses({ course }: { course: any }) {
             radius="lg"
             startContent={<InlineIcon icon="mdi:clock-outline" width="18" />}
           >
-            60 min
+            {course.duration}h
           </Chip>
         </div>
         <CardBody className="">
