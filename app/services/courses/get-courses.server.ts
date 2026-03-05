@@ -1,4 +1,4 @@
-import { eq, and, gte, lte, min, max } from 'drizzle-orm';
+import { eq, and, gte, lte, min, max, ilike } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 
 import { courses, teachers, user } from '~/server/lib/db/schema';
