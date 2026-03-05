@@ -17,5 +17,6 @@ export default [
   layout('routes/layouts/auth-layout.tsx', [
     index('routes/pages/dashboard/page.tsx'),
     route('/courses/create', 'routes/pages/courses/create-course-form.tsx'),
+    route('/profile', 'routes/pages/profile/page.tsx'),
   ]),
 ] satisfies RouteConfig;
