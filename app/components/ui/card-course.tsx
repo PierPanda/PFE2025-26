@@ -1,7 +1,22 @@
-import { Card, CardBody, Image, Chip } from '@heroui/react';
+import {
+  Card,
+  CardBody,
+  Image,
+  Chip,
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
 
-export default function CardCourses({ course }: { course: any }) {
+type CardCoursesProps = {
+  course: any;
+  showActions?: boolean;
+};
+
+export default function CardCourses({ course, showActions = false }: CardCoursesProps) {
   const urlImage = `/categories/${course.category}.jpg`;
 
   const renderStars = (rating: number) => {
@@ -16,19 +31,52 @@ export default function CardCourses({ course }: { course: any }) {
   };
 
   return (
-    <li key={course.id} className="shrink-0">
+    <li className="shrink-0">
       <Card className="border-none bg-white max-w-80 h-full p-2 shadow-sm" radius="lg" shadow="none">
         <div className="relative">
           <Image alt="Courses image" className="object-cover rounded-t-lg" height={150} src={urlImage} width={350} />
           <Chip
-            className="absolute top-3 right-3 text-sm font-bold z-10 text-white bg-amber-400"
+            className="absolute top-3 left-3 text-sm font-bold z-10 text-white bg-amber-400"
             radius="lg"
             startContent={<InlineIcon icon="mdi:clock-outline" width="18" />}
           >
             {course.duration}h
           </Chip>
+          {showActions && (
+            <div className="absolute top-2 right-2 z-10">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="solid"
+                    className="bg-white/80 backdrop-blur-sm"
+                    aria-label="Options"
+                  >
+                    <InlineIcon icon="mdi:dots-vertical" width="20" />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Gestion du cours">
+                  <DropdownItem key="edit" startContent={<InlineIcon icon="mdi:pencil" width="16" />}>
+                    Modifier
+                  </DropdownItem>
+                  <DropdownItem key="share" startContent={<InlineIcon icon="mdi:share-variant" width="16" />}>
+                    Partager
+                  </DropdownItem>
+                  <DropdownItem
+                    key="delete"
+                    color="danger"
+                    className="text-danger"
+                    startContent={<InlineIcon icon="mdi:trash-can-outline" width="16" />}
+                  >
+                    Supprimer
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          )}
         </div>
-        <CardBody className="">
+        <CardBody>
           <div className="flex gap-1 mb-3 font-bold">{renderStars(course.rating || 4.5)}</div>
           <p className="text-3xl font-bold text-black mb-2">{course.price}€</p>
           <p className="text-amber-400 font-semibold text-sm uppercase mb-1">{course.teacherName}</p>

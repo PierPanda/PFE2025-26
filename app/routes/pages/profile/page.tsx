@@ -54,7 +54,7 @@ export default function Page() {
           <div className="w-full overflow-x-auto">
             <ul className="flex gap-4 pb-2">
               {courses.map((course) => (
-                <CardCourse key={course.id} course={course} />
+                <CardCourse key={course.id} course={course} showActions />
               ))}
             </ul>
           </div>
