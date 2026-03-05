@@ -10,9 +10,10 @@ type BannerProps = {
     teachersCount: number;
     learnersCount: number;
   };
+  onFindCourses?: () => void;
 };
 
-export default function Banner({ userName, stats }: BannerProps) {
+export default function Banner({ userName, stats, onFindCourses }: BannerProps) {
   const formatCount = (value: number) => new Intl.NumberFormat('fr-FR').format(value);
 
   const statistics = [
@@ -46,8 +47,7 @@ export default function Banner({ userName, stats }: BannerProps) {
 
         <div className="flex flex-wrap gap-4 justify-center">
           <Button
-            as={Link}
-            to="/#courses"
+            onPress={onFindCourses}
             size="lg"
             radius="lg"
             color="warning"

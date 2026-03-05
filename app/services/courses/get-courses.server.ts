@@ -13,6 +13,7 @@ export async function getCourses(
   level?: CourseLevel,
   minPrice?: string,
   maxPrice?: string,
+  search?: string,
 ): Promise<GetCoursesResponse> {
   try {
     const result = await db.query.courses.findMany({
@@ -21,6 +22,7 @@ export async function getCourses(
         level ? eq(courses.level, level) : undefined,
         minPrice ? gte(courses.price, minPrice) : undefined,
         maxPrice ? lte(courses.price, maxPrice) : undefined,
+        search ? ilike(courses.title, `%${search}%`) : undefined,
       ),
       with: {
         teacher: {
