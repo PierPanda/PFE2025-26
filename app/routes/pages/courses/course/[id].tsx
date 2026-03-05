@@ -10,10 +10,14 @@ export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
 
   const courseResult = await getCourseById(id);
-  if (!courseResult.success || !courseResult.course) {
-    throw new Response('Cours non trouvé', { status: 404 });
+
+  if (!courseResult.success) {
+    throw new Response("Erreur lors de la récupération du cours", { status: 500 });
   }
 
+  if (!courseResult.course) {
+    throw new Response("Cours non trouvé", { status: 404 });
+  }
   const teacherResult = await getTeacher(courseResult.course.teacherId);
 
   return {
