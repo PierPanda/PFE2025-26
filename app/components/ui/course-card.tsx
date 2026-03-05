@@ -15,7 +15,7 @@ export default function CourseCard({ course }: { course: CourseWithTeacher }) {
         shadow="sm"
       >
         <div className="relative">
-          <Image alt="Courses image" className="object-cover rounded-t-lg" height={150} src={urlImage} width={350} />
+          <Image alt={course.title} className="object-cover rounded-t-lg" height={150} src={urlImage} width={350} />
           <Chip
             className="absolute top-3 right-3 text-sm font-bold z-10 text-white bg-amber-400"
             radius="lg"
