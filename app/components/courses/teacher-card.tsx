@@ -17,7 +17,7 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
         <div>
           <p className="font-semibold text-gray-900">{teacher.user.name}</p>
           <p className="text-sm text-gray-500">
-            {teacher.courses.length} cours disponible{teacher.courses.length > 1 ? 's' : ''}
+            {teacher.courses.length} cours disponible{teacher.courses.length !== 1 ? 's' : ''}
           </p>
         </div>
       </div>
