@@ -1,7 +1,7 @@
-import type { TeacherWithUserAndCourses } from '~/services/types';
+import type { TeacherWithUserAndCoursesCount } from '~/services/types';
 
 type TeacherCardProps = {
-  teacher: TeacherWithUserAndCourses | null;
+  teacher: TeacherWithUserAndCoursesCount | null;
 };
 
 export default function TeacherCard({ teacher }: TeacherCardProps) {
@@ -17,7 +17,7 @@ export default function TeacherCard({ teacher }: TeacherCardProps) {
         <div>
           <p className="font-semibold text-gray-900">{teacher.user.name}</p>
           <p className="text-sm text-gray-500">
-            {teacher.courses.length} cours disponible{teacher.courses.length !== 1 ? 's' : ''}
+            {teacher.coursesCount} cours disponible{teacher.coursesCount !== 1 ? 's' : ''}
           </p>
         </div>
       </div>

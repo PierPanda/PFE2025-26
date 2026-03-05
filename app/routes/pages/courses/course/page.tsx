@@ -1,7 +1,7 @@
 import { useLoaderData } from 'react-router';
-import type { Route } from './+types/[id]';
+import type { Route } from './+types/page';
 import { getCourseById } from '~/services/courses/get-course.server';
-import { getTeacher } from '~/services/teachers/get-teacher.server';
+import { getTeacherSummary } from '~/services/teachers/get-teacher.server';
 import CourseHeader from '~/components/courses/course-header';
 import CourseDescription from '~/components/courses/course-description';
 import BookingCard from '~/components/courses/booking-card';
@@ -12,13 +12,15 @@ export async function loader({ params }: Route.LoaderArgs) {
   const courseResult = await getCourseById(id);
 
   if (!courseResult.success) {
-    throw new Response("Erreur lors de la récupération du cours", { status: 500 });
+    throw new Response('Erreur lors de la récupération du cours', {
+      status: 500,
+    });
   }
 
   if (!courseResult.course) {
-    throw new Response("Cours non trouvé", { status: 404 });
+    throw new Response('Cours non trouvé', { status: 404 });
   }
-  const teacherResult = await getTeacher(courseResult.course.teacherId);
+  const teacherResult = await getTeacherSummary(courseResult.course.teacherId);
 
   return {
     course: courseResult.course,
@@ -28,7 +30,9 @@ export async function loader({ params }: Route.LoaderArgs) {
 
 export function meta({ data }: Route.MetaArgs) {
   return [
-    { title: data?.course?.title ? `${data.course.title} | Maestroo` : 'Maestroo' },
+    {
+      title: data?.course?.title ? `${data.course.title} | Maestroo` : 'Maestroo',
+    },
     { name: 'description', content: data?.course?.description ?? '' },
     { property: 'og:title', content: data?.course?.title ?? 'Maestroo' },
     { property: 'og:description', content: data?.course?.description ?? '' },

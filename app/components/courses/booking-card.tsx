@@ -1,10 +1,10 @@
 import { Button, Card, CardBody } from '@heroui/react';
-import type { CourseWithTeacher, TeacherWithUserAndCourses } from '~/services/types';
+import type { CourseWithTeacher, TeacherWithUserAndCoursesCount } from '~/services/types';
 import TeacherCard from './teacher-card';
 
 type BookingCardProps = {
   course: CourseWithTeacher;
-  teacher: TeacherWithUserAndCourses | null;
+  teacher: TeacherWithUserAndCoursesCount | null;
 };
 
 export default function BookingCard({ course, teacher }: BookingCardProps) {
