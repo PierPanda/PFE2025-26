@@ -20,6 +20,17 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { user: session.user, teacher, courses };
 }
 
+export async function action({ request }: Route.ActionArgs) {
+  await authentifyUser(request, { redirectTo: '/auth' });
+
+  const { deleteCourse } = await import('~/services/courses/delete-course.server');
+  const formData = await request.formData();
+  const courseId = formData.get('courseId') as string;
+
+  if (!courseId) return { success: false, error: 'ID manquant.' };
+  return deleteCourse(courseId);
+}
+
 export default function Page() {
   const { user, teacher, courses } = useLoaderData<typeof loader>();
 
@@ -32,13 +43,13 @@ export default function Page() {
       <div className="flex flex-col bg-amber-50 rounded-2xl p-6 gap-4 w-full overflow-hidden">
         <div className="flex items-center justify-between">
           <h3 className="text-2xl font-bold">Mes cours</h3>
-          {courses.length > 0 ? (
+          {courses.length > 0 && (
             <Link to="/courses/create">
               <Button isIconOnly size="sm" color="warning" className="text-white">
                 <InlineIcon icon="mdi:plus" width="20" />
               </Button>
             </Link>
-          ) : null}
+          )}
         </div>
 
         {courses.length === 0 ? (
