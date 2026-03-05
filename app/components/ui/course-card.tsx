@@ -1,14 +1,21 @@
 import { Card, CardBody, Image, Chip } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
+import { Link } from 'react-router';
 import type { CourseWithTeacher } from '~/services/types';
 
 export default function CourseCard({ course }: { course: CourseWithTeacher }) {
   const urlImage = `/categories/${course.category}.jpg`;
   return (
     <li className="shrink-0">
-      <Card className="border-none bg-white max-w-80 h-full p-2" radius="lg" shadow="sm">
+      <Card
+        as={Link}
+        to={`/courses/${course.id}`}
+        className="border-none bg-white max-w-80 h-full p-2 transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
+        radius="lg"
+        shadow="sm"
+      >
         <div className="relative">
-          <Image alt="Courses image" className="object-cover rounded-t-lg" height={150} src={urlImage} width={350} />
+          <Image alt={course.title} className="object-cover rounded-t-lg" height={150} src={urlImage} width={350} />
           <Chip
             className="absolute top-3 right-3 text-sm font-bold z-10 text-white bg-amber-400"
             radius="lg"

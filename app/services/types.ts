@@ -24,6 +24,11 @@ export type TeacherWithUserAndCourses = DbTeacher & {
   courses: DbCourse[];
 };
 
+export type TeacherWithUserAndCoursesCount = DbTeacher & {
+  user: DbUser;
+  coursesCount: number;
+};
+
 export type CourseWithTeacher = DbCourse & {
   teacher: TeacherWithUser;
 };
@@ -59,6 +64,10 @@ export type GetCoursesByTeacherResponse = ServiceResponse<{
 
 export type GetTeacherResponse = ServiceResponse<{
   teacher: TeacherWithUserAndCourses | null;
+}>;
+
+export type GetTeacherSummaryResponse = ServiceResponse<{
+  teacher: TeacherWithUserAndCoursesCount | null;
 }>;
 
 export type GetAppStatsResponse = ServiceResponse<{
