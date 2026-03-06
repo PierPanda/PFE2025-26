@@ -78,6 +78,10 @@ export type GetAvailabilityResponse = ServiceResponse<{
   availability: AvailabilityWithTeacher | null;
 }>;
 
+export type GetAvailabilitiesResponse = ServiceResponse<{
+  availabilities: AvailabilityWithTeacher[];
+}>;
+
 export type GetAppStatsResponse = ServiceResponse<{
   stats: {
     coursesCount: number;

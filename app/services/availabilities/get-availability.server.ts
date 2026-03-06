@@ -1,7 +1,7 @@
-import { count, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { availabilities } from '~/server/lib/db/schema';
-import type { GetAvailabilityResponse } from '../types';
+import type { GetAvailabilityResponse, GetAvailabilitiesResponse } from '../types';
 
 /**
  * Get a single availability by ID
@@ -33,11 +33,11 @@ export async function getAvailability(availabilityId: string): Promise<GetAvaila
 }
 
 /**
- * Get availability by teacher ID with user info and courses
+ * Get all availabilities for a teacher
  */
-export async function getAvailabilityByTeacherId(teacherId: string): Promise<GetAvailabilityResponse> {
+export async function getAvailabilityByTeacherId(teacherId: string): Promise<GetAvailabilitiesResponse> {
   try {
-    const availability = await db.query.availabilities.findFirst({
+    const availabilitiesList = await db.query.availabilities.findMany({
       where: eq(availabilities.teacherId, teacherId),
       with: {
         teacher: {
@@ -50,13 +50,13 @@ export async function getAvailabilityByTeacherId(teacherId: string): Promise<Get
 
     return {
       success: true,
-      availability: availability ?? null,
+      availabilities: availabilitiesList,
     };
   } catch (error) {
     console.error('Error fetching availability by teacher ID:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la récupération de la disponibilité.",
+      error: "Une erreur s'est produite lors de la récupération des disponibilités.",
     };
   }
 }

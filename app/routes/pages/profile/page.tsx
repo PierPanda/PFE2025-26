@@ -20,13 +20,13 @@ export async function loader({ request }: Route.LoaderArgs) {
   const courses = coursesResult?.success ? (coursesResult.courses ?? []) : [];
 
   const availabilityResult = teacher ? await getAvailabilityByTeacherId(teacher.id) : null;
-  const availabilities = availabilityResult?.success ? availabilityResult.availability : null;
+  const availabilities = availabilityResult?.success ? availabilityResult.availabilities : [];
 
   return {
     user: session.user,
     teacher,
     courses,
-    availabilities: availabilities ? [availabilities] : [],
+    availabilities,
   };
 }
 

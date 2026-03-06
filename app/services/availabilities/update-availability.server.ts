@@ -33,7 +33,7 @@ export async function updateAvailability(
     console.error('Error updating availability:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la mise à jour de l'enseignant.",
+      error: "Une erreur s'est produite lors de la mise à jour de la disponibilité.",
     };
   }
 }

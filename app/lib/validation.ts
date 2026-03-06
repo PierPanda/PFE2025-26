@@ -55,14 +55,16 @@ export const courseQuerySchema = paginationQuerySchema.extend({
 });
 
 export const availabilityFormSchema = z.object({
-  startTime: z.date(),
-  endTime: z.date(),
+  startTime: z.coerce.date(),
+  endTime: z.coerce.date(),
 });
 
 export const createAvailabilitySchema = availabilityFormSchema.extend({
   id: uuidSchema,
   teacherId: z.string().min(1, "L'ID enseignant est requis."),
 });
+
+export const updateAvailabilitySchema = availabilityFormSchema.partial();
 
 export const createTeacherSchema = z.object({
   id: uuidSchema,
