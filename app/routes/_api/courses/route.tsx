@@ -2,8 +2,8 @@ import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-ro
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { createCourseSchema, updateCourseSchema } from '~/lib/validation';
 import { createCourse } from '~/services/courses/create-course.server';
-import { getCourseById, getCoursesByTeacher } from '~/services/courses/get-course.server';
-import { getCourses } from '~/services/courses/get-courses.server';
+import { getCourseById } from '~/services/courses/get-course.server';
+import { getCourses, getCoursesByTeacher } from '~/services/courses/get-courses.server';
 import { updateCourse } from '~/services/courses/update-course.server';
 import { deleteCourse } from '~/services/courses/delete-course.server';
 import type { CourseCategory, CourseLevel } from '~/types/course';

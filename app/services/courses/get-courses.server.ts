@@ -4,6 +4,7 @@ import { db } from '~/server/lib/db/index.server';
 import { courses } from '~/server/lib/db/schema';
 import type { GetCoursesResponse } from '../types';
 import type { CourseLevel, CourseCategory } from '~/types/course';
+import type { GetCoursesByTeacherResponse } from '../types';
 
 /**
  * Get all courses with optional filters and teacher info
@@ -50,6 +51,28 @@ export async function getCourses(
     };
   } catch (error) {
     console.error('Error fetching courses:', error);
+    return {
+      success: false,
+      error: "Une erreur s'est produite lors de la récupération des cours.",
+    };
+  }
+}
+
+/**
+ * Get courses by teacher ID
+ */
+export async function getCoursesByTeacher(teacherId: string): Promise<GetCoursesByTeacherResponse> {
+  try {
+    const result = await db.query.courses.findMany({
+      where: eq(courses.teacherId, teacherId),
+    });
+
+    return {
+      success: true,
+      courses: result,
+    };
+  } catch (error) {
+    console.error('Error fetching courses by teacher:', error);
     return {
       success: false,
       error: "Une erreur s'est produite lors de la récupération des cours.",
