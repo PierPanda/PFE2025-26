@@ -1,7 +1,7 @@
 import { eq, and, gte, lte, min, max, ilike } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 
-import { courses } from '~/server/lib/db/schema';
+import { courses, teachers, user } from '~/server/lib/db/schema';
 import type { GetCoursesResponse } from '../types';
 import type { CourseLevel, CourseCategory } from '~/types/course';
 import type { GetCoursesByTeacherResponse } from '../types';

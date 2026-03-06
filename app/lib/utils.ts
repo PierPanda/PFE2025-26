@@ -32,13 +32,6 @@ export function formatDuration(minutes: number): string {
 }
 
 /**
- * Capitalize first letter
- */
-export function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
-
-/**
  * Sleep utility for async operations
  */
 export function sleep(ms: number): Promise<void> {

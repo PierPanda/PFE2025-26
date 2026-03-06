@@ -1,8 +1,8 @@
-import { relations } from "drizzle-orm";
-import { bookings } from "./bookings";
-import { courses } from "./courses";
-import { availabilities } from "./availabilities";
-import { learners } from "./learners";
+import { relations } from 'drizzle-orm';
+import { bookings } from './bookings';
+import { courses } from './courses';
+import { availabilities } from './availabilities';
+import { learners } from './learners';
 
 export const bookingsRelations = relations(bookings, ({ one }) => ({
   course: one(courses, {

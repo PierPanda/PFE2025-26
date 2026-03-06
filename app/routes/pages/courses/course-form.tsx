@@ -8,6 +8,7 @@ import {
   SelectItem,
   Textarea,
 } from '@heroui/react';
+import { useState } from 'react';
 import { categoryOptions, levelOptions } from '~/lib/constant';
 import type { CourseFormInput } from './create-course-form';
 
@@ -17,6 +18,8 @@ type CourseFormProps = {
 };
 
 export default function CourseForm({ values, errors }: CourseFormProps) {
+  const [selectedCategory, setSelectedCategory] = useState<string>(values?.category ?? '');
+
   return (
     <div className="flex flex-col gap-5">
       <Input
@@ -41,15 +44,12 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Catégorie"
           placeholder="Instrument…"
           name="category"
-          defaultSelectedKey={values?.category || ''}
+          selectedKey={selectedCategory || null}
+          onSelectionChange={(key) => setSelectedCategory(typeof key === 'string' ? key : '')}
           isInvalid={errors.category ? true : undefined}
           errorMessage={errors.category}
         >
-          {(item) => (
-            <AutocompleteItem key={item.value} className="capitalize">
-              {item.label}
-            </AutocompleteItem>
-          )}
+          {(item) => <AutocompleteItem key={item.key}>{item.value}</AutocompleteItem>}
         </Autocomplete>
 
         <Select
@@ -64,9 +64,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           errorMessage={errors.level}
         >
           {levelOptions.map((levelItem) => (
-            <SelectItem key={levelItem.value} className="capitalize">
-              {levelItem.label}
-            </SelectItem>
+            <SelectItem key={levelItem.key}>{levelItem.value}</SelectItem>
           ))}
         </Select>
       </div>

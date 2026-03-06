@@ -15,6 +15,7 @@ import { categoryOptions, levelOptions } from '~/lib/constant';
 import type { ChangeEvent } from 'react';
 import { InlineIcon } from '@iconify/react';
 import type { NavigateOptions } from 'react-router';
+import { formatPrice } from '~/lib/utils';
 
 type FiltersProps = {
   searchParams: URLSearchParams;
@@ -24,15 +25,6 @@ type FiltersProps = {
 };
 
 export default function Filters({ searchParams, setSearchParams, minPrice, maxPrice }: FiltersProps) {
-  const toCapitalized = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
-
-  const formatPrice = (value: number) =>
-    new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
-      maximumFractionDigits: 0,
-    }).format(value);
-
   const selectedCategoryValue = searchParams.get('category') ?? '';
   const selectedLevelValue = searchParams.get('level') ?? '';
   const selectedCategory = categoryOptions.find((cat) => cat.value === selectedCategoryValue);
@@ -59,8 +51,7 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
   };
 
   const handleCategoryChange = (value: string) => {
-    const normalizedValue = value.toLowerCase();
-    const match = categoryOptions.find((cat) => cat.label.toLowerCase() === normalizedValue);
+    const match = categoryOptions.find((cat) => cat.key === value);
     setCategoryParam(match?.value ?? null);
   };
 
@@ -105,28 +96,23 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
         <div className="flex flex-col gap-4">
           <Autocomplete
             size="sm"
-            className="w-full capitalize"
+            className="w-full"
             defaultItems={categoryOptions}
             label="Filtrer par catégorie"
             name="category"
             color="warning"
             variant="bordered"
             selectedKey={selectedCategoryValue || null}
-            inputValue={selectedCategory?.label ? toCapitalized(selectedCategory.label) : ''}
+            inputValue={selectedCategory?.value || ''}
             onInputChange={handleCategoryChange}
             onSelectionChange={handleCategorySelection}
             isClearable
           >
-            {(item) => (
-              <AutocompleteItem key={item.value} className="capitalize">
-                {item.label}
-              </AutocompleteItem>
-            )}
+            {(item) => <AutocompleteItem key={item.key}>{item.value}</AutocompleteItem>}
           </Autocomplete>
 
           <Select
             className="w-full"
-            classNames={{ value: 'capitalize' }}
             label="Filtrer par niveau"
             size="sm"
             name="level"
@@ -136,10 +122,8 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
             onChange={handleLevelChange}
             isClearable
           >
-            {levelOptions.map((levelItem: { value: string; label: string }) => (
-              <SelectItem key={levelItem.value} className="capitalize">
-                {levelItem.label}
-              </SelectItem>
+            {levelOptions.map((levelItem) => (
+              <SelectItem key={levelItem.key}>{levelItem.value}</SelectItem>
             ))}
           </Select>
 
