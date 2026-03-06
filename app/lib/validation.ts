@@ -73,6 +73,14 @@ export type CreateTeacherInput = z.infer<typeof createTeacherSchema>;
 export type UpdateTeacherInput = z.infer<typeof updateTeacherSchema>;
 export type UpdateCourseInput = z.infer<typeof updateCourseSchema>;
 
+export const createLearnerSchema = z.object({
+  userId: z.string().min(1, "L'ID utilisateur est requis."),
+});
+
+export const updateLearnerSchema = z.object({
+  userId: z.string().min(1, "L'ID utilisateur est requis.").optional(),
+});
+
 export function validateSearchParams<T extends z.ZodTypeAny>(url: URL, schema: T): z.infer<T> {
   const params = Object.fromEntries(url.searchParams.entries());
   const result = schema.safeParse(params);
