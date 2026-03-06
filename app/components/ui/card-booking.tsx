@@ -1,6 +1,6 @@
 import { Card, CardFooter, Image, Chip } from '@heroui/react';
 
-export default function TeacherCourses({ booking }: { booking: any }) {
+export default function CardBooking({ booking }: { booking: any }) {
   const { course, booking: bookingData } = booking;
   const urlImage = `/categories/${course.category}.jpg`;
   return (
