@@ -1,19 +1,14 @@
 import { formatTime } from '~/lib/utils';
+import type { AvailabilityFormInput } from '~/types/availability';
 
-interface Availability {
-  id: string;
-  dayOfWeek?: string;
-  startTime: Date | string;
-  endTime: Date | string;
-  [key: string]: any;
-}
+type CardAvailabilityProps = {
+  availability: AvailabilityFormInput;
+};
 
-export default function CardAvailability({ availability }: { availability: Availability }) {
+export default function CardAvailability({ availability }: CardAvailabilityProps) {
   return (
     <div className="rounded-lg p-4 min-w-max font-bold text-black bg-orange-500">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">{availability.dayOfWeek}</h3>
-      </div>
+      <div className="flex items-center justify-between"></div>
       <p className="">
         {formatTime(availability.startTime)} - {formatTime(availability.endTime)}
       </p>
