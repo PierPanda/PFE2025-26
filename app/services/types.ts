@@ -1,4 +1,12 @@
-import { user, teachers, learners, courses, availabilities, bookings, ratings } from '~/server/lib/db/schema';
+import {
+  user,
+  teachers,
+  learners,
+  courses,
+  availabilities,
+  bookings,
+  ratings,
+} from "~/server/lib/db/schema";
 
 /**
  * Base models inferred from Drizzle schema using $inferSelect
@@ -31,6 +39,15 @@ export type TeacherWithUserAndCoursesCount = DbTeacher & {
 
 export type CourseWithTeacher = DbCourse & {
   teacher: TeacherWithUser;
+};
+
+export type LearnerWithUser = DbLearner & {
+  user: DbUser;
+};
+
+export type LearnerWithUserAndBookings = DbLearner & {
+  user: DbUser;
+  bookings: DbBooking[];
 };
 
 /**
@@ -66,6 +83,10 @@ export type GetTeacherResponse = ServiceResponse<{
   teacher: TeacherWithUserAndCourses | null;
 }>;
 
+export type GetLearnerResponse = ServiceResponse<{
+  learner: LearnerWithUserAndBookings | null;
+}>;
+
 export type GetTeacherSummaryResponse = ServiceResponse<{
   teacher: TeacherWithUserAndCoursesCount | null;
 }>;
@@ -85,3 +106,7 @@ export type DeleteCourseResponse = ServiceResponse<object>;
 export type CreateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type UpdateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type DeleteTeacherResponse = ServiceResponse<object>;
+
+export type CreateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
+export type UpdateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
+export type DeleteLearnerResponse = ServiceResponse<object>;
