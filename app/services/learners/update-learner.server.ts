@@ -1,16 +1,13 @@
-import { eq, sql } from "drizzle-orm";
-import { db } from "~/server/lib/db/index.server";
-import { learners } from "~/server/lib/db/schema";
-import type { UpdateLearnerInput } from "~/lib/validation";
-import type { UpdateLearnerResponse } from "../types";
+import { eq, sql } from 'drizzle-orm';
+import { db } from '~/server/lib/db/index.server';
+import { learners } from '~/server/lib/db/schema';
+import type { UpdateLearnerInput } from '~/lib/validation';
+import type { UpdateLearnerResponse } from '../types';
 
 /**
  * Update an existing learner profile in database
  */
-export async function updateLearner(
-  learnerId: string,
-  data: UpdateLearnerInput,
-): Promise<UpdateLearnerResponse> {
+export async function updateLearner(learnerId: string, data: UpdateLearnerInput): Promise<UpdateLearnerResponse> {
   try {
     const [updatedLearner] = await db
       .update(learners)
@@ -26,11 +23,11 @@ export async function updateLearner(
     }
     return {
       success: true,
-      message: "Apprenant mis à jour avec succès.",
+      message: 'Apprenant mis à jour avec succès.',
       learner: updatedLearner,
     };
   } catch (error) {
-    console.error("Error updating learner:", error);
+    console.error('Error updating learner:', error);
     return {
       success: false,
       error: "Une erreur s'est produite lors de la mise à jour de l'apprenant.",

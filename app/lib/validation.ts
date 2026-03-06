@@ -1,21 +1,21 @@
-import { z } from "zod";
-import { levelValues } from "~/server/lib/levels";
-import { categoryValues } from "~/server/lib/categories";
+import { z } from 'zod';
+import { levelValues } from '~/server/lib/levels';
+import { categoryValues } from '~/server/lib/categories';
 
 /**
  * Schémas de validation communs pour les routes API
  */
 
-export const uuidSchema = z.string().uuid("ID invalide");
+export const uuidSchema = z.string().uuid('ID invalide');
 
 export const paginationQuerySchema = z.object({
   page: z
     .string()
     .optional()
-    .default("1")
+    .default('1')
     .transform((val) => parseInt(val, 10))
-    .pipe(z.number().int().positive("Le numéro de page doit être positif")),
-  search: z.string().optional().default(""),
+    .pipe(z.number().int().positive('Le numéro de page doit être positif')),
+  search: z.string().optional().default(''),
 });
 
 export const idParamSchema = z.object({
@@ -23,13 +23,13 @@ export const idParamSchema = z.object({
 });
 
 export const courseFormSchema = z.object({
-  title: z.string().min(1, "Le titre est requis."),
-  description: z.string().min(1, "La description est requise."),
-  duration: z.coerce.number().min(1, "La durée est requise."),
+  title: z.string().min(1, 'Le titre est requis.'),
+  description: z.string().min(1, 'La description est requise.'),
+  duration: z.coerce.number().min(1, 'La durée est requise.'),
   level: z.enum(levelValues),
   price: z.coerce
     .number()
-    .min(0, "Le prix doit être supérieur ou égal à 0.")
+    .min(0, 'Le prix doit être supérieur ou égal à 0.')
     .transform((val) => val.toString()),
   category: z.enum(categoryValues),
 });
@@ -51,7 +51,7 @@ export const courseQuerySchema = paginationQuerySchema.extend({
   isPublished: z
     .string()
     .optional()
-    .transform((val) => (val === undefined ? undefined : val === "true")),
+    .transform((val) => (val === undefined ? undefined : val === 'true')),
 });
 
 export type CourseFormInput = z.infer<typeof courseFormSchema>;
@@ -85,52 +85,37 @@ export const updateLearnerSchema = createLearnerSchema.partial().extend({
 export type CreateLearnerInput = z.infer<typeof createLearnerSchema>;
 export type UpdateLearnerInput = z.infer<typeof updateLearnerSchema>;
 
-export function validateSearchParams<T extends z.ZodTypeAny>(
-  url: URL,
-  schema: T,
-): z.infer<T> {
+export function validateSearchParams<T extends z.ZodTypeAny>(url: URL, schema: T): z.infer<T> {
   const params = Object.fromEntries(url.searchParams.entries());
   const result = schema.safeParse(params);
 
   if (!result.success) {
-    const errors = result.error.issues
-      .map((e) => `${e.path.join(".")}: ${e.message}`)
-      .join(", ");
+    const errors = result.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ');
     throw new Response(`Paramètres invalides: ${errors}`, { status: 400 });
   }
 
   return result.data;
 }
 
-export async function validateFormData<T extends z.ZodTypeAny>(
-  request: Request,
-  schema: T,
-): Promise<z.infer<T>> {
+export async function validateFormData<T extends z.ZodTypeAny>(request: Request, schema: T): Promise<z.infer<T>> {
   const formData = await request.formData();
   const data = Object.fromEntries(formData.entries());
   const result = schema.safeParse(data);
 
   if (!result.success) {
-    const errors = result.error.issues
-      .map((e) => `${e.path.join(".")}: ${e.message}`)
-      .join(", ");
+    const errors = result.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ');
     throw new Response(`Données invalides: ${errors}`, { status: 400 });
   }
 
   return result.data;
 }
 
-export async function validateJsonBody<T extends z.ZodTypeAny>(
-  request: Request,
-  schema: T,
-): Promise<z.infer<T>> {
+export async function validateJsonBody<T extends z.ZodTypeAny>(request: Request, schema: T): Promise<z.infer<T>> {
   const body = await request.json();
   const result = schema.safeParse(body);
 
   if (!result.success) {
-    const errors = result.error.issues
-      .map((e) => `${e.path.join(".")}: ${e.message}`)
-      .join(", ");
+    const errors = result.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ');
     throw new Response(`Données invalides: ${errors}`, { status: 400 });
   }
 
@@ -144,9 +129,7 @@ export function validateParams<T extends z.ZodTypeAny>(
   const result = schema.safeParse(params);
 
   if (!result.success) {
-    const errors = result.error.issues
-      .map((e) => `${e.path.join(".")}: ${e.message}`)
-      .join(", ");
+    const errors = result.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ');
     throw new Response(`Paramètres invalides: ${errors}`, { status: 400 });
   }
 

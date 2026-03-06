@@ -1,22 +1,15 @@
-import {
-  data,
-  type LoaderFunctionArgs,
-  type ActionFunctionArgs,
-} from "react-router";
-import { authentifyUser } from "~/server/utils/authentify-user.server";
-import { createLearnerSchema, updateLearnerSchema } from "~/lib/validation";
-import { createLearner } from "~/services/learners/create-learner.server";
-import {
-  getLearner,
-  getLearnerByUserId,
-} from "~/services/learners/get-learner.server";
-import { updateLearner } from "~/services/learners/update-learner.server";
-import { deleteLearner } from "~/services/learners/delete-learner.server";
+import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-router';
+import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { createLearnerSchema, updateLearnerSchema } from '~/lib/validation';
+import { createLearner } from '~/services/learners/create-learner.server';
+import { getLearner, getLearnerByUserId } from '~/services/learners/get-learner.server';
+import { updateLearner } from '~/services/learners/update-learner.server';
+import { deleteLearner } from '~/services/learners/delete-learner.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-  const learnerId = url.searchParams.get("id");
-  const userId = url.searchParams.get("userId");
+  const learnerId = url.searchParams.get('id');
+  const userId = url.searchParams.get('userId');
 
   if (learnerId) {
     const result = await getLearner(learnerId);
@@ -31,7 +24,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return result;
   }
 
-  return data({ error: "Learner ID or User ID required" }, { status: 400 });
+  return data({ error: 'Learner ID or User ID required' }, { status: 400 });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -40,55 +33,43 @@ export async function action({ request }: ActionFunctionArgs) {
   const method = request.method.toUpperCase();
 
   switch (method) {
-    case "POST": {
+    case 'POST': {
       const body = await request.json();
       const parsed = createLearnerSchema.safeParse(body);
 
       if (!parsed.success) {
-        return data(
-          { success: false, errors: parsed.error.flatten() },
-          { status: 400 },
-        );
+        return data({ success: false, errors: parsed.error.flatten() }, { status: 400 });
       }
 
       const result = await createLearner(parsed.data);
       return data(result, { status: result.success ? 201 : 400 });
     }
 
-    case "PUT": {
+    case 'PUT': {
       const url = new URL(request.url);
-      const learnerId = url.searchParams.get("id");
+      const learnerId = url.searchParams.get('id');
 
       if (!learnerId) {
-        return data(
-          { success: false, error: "Learner ID required" },
-          { status: 400 },
-        );
+        return data({ success: false, error: 'Learner ID required' }, { status: 400 });
       }
 
       const body = await request.json();
       const parsed = updateLearnerSchema.safeParse(body);
 
       if (!parsed.success) {
-        return data(
-          { success: false, errors: parsed.error.flatten() },
-          { status: 400 },
-        );
+        return data({ success: false, errors: parsed.error.flatten() }, { status: 400 });
       }
 
       const result = await updateLearner(learnerId, parsed.data);
       return result;
     }
 
-    case "DELETE": {
+    case 'DELETE': {
       const url = new URL(request.url);
-      const learnerId = url.searchParams.get("id");
+      const learnerId = url.searchParams.get('id');
 
       if (!learnerId) {
-        return data(
-          { success: false, error: "Learner ID required" },
-          { status: 400 },
-        );
+        return data({ success: false, error: 'Learner ID required' }, { status: 400 });
       }
 
       const result = await deleteLearner(learnerId);
@@ -96,6 +77,6 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     default:
-      return data({ error: "Method not allowed" }, { status: 405 });
+      return data({ error: 'Method not allowed' }, { status: 405 });
   }
 }
