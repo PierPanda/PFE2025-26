@@ -1,19 +1,20 @@
 import { eq, and, gte, lte, min, max, ilike } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 
-import { courses, teachers, user } from '~/server/lib/db/schema';
+import { courses } from '~/server/lib/db/schema';
 import type { GetCoursesResponse } from '../types';
 import type { CourseLevel, CourseCategory } from '~/types/course';
+import type { GetCoursesByTeacherResponse } from '../types';
 
 /**
  * Get all courses with optional filters and teacher info
  */
 export async function getCourses(
-  category?: CourseCategory,
-  level?: CourseLevel,
-  minPrice?: string,
-  maxPrice?: string,
-  search?: string,
+  category?: CourseCategory | null,
+  level?: CourseLevel | null,
+  minPrice?: string | null,
+  maxPrice?: string | null,
+  search?: string | null,
 ): Promise<GetCoursesResponse> {
   try {
     const result = await db.query.courses.findMany({
@@ -58,25 +59,21 @@ export async function getCourses(
 }
 
 /**
- * Get all courses by teacher ID
+ * Get courses by teacher ID
  */
-export async function getCoursesByTeacher(teacherId: string) {
+export async function getCoursesByTeacher(teacherId: string): Promise<GetCoursesByTeacherResponse> {
   try {
-    const result = await db
-      .select({
-        id: courses.id,
-        title: courses.title,
-        description: courses.description,
-        duration: courses.duration,
-        price: courses.price,
-        category: courses.category,
-        level: courses.level,
-        teacherName: user.name,
-      })
-      .from(courses)
-      .leftJoin(teachers, eq(courses.teacherId, teachers.id))
-      .leftJoin(user, eq(teachers.userId, user.id))
-      .where(eq(courses.teacherId, teacherId));
+    const result = await db.query.courses.findMany({
+      where: eq(courses.teacherId, teacherId),
+      with: {
+        teacher: {
+          with: {
+            user: true,
+          },
+        },
+        ratings: true,
+      },
+    });
 
     return {
       success: true,
@@ -86,7 +83,7 @@ export async function getCoursesByTeacher(teacherId: string) {
     console.error('Error fetching courses by teacher:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la récupération des cours de l'enseignant.",
+      error: "Une erreur s'est produite lors de la récupération des cours.",
     };
   }
 }

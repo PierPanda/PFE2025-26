@@ -2,8 +2,8 @@ import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-ro
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { createCourseSchema, updateCourseSchema } from '~/lib/validation';
 import { createCourse } from '~/services/courses/create-course.server';
-import { getCourseById, getCoursesByTeacher } from '~/services/courses/get-course.server';
-import { getCourses } from '~/services/courses/get-courses.server';
+import { getCourseById } from '~/services/courses/get-course.server';
+import { getCourses, getCoursesByTeacher } from '~/services/courses/get-courses.server';
 import { updateCourse } from '~/services/courses/update-course.server';
 import { deleteCourse } from '~/services/courses/delete-course.server';
 import type { CourseCategory, CourseLevel } from '~/types/course';
@@ -14,11 +14,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const courseId = url.searchParams.get('id');
   const teacherId = url.searchParams.get('teacherId');
 
-  const category = url.searchParams.get('category') as CourseCategory | undefined;
-  const level = url.searchParams.get('level') as CourseLevel | undefined;
-  const minPrice = url.searchParams.get('minPrice') || undefined;
-  const maxPrice = url.searchParams.get('maxPrice') || undefined;
-  const search = url.searchParams.get('search') || undefined;
+  const category = url.searchParams.get('category') as CourseCategory | null;
+  const level = url.searchParams.get('level') as CourseLevel | null;
+  const minPrice = url.searchParams.get('minPrice') as string | null;
+  const maxPrice = url.searchParams.get('maxPrice') as string | null;
+  const search = url.searchParams.get('search') as string | null;
 
   if (courseId) {
     const result = await getCourseById(courseId);

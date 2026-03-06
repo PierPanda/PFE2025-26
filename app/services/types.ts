@@ -33,6 +33,10 @@ export type CourseWithTeacher = DbCourse & {
   teacher: TeacherWithUser;
 };
 
+export type CourseWithTeacherAndRatings = CourseWithTeacher & {
+  ratings: DbRating[];
+}
+
 export type LearnerWithUser = DbLearner & {
   user: DbUser;
 };
@@ -68,7 +72,7 @@ export type GetCoursesResponse = ServiceResponse<{
   filters?: { minPrice: number; maxPrice: number };
 }>;
 export type GetCoursesByTeacherResponse = ServiceResponse<{
-  courses: DbCourse[];
+  courses: CourseWithTeacherAndRatings[];
 }>;
 
 export type GetTeacherResponse = ServiceResponse<{

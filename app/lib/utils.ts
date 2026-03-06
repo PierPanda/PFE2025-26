@@ -51,3 +51,12 @@ export function isServer(): boolean {
 export function isClient(): boolean {
   return typeof window !== 'undefined';
 }
+
+/**
+ * Calculate average rating from a list of ratings
+ * Returns null if no ratings exist
+ */
+export function calculateAverageRating(ratings: { rate: string | number }[]): number | null {
+  if (ratings.length === 0) return null;
+  return ratings.reduce((sum, r) => sum + Number(r.rate), 0) / ratings.length;
+}
