@@ -35,6 +35,15 @@ export type CourseWithTeacher = DbCourse & {
 
 export type CourseWithTeacherAndRatings = CourseWithTeacher & {
   ratings: DbRating[];
+}
+
+export type LearnerWithUser = DbLearner & {
+  user: DbUser;
+};
+
+export type LearnerWithUserAndBookings = DbLearner & {
+  user: DbUser;
+  bookings: DbBooking[];
 };
 
 /**
@@ -70,6 +79,10 @@ export type GetTeacherResponse = ServiceResponse<{
   teacher: TeacherWithUserAndCourses | null;
 }>;
 
+export type GetLearnerResponse = ServiceResponse<{
+  learner: LearnerWithUserAndBookings | null;
+}>;
+
 export type GetTeacherSummaryResponse = ServiceResponse<{
   teacher: TeacherWithUserAndCoursesCount | null;
 }>;
@@ -89,3 +102,7 @@ export type DeleteCourseResponse = ServiceResponse<object>;
 export type CreateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type UpdateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type DeleteTeacherResponse = ServiceResponse<object>;
+
+export type CreateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
+export type UpdateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
+export type DeleteLearnerResponse = ServiceResponse<object>;
