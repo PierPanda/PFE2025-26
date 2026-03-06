@@ -33,6 +33,10 @@ export type CourseWithTeacher = DbCourse & {
   teacher: TeacherWithUser;
 };
 
+export type CourseWithTeacherAndRatings = CourseWithTeacher & {
+  ratings: DbRating[];
+};
+
 /**
  * Service response types - Discriminated union pattern
  */
@@ -59,7 +63,7 @@ export type GetCoursesResponse = ServiceResponse<{
   filters?: { minPrice: number; maxPrice: number };
 }>;
 export type GetCoursesByTeacherResponse = ServiceResponse<{
-  courses: DbCourse[];
+  courses: CourseWithTeacherAndRatings[];
 }>;
 
 export type GetTeacherResponse = ServiceResponse<{

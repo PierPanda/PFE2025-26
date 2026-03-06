@@ -65,6 +65,14 @@ export async function getCoursesByTeacher(teacherId: string): Promise<GetCourses
   try {
     const result = await db.query.courses.findMany({
       where: eq(courses.teacherId, teacherId),
+      with: {
+        teacher: {
+          with: {
+            user: true,
+          },
+        },
+        ratings: true,
+      },
     });
 
     return {

@@ -16,28 +16,21 @@ import {
   ModalFooter,
 } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
-import { formatDuration } from '~/lib/utils';
+import { formatDuration, calculateAverageRating } from '~/lib/utils';
 import { useFetcher } from 'react-router';
+import type { CourseWithTeacherAndRatings } from '~/services/types';
+import StarRating from '~/components/ui/star-rating';
 
 type CardCoursesProps = {
-  course: any;
+  course: CourseWithTeacherAndRatings;
   showActions?: boolean;
 };
 
 export default function CardCourses({ course, showActions = false }: CardCoursesProps) {
   const urlImage = `/categories/${course.category}.jpg`;
+  const courseRate = calculateAverageRating(course.ratings);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const fetcher = useFetcher();
-
-  const renderStars = (rating: number) =>
-    Array.from({ length: 5 }, (_, index) => (
-      <InlineIcon
-        key={index}
-        icon={index < Math.floor(rating) ? 'mdi:star' : 'mdi:star-outline'}
-        className="text-amber-400"
-        width="24"
-      />
-    ));
 
   const handleDelete = () => {
     fetcher.submit({ courseId: course.id }, { method: 'post', action: '/profile' });
@@ -94,9 +87,11 @@ export default function CardCourses({ course, showActions = false }: CardCourses
             )}
           </div>
           <CardBody>
-            <div className="flex gap-1 mb-3 font-bold">{renderStars(course.rating || 4.5)}</div>
+            <div className="flex gap-1 mb-3 font-bold">
+              <StarRating rating={courseRate} />
+            </div>
             <p className="text-3xl font-bold text-black mb-2">{course.price}€</p>
-            <p className="text-amber-400 font-semibold text-sm uppercase mb-1">{course.teacherName}</p>
+            <p className="text-amber-400 font-semibold text-sm uppercase mb-1">{course.teacher.user.name}</p>
             <h3 className="text-orange-500 font-bold text-2xl mb-2">{course.title}</h3>
             <p className="text-gray-700 text-sm">{course.description}</p>
           </CardBody>
