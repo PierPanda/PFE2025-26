@@ -16,6 +16,7 @@ import {
   ModalFooter,
 } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
+import { formatDuration } from '~/lib/utils';
 import { useFetcher } from 'react-router';
 
 type CardCoursesProps = {
@@ -54,7 +55,7 @@ export default function CardCourses({ course, showActions = false }: CardCourses
               radius="lg"
               startContent={<InlineIcon icon="mdi:clock-outline" width="18" />}
             >
-              {course.duration}h
+              {formatDuration(course.duration)}
             </Chip>
 
             {showActions && (
