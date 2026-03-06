@@ -10,11 +10,11 @@ import type { GetCoursesByTeacherResponse } from '../types';
  * Get all courses with optional filters and teacher info
  */
 export async function getCourses(
-  category?: CourseCategory,
-  level?: CourseLevel,
-  minPrice?: string,
-  maxPrice?: string,
-  search?: string,
+  category?: CourseCategory | null,
+  level?: CourseLevel | null,
+  minPrice?: string | null,
+  maxPrice?: string | null,
+  search?: string | null,
 ): Promise<GetCoursesResponse> {
   try {
     const result = await db.query.courses.findMany({

@@ -14,11 +14,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const courseId = url.searchParams.get('id');
   const teacherId = url.searchParams.get('teacherId');
 
-  const category = url.searchParams.get('category') as CourseCategory | undefined;
-  const level = url.searchParams.get('level') as CourseLevel | undefined;
-  const minPrice = url.searchParams.get('minPrice') || undefined;
-  const maxPrice = url.searchParams.get('maxPrice') || undefined;
-  const search = url.searchParams.get('search') || undefined;
+  const category = url.searchParams.get('category') as CourseCategory | null;
+  const level = url.searchParams.get('level') as CourseLevel | null;
+  const minPrice = url.searchParams.get('minPrice') as string | null;
+  const maxPrice = url.searchParams.get('maxPrice') as string | null;
+  const search = url.searchParams.get('search') as string | null;
 
   if (courseId) {
     const result = await getCourseById(courseId);
