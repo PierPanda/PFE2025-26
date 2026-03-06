@@ -33,6 +33,10 @@ export type CourseWithTeacher = DbCourse & {
   teacher: TeacherWithUser;
 };
 
+export type AvailabilityWithTeacher = DbAvailability & {
+  teacher: TeacherWithUser;
+};
+
 /**
  * Service response types - Discriminated union pattern
  */
@@ -70,6 +74,10 @@ export type GetTeacherSummaryResponse = ServiceResponse<{
   teacher: TeacherWithUserAndCoursesCount | null;
 }>;
 
+export type GetAvailabilityResponse = ServiceResponse<{
+  availability: AvailabilityWithTeacher | null;
+}>;
+
 export type GetAppStatsResponse = ServiceResponse<{
   stats: {
     coursesCount: number;
@@ -85,3 +93,7 @@ export type DeleteCourseResponse = ServiceResponse<object>;
 export type CreateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type UpdateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type DeleteTeacherResponse = ServiceResponse<object>;
+
+export type CreateAvailabilityResponse = ServiceResponse<{ availability: DbAvailability }>;
+export type UpdateAvailabilityResponse = ServiceResponse<{ availability: DbAvailability }>;
+export type DeleteAvailabilityResponse = ServiceResponse<object>;
