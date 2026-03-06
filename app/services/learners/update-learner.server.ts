@@ -1,7 +1,7 @@
 import { eq, sql } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { learners } from '~/server/lib/db/schema';
-import type { UpdateLearnerInput } from '~/lib/validation';
+import type { UpdateLearnerInput } from '~/types/learner';
 import type { UpdateLearnerResponse } from '../types';
 
 /**

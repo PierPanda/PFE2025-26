@@ -82,9 +82,6 @@ export const updateLearnerSchema = createLearnerSchema.partial().extend({
   id: uuidSchema,
 });
 
-export type CreateLearnerInput = z.infer<typeof createLearnerSchema>;
-export type UpdateLearnerInput = z.infer<typeof updateLearnerSchema>;
-
 export function validateSearchParams<T extends z.ZodTypeAny>(url: URL, schema: T): z.infer<T> {
   const params = Object.fromEntries(url.searchParams.entries());
   const result = schema.safeParse(params);

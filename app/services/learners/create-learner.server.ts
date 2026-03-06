@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { learners } from '~/server/lib/db/schema';
-import type { CreateLearnerInput } from '~/lib/validation';
+import type { CreateLearnerInput } from '~/types/learner';
 import type { CreateLearnerResponse } from '../types';
 
 /**
