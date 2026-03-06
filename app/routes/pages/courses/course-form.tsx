@@ -8,7 +8,9 @@ import {
   SelectItem,
   Textarea,
 } from '@heroui/react';
+import { useState } from 'react';
 import { categoryOptions, levelOptions } from '~/lib/constant';
+import { capitalize } from '~/lib/utils';
 import type { CourseFormInput } from './create-course-form';
 
 type CourseFormProps = {
@@ -17,6 +19,13 @@ type CourseFormProps = {
 };
 
 export default function CourseForm({ values, errors }: CourseFormProps) {
+  const initialCategory = categoryOptions.find((category) => category.value === values?.category);
+
+  const [selectedCategoryValue, setSelectedCategoryValue] = useState<string>(values?.category ?? '');
+  const [categoryInputValue, setCategoryInputValue] = useState<string>(
+    initialCategory?.label ? capitalize(initialCategory.label) : '',
+  );
+
   return (
     <div className="flex flex-col gap-5">
       <Input
@@ -41,7 +50,21 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Catégorie"
           placeholder="Instrument…"
           name="category"
-          defaultSelectedKey={values?.category || ''}
+          selectedKey={selectedCategoryValue || null}
+          inputValue={categoryInputValue}
+          onInputChange={(value) => {
+            setCategoryInputValue(value);
+            if (!value) {
+              setSelectedCategoryValue('');
+            }
+          }}
+          onSelectionChange={(key) => {
+            const selectedValue = typeof key === 'string' ? key : '';
+            setSelectedCategoryValue(selectedValue);
+
+            const selectedCategory = categoryOptions.find((category) => category.value === selectedValue);
+            setCategoryInputValue(selectedCategory?.label ? capitalize(selectedCategory.label) : '');
+          }}
           isInvalid={errors.category ? true : undefined}
           errorMessage={errors.category}
         >
@@ -59,6 +82,9 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Niveau"
           placeholder="Choisir…"
           name="level"
+          classNames={{
+            value: 'capitalize',
+          }}
           defaultSelectedKeys={values?.level ? [values.level] : []}
           isInvalid={errors.level ? true : undefined}
           errorMessage={errors.level}

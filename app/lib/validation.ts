@@ -30,7 +30,7 @@ export const courseFormSchema = z.object({
   price: z.coerce
     .number()
     .min(0, 'Le prix doit être supérieur ou égal à 0.')
-    .transform((val) => val.toString()),
+    .transform((val) => val.toFixed(2)),
   category: z.enum(categoryValues),
 });
 

@@ -38,8 +38,10 @@ export function UserProfile() {
         aria-label="Menu utilisateur"
         onAction={(key) => {
           if (key === 'logout') handleSignOut();
+          if (key === 'profile') navigate('/profile');
         }}
       >
+        <DropdownItem key="profile">Mon profil</DropdownItem>
         <DropdownItem key="logout" color="danger" className="text-danger">
           Déconnexion
         </DropdownItem>
