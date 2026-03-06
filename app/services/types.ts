@@ -37,6 +37,19 @@ export type AvailabilityWithTeacher = DbAvailability & {
   teacher: TeacherWithUser;
 };
 
+export type CourseWithTeacherAndRatings = CourseWithTeacher & {
+  ratings: DbRating[];
+};
+
+export type LearnerWithUser = DbLearner & {
+  user: DbUser;
+};
+
+export type LearnerWithUserAndBookings = DbLearner & {
+  user: DbUser;
+  bookings: DbBooking[];
+};
+
 /**
  * Service response types - Discriminated union pattern
  */
@@ -63,11 +76,15 @@ export type GetCoursesResponse = ServiceResponse<{
   filters?: { minPrice: number; maxPrice: number };
 }>;
 export type GetCoursesByTeacherResponse = ServiceResponse<{
-  courses: DbCourse[];
+  courses: CourseWithTeacherAndRatings[];
 }>;
 
 export type GetTeacherResponse = ServiceResponse<{
   teacher: TeacherWithUserAndCourses | null;
+}>;
+
+export type GetLearnerResponse = ServiceResponse<{
+  learner: LearnerWithUserAndBookings | null;
 }>;
 
 export type GetTeacherSummaryResponse = ServiceResponse<{
@@ -101,3 +118,7 @@ export type DeleteTeacherResponse = ServiceResponse<object>;
 export type CreateAvailabilityResponse = ServiceResponse<{ availability: DbAvailability }>;
 export type UpdateAvailabilityResponse = ServiceResponse<{ availability: DbAvailability }>;
 export type DeleteAvailabilityResponse = ServiceResponse<object>;
+
+export type CreateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
+export type UpdateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
+export type DeleteLearnerResponse = ServiceResponse<object>;

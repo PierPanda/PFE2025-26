@@ -10,7 +10,6 @@ import {
 } from '@heroui/react';
 import { useState } from 'react';
 import { categoryOptions, levelOptions } from '~/lib/constant';
-import { capitalize } from '~/lib/utils';
 import type { CourseFormInput } from './create-course-form';
 
 type CourseFormProps = {
@@ -19,12 +18,7 @@ type CourseFormProps = {
 };
 
 export default function CourseForm({ values, errors }: CourseFormProps) {
-  const initialCategory = categoryOptions.find((category) => category.value === values?.category);
-
-  const [selectedCategoryValue, setSelectedCategoryValue] = useState<string>(values?.category ?? '');
-  const [categoryInputValue, setCategoryInputValue] = useState<string>(
-    initialCategory?.label ? capitalize(initialCategory.label) : '',
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string>(values?.category ?? '');
 
   return (
     <div className="flex flex-col gap-5">
@@ -50,29 +44,12 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Catégorie"
           placeholder="Instrument…"
           name="category"
-          selectedKey={selectedCategoryValue || null}
-          inputValue={categoryInputValue}
-          onInputChange={(value) => {
-            setCategoryInputValue(value);
-            if (!value) {
-              setSelectedCategoryValue('');
-            }
-          }}
-          onSelectionChange={(key) => {
-            const selectedValue = typeof key === 'string' ? key : '';
-            setSelectedCategoryValue(selectedValue);
-
-            const selectedCategory = categoryOptions.find((category) => category.value === selectedValue);
-            setCategoryInputValue(selectedCategory?.label ? capitalize(selectedCategory.label) : '');
-          }}
+          selectedKey={selectedCategory || null}
+          onSelectionChange={(key) => setSelectedCategory(typeof key === 'string' ? key : '')}
           isInvalid={errors.category ? true : undefined}
           errorMessage={errors.category}
         >
-          {(item) => (
-            <AutocompleteItem key={item.value} className="capitalize">
-              {item.label}
-            </AutocompleteItem>
-          )}
+          {(item) => <AutocompleteItem key={item.key}>{item.value}</AutocompleteItem>}
         </Autocomplete>
 
         <Select
@@ -82,17 +59,12 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Niveau"
           placeholder="Choisir…"
           name="level"
-          classNames={{
-            value: 'capitalize',
-          }}
           defaultSelectedKeys={values?.level ? [values.level] : []}
           isInvalid={errors.level ? true : undefined}
           errorMessage={errors.level}
         >
           {levelOptions.map((levelItem) => (
-            <SelectItem key={levelItem.value} className="capitalize">
-              {levelItem.label}
-            </SelectItem>
+            <SelectItem key={levelItem.key}>{levelItem.value}</SelectItem>
           ))}
         </Select>
       </div>

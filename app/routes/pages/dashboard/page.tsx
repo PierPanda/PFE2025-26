@@ -8,7 +8,7 @@ import Filters from '~/components/dashboard/filters';
 import Banner from '~/components/dashboard/banner';
 import { getCourses } from '~/services/courses/get-courses.server';
 import { getAppStats } from '~/services/stats/get-app-stats.server';
-import type { CourseWithTeacher } from '~/services/types';
+
 import type { CourseCategory, CourseLevel } from '~/types/course';
 import { SearchBar } from '~/components/dashboard/search-bar';
 
@@ -89,7 +89,7 @@ export default function Home() {
               <p className="py-10 text-center text-default-500">Aucun cours disponible pour le moment.</p>
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {courses.map((course: CourseWithTeacher) => (
+                {courses.map((course) => (
                   <CourseCard key={course.id} course={course} />
                 ))}
               </ul>

@@ -32,13 +32,6 @@ export function formatDuration(minutes: number): string {
 }
 
 /**
- * Capitalize first letter
- */
-export function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
-
-/**
  * Sleep utility for async operations
  */
 export function sleep(ms: number): Promise<void> {
@@ -69,4 +62,13 @@ export function formatTime(time: Date | string): string {
     minute: '2-digit',
     hour12: false,
   });
+}
+
+/**
+ * Calculate average rating from a list of ratings
+ * Returns null if no ratings exist
+ */
+export function calculateAverageRating(ratings: { rate: string | number }[]): number | null {
+  if (ratings.length === 0) return null;
+  return ratings.reduce((sum, r) => sum + Number(r.rate), 0) / ratings.length;
 }
