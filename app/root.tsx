@@ -9,7 +9,7 @@ import {
   useHref,
 } from 'react-router';
 import type { LinksFunction } from 'react-router';
-import { HeroUIProvider } from '@heroui/react';
+import { HeroUIProvider, ToastProvider } from '@heroui/react';
 
 import './app.css';
 
@@ -47,7 +47,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const navigate = useNavigate();
   return (
-    <HeroUIProvider navigate={navigate} useHref={useHref}>
+    <HeroUIProvider navigate={navigate} useHref={useHref} locale="fr-FR">
+      <ToastProvider />
       <Outlet />
     </HeroUIProvider>
   );

@@ -1,12 +1,13 @@
 import { useLoaderData, Link } from 'react-router';
+import { useState } from 'react';
 import type { Route } from './+types/page';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { getCoursesByTeacher } from '~/services/courses/get-courses.server';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
 import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability.server';
 import CardCourse from '~/components/ui/card-course';
-import CardAvailability from '~/components/ui/card-availability';
 import UserProfile from '~/components/profile/user-profile';
+import { AvailabilitiesModal } from '~/components/availabilities/availabilities-modal';
 import { Button } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
 
@@ -43,10 +44,25 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function Page() {
   const { user, teacher, courses, availabilities } = useLoaderData<typeof loader>();
+  const [isAvailabilitiesOpen, setAvailabilitiesOpen] = useState(false);
+
   return (
     <main className="px-10 py-8 flex flex-col gap-6">
-      <div className="flex flex-col bg-amber-50 rounded-2xl p-6 w-full">
+      <div className="flex justify-between items-center bg-amber-50 rounded-2xl p-6 w-full gap-4">
         <UserProfile user={user} teacher={teacher} />
+        {teacher && (
+          <div className="flex justify-end">
+            <Button
+              size="lg"
+              color="warning"
+              variant="flat"
+              startContent={<InlineIcon icon="mdi:calendar-clock" width="16" />}
+              onPress={() => setAvailabilitiesOpen(true)}
+            >
+              Mes disponibilités
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col bg-amber-50 rounded-2xl p-6 gap-4 w-full overflow-hidden">
@@ -79,25 +95,16 @@ export default function Page() {
             </ul>
           </div>
         )}
-        {availabilities.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <p className="text-gray-500 mb-4">Vous n'avez pas encore de disponibilités.</p>
-            <Link to="/availability/create">
-              <Button size="sm" color="warning" variant="flat">
-                Créer ma première disponibilité
-              </Button>
-            </Link>
-          </div>
-        ) : (
-          <div className="w-full overflow-x-auto">
-            <ul className="flex gap-4 pb-2">
-              {availabilities.map((availability) => (
-                <CardAvailability key={availability.id} availability={availability} />
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
+
+      {teacher && (
+        <AvailabilitiesModal
+          isOpen={isAvailabilitiesOpen}
+          onClose={() => setAvailabilitiesOpen(false)}
+          teacherId={teacher.id}
+          availabilities={availabilities}
+        />
+      )}
     </main>
   );
 }
