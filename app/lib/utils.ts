@@ -53,6 +53,18 @@ export function isClient(): boolean {
 }
 
 /**
+ * Format time from Date or string to HH:mm format
+ */
+export function formatTime(time: Date | string): string {
+  const date = typeof time === 'string' ? new Date(time) : time;
+  return date.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}
+
+/**
  * Calculate average rating from a list of ratings
  * Returns null if no ratings exist
  */

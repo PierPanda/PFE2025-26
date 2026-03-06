@@ -54,8 +54,17 @@ export const courseQuerySchema = paginationQuerySchema.extend({
     .transform((val) => (val === undefined ? undefined : val === 'true')),
 });
 
-export type CourseFormInput = z.infer<typeof courseFormSchema>;
-export type CreateCourseInput = z.infer<typeof createCourseSchema>;
+export const availabilityFormSchema = z.object({
+  startTime: z.coerce.date(),
+  endTime: z.coerce.date(),
+});
+
+export const createAvailabilitySchema = availabilityFormSchema.extend({
+  id: uuidSchema,
+  teacherId: z.string().min(1, "L'ID enseignant est requis."),
+});
+
+export const updateAvailabilitySchema = availabilityFormSchema.partial();
 
 export const createTeacherSchema = z.object({
   id: uuidSchema,
@@ -68,10 +77,6 @@ export const createTeacherSchema = z.object({
 export const updateTeacherSchema = createTeacherSchema.partial().extend({
   id: uuidSchema,
 });
-
-export type CreateTeacherInput = z.infer<typeof createTeacherSchema>;
-export type UpdateTeacherInput = z.infer<typeof updateTeacherSchema>;
-export type UpdateCourseInput = z.infer<typeof updateCourseSchema>;
 
 export const createLearnerSchema = z.object({
   userId: z.string().min(1, "L'ID utilisateur est requis."),
