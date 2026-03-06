@@ -1,7 +1,7 @@
 import { eq, and, gte, lte, min, max, ilike } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 
-import { courses } from '~/server/lib/db/schema';
+import { courses, teachers, user } from '~/server/lib/db/schema';
 import type { GetCoursesResponse } from '../types';
 import type { CourseLevel, CourseCategory } from '~/types/course';
 
@@ -53,6 +53,40 @@ export async function getCourses(
     return {
       success: false,
       error: "Une erreur s'est produite lors de la récupération des cours.",
+    };
+  }
+}
+
+/**
+ * Get all courses by teacher ID
+ */
+export async function getCoursesByTeacher(teacherId: string) {
+  try {
+    const result = await db
+      .select({
+        id: courses.id,
+        title: courses.title,
+        description: courses.description,
+        duration: courses.duration,
+        price: courses.price,
+        category: courses.category,
+        level: courses.level,
+        teacherName: user.name,
+      })
+      .from(courses)
+      .leftJoin(teachers, eq(courses.teacherId, teachers.id))
+      .leftJoin(user, eq(teachers.userId, user.id))
+      .where(eq(courses.teacherId, teacherId));
+
+    return {
+      success: true,
+      courses: result,
+    };
+  } catch (error) {
+    console.error('Error fetching courses by teacher:', error);
+    return {
+      success: false,
+      error: "Une erreur s'est produite lors de la récupération des cours de l'enseignant.",
     };
   }
 }
