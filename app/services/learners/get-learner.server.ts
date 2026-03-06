@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
-import { learners, bookings } from '~/server/lib/db/schema';
+import { learners } from '~/server/lib/db/schema';
 import type { GetLearnerResponse } from '../types';
 
 /**

@@ -12,6 +12,7 @@ export async function createLearner(learnerData: CreateLearnerInput): Promise<Cr
     const [createdLearner] = await db
       .insert(learners)
       .values({
+        id: crypto.randomUUID(),
         ...learnerData,
         createdAt: sql`NOW()`,
         updatedAt: sql`NOW()`,

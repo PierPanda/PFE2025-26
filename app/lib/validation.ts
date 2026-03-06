@@ -74,12 +74,11 @@ export type UpdateTeacherInput = z.infer<typeof updateTeacherSchema>;
 export type UpdateCourseInput = z.infer<typeof updateCourseSchema>;
 
 export const createLearnerSchema = z.object({
-  id: uuidSchema,
   userId: z.string().min(1, "L'ID utilisateur est requis."),
 });
 
-export const updateLearnerSchema = createLearnerSchema.partial().extend({
-  id: uuidSchema,
+export const updateLearnerSchema = z.object({
+  userId: z.string().min(1, "L'ID utilisateur est requis.").optional(),
 });
 
 export function validateSearchParams<T extends z.ZodTypeAny>(url: URL, schema: T): z.infer<T> {

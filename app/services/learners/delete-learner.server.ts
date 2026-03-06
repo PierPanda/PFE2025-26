@@ -8,7 +8,14 @@ import type { DeleteLearnerResponse } from '../types';
  */
 export async function deleteLearner(learnerId: string): Promise<DeleteLearnerResponse> {
   try {
-    await db.delete(learners).where(eq(learners.id, learnerId));
+    const [deleted] = await db.delete(learners).where(eq(learners.id, learnerId)).returning();
+
+    if (!deleted) {
+      return {
+        success: false,
+        error: "Apprenant introuvable pour l'identifiant fourni.",
+      };
+    }
 
     return {
       success: true,

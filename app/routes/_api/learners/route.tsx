@@ -7,6 +7,8 @@ import { updateLearner } from '~/services/learners/update-learner.server';
 import { deleteLearner } from '~/services/learners/delete-learner.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  await authentifyUser(request);
+
   const url = new URL(request.url);
   const learnerId = url.searchParams.get('id');
   const userId = url.searchParams.get('userId');
@@ -16,11 +18,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
     if (!result.success) {
       return data({ error: result.error }, { status: 404 });
     }
+    if (!result.learner) {
+      return data({ error: 'Apprenant introuvable.' }, { status: 404 });
+    }
     return result;
   }
 
   if (userId) {
     const result = await getLearnerByUserId(userId);
+    if (!result.success) {
+      return data({ error: result.error }, { status: 404 });
+    }
+    if (!result.learner) {
+      return data({ error: 'Apprenant introuvable.' }, { status: 404 });
+    }
     return result;
   }
 
@@ -61,7 +72,7 @@ export async function action({ request }: ActionFunctionArgs) {
       }
 
       const result = await updateLearner(learnerId, parsed.data);
-      return result;
+      return data(result, { status: result.success ? 200 : 404 });
     }
 
     case 'DELETE': {
@@ -73,7 +84,7 @@ export async function action({ request }: ActionFunctionArgs) {
       }
 
       const result = await deleteLearner(learnerId);
-      return result;
+      return data(result, { status: result.success ? 200 : 404 });
     }
 
     default:
