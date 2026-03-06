@@ -33,7 +33,7 @@ export async function getAvailability(availabilityId: string): Promise<GetAvaila
 }
 
 /**
- * Get availability by learner ID with user info and courses
+ * Get availability by teacher ID with user info and courses
  */
 export async function getAvailabilityByTeacherId(teacherId: string): Promise<GetAvailabilityResponse> {
   try {

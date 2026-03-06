@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { teachers } from '~/server/lib/db/schema';
-import type { CreateTeacherInput } from '~/lib/validation';
+import type { CreateTeacherInput } from '~/types/teacher';
 import type { CreateTeacherResponse } from '../types';
 
 /**

@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { availabilities } from '~/server/lib/db/schema';
-import type { CreateAvailabilityInput } from '~/lib/validation';
+import type { CreateAvailabilityInput } from '~/types/availability';
 import type { CreateAvailabilityResponse } from '../types';
 
 /**

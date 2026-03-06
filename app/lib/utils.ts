@@ -58,3 +58,15 @@ export function isServer(): boolean {
 export function isClient(): boolean {
   return typeof window !== 'undefined';
 }
+
+/**
+ * Format time from Date or string to HH:mm format
+ */
+export function formatTime(time: Date | string): string {
+  const date = typeof time === 'string' ? new Date(time) : time;
+  return date.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}

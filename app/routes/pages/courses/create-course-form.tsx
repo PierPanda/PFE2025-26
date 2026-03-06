@@ -10,7 +10,7 @@ import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
 import { createTeacher } from '~/services/teachers/create-teacher.server';
 import { cn } from '~/lib/utils';
 import { courseFormSchema, createCourseSchema } from '~/lib/validation';
-import type { CourseFormInput, CreateCourseInput } from '~/lib/validation';
+import type { CourseFormInput, CreateCourseInput } from '~/types/course';
 export type { CourseFormInput, CreateCourseInput };
 
 export async function loader({ request }: LoaderFunctionArgs) {

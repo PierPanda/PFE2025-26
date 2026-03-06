@@ -53,8 +53,6 @@ export const courseQuerySchema = paginationQuerySchema.extend({
     .optional()
     .transform((val) => (val === undefined ? undefined : val === 'true')),
 });
-export type CourseFormInput = z.infer<typeof courseFormSchema>;
-export type CreateCourseInput = z.infer<typeof createCourseSchema>;
 
 export const availabilityFormSchema = z.object({
   startTime: z.date(),
@@ -65,10 +63,6 @@ export const createAvailabilitySchema = availabilityFormSchema.extend({
   id: uuidSchema,
   teacherId: z.string().min(1, "L'ID enseignant est requis."),
 });
-
-export type AvailabilityFormInput = z.infer<typeof availabilityFormSchema>;
-export type CreateAvailabilityInput = z.infer<typeof createAvailabilitySchema>;
-export type UpdateAvailabilityInput = z.infer<typeof createAvailabilitySchema>;
 
 export const createTeacherSchema = z.object({
   id: uuidSchema,
@@ -81,10 +75,6 @@ export const createTeacherSchema = z.object({
 export const updateTeacherSchema = createTeacherSchema.partial().extend({
   id: uuidSchema,
 });
-
-export type CreateTeacherInput = z.infer<typeof createTeacherSchema>;
-export type UpdateTeacherInput = z.infer<typeof updateTeacherSchema>;
-export type UpdateCourseInput = z.infer<typeof updateCourseSchema>;
 
 export function validateSearchParams<T extends z.ZodTypeAny>(url: URL, schema: T): z.infer<T> {
   const params = Object.fromEntries(url.searchParams.entries());
