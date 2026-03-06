@@ -15,6 +15,7 @@ import { categoryOptions, levelOptions } from '~/lib/constant';
 import type { ChangeEvent } from 'react';
 import { InlineIcon } from '@iconify/react';
 import type { NavigateOptions } from 'react-router';
+import { capitalize, formatPrice } from '~/lib/utils';
 
 type FiltersProps = {
   searchParams: URLSearchParams;
@@ -24,15 +25,6 @@ type FiltersProps = {
 };
 
 export default function Filters({ searchParams, setSearchParams, minPrice, maxPrice }: FiltersProps) {
-  const toCapitalized = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
-
-  const formatPrice = (value: number) =>
-    new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
-      maximumFractionDigits: 0,
-    }).format(value);
-
   const selectedCategoryValue = searchParams.get('category') ?? '';
   const selectedLevelValue = searchParams.get('level') ?? '';
   const selectedCategory = categoryOptions.find((cat) => cat.value === selectedCategoryValue);
@@ -112,7 +104,7 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
             color="warning"
             variant="bordered"
             selectedKey={selectedCategoryValue || null}
-            inputValue={selectedCategory?.label ? toCapitalized(selectedCategory.label) : ''}
+            inputValue={selectedCategory?.label ? capitalize(selectedCategory.label) : ''}
             onInputChange={handleCategoryChange}
             onSelectionChange={handleCategorySelection}
             isClearable
