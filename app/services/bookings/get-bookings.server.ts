@@ -47,7 +47,11 @@ export async function getBooking(bookingId: string): Promise<GetBookingResponse>
     console.error('Error fetching booking:', error);
     return {
       success: false,
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la recuperation de la réservation.",
+=======
+      error: "Une erreur s'est produite lors de la recuperation de la reservation.",
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
     };
   }
 }
@@ -61,10 +65,14 @@ export async function getBookingsByLearnerId(
 ): Promise<GetBookingsResponse> {
   try {
     const bookingsList = await db.query.bookings.findMany({
+<<<<<<< HEAD
       where: and(
         eq(bookings.learnerId, learnerId),
         status ? eq(bookings.status, status) : undefined,
       ),
+=======
+      where: and(eq(bookings.learnerId, learnerId), status ? eq(bookings.status, status) : undefined),
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
       with: bookingRelations,
     });
 
@@ -76,7 +84,11 @@ export async function getBookingsByLearnerId(
     console.error('Error fetching bookings by learner ID:', error);
     return {
       success: false,
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la recuperation des réservations.",
+=======
+      error: "Une erreur s'est produite lors de la recuperation des reservations.",
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
     };
   }
 }
@@ -122,7 +134,11 @@ export async function getBookingsByTeacherId(
     console.error('Error fetching bookings by teacher ID:', error);
     return {
       success: false,
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la recuperation des réservations.",
+=======
+      error: "Une erreur s'est produite lors de la recuperation des reservations.",
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
     };
   }
 }
@@ -145,7 +161,11 @@ export async function getBookingsByCourseId(courseId: string): Promise<GetBookin
     console.error('Error fetching bookings by course ID:', error);
     return {
       success: false,
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la recuperation des réservations.",
+=======
+      error: "Une erreur s'est produite lors de la recuperation des reservations.",
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
     };
   }
 }
@@ -153,9 +173,13 @@ export async function getBookingsByCourseId(courseId: string): Promise<GetBookin
 /**
  * Get all bookings for an availability
  */
+<<<<<<< HEAD
 export async function getBookingsByAvailabilityId(
   availabilityId: string,
 ): Promise<GetBookingsResponse> {
+=======
+export async function getBookingsByAvailabilityId(availabilityId: string): Promise<GetBookingsResponse> {
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
   try {
     const bookingsList = await db.query.bookings.findMany({
       where: eq(bookings.availabilityId, availabilityId),
@@ -170,7 +194,11 @@ export async function getBookingsByAvailabilityId(
     console.error('Error fetching bookings by availability ID:', error);
     return {
       success: false,
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la recuperation des réservations.",
+=======
+      error: "Une erreur s'est produite lors de la recuperation des reservations.",
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
     };
   }
 }

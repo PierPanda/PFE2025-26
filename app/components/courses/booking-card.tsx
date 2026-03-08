@@ -1,4 +1,5 @@
 import { Button, Card, CardBody } from '@heroui/react';
+<<<<<<< HEAD
 import type {
   CourseWithTeacher,
   TeacherWithUserAndCoursesCount,
@@ -10,12 +11,16 @@ import type {
   BookingWithRelations,
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
 } from '~/services/types';
+=======
+import type { CourseWithTeacher, TeacherWithUserAndCoursesCount, AvailabilityWithTeacher } from '~/services/types';
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
 import TeacherCard from './teacher-card';
 import { formatSlot } from '~/lib/utils';
 
 type BookingCardProps = {
   course: CourseWithTeacher;
   teacher: TeacherWithUserAndCoursesCount | null;
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   availabilities?: AvailabilityWithTeacher[] | null;
@@ -63,6 +68,15 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
 >>>>>>> 3b88034 (feat(api): enhance booking and slot management)
   const freeSlots = availableSlots ?? [];
 
+=======
+  availabilities?: AvailabilityWithTeacher[] | null;
+  availableSlots?: AvailabilityWithTeacher[] | null;
+};
+
+export default function BookingCard({ course, teacher, availabilities, availableSlots }: BookingCardProps) {
+  console.log('Availabilities in BookingCard:', availabilities);
+  console.log('Available Slots in BookingCard:', availableSlots);
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
   return (
     <Card className="sticky top-6 shadow-md">
       <CardBody className="flex flex-col gap-5 p-6">

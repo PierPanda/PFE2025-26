@@ -5,6 +5,7 @@ import { getTeacherSummary } from '~/services/teachers/get-teacher.server';
 import CourseHeader from '~/components/courses/course-header';
 import CourseDescription from '~/components/courses/course-description';
 import BookingCard from '~/components/courses/booking-card';
+<<<<<<< HEAD
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots.server';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -14,6 +15,10 @@ import { getBookingsByTeacherId } from '~/services/bookings/get-bookings.server'
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
 =======
 >>>>>>> 3b88034 (feat(api): enhance booking and slot management)
+=======
+import { getAvailabileSlots } from '~/services/availabilities/get-available-slots.server';
+import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability.server';
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
@@ -56,9 +61,13 @@ export async function loader({ params }: Route.LoaderArgs) {
 >>>>>>> 3b88034 (feat(api): enhance booking and slot management)
   const availableSlotsResult = await getAvailableSlots(courseResult.course.teacherId, courseResult.course.duration);
 
+  const availabilitiesResult = await getAvailabilityByTeacherId(courseResult.course.teacherId);
+  const availableSlotsResult = await getAvailabileSlots(courseResult.course.teacherId);
+
   return {
     course: courseResult.course,
     teacher: teacherResult.success ? teacherResult.teacher : null,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     availableSlots: availableSlotsResult.success ? availableSlotsResult.slots : null,
@@ -70,6 +79,10 @@ export async function loader({ params }: Route.LoaderArgs) {
 =======
     availableSlots: availableSlotsResult.success ? availableSlotsResult.slots : null,
 >>>>>>> 3b88034 (feat(api): enhance booking and slot management)
+=======
+    availabilities: availabilitiesResult.success ? availabilitiesResult.availabilities : null,
+    availableSlots: availableSlotsResult.success ? availableSlotsResult.availabilities : null,
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
   };
 }
 
@@ -87,6 +100,7 @@ export function meta({ data }: Route.MetaArgs) {
 export default function CourseDetail() {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const { course, teacher, availableSlots } = useLoaderData<typeof loader>();
 =======
   const { course, teacher, availabilities, bookings, availableSlots } = useLoaderData<typeof loader>();
@@ -94,6 +108,9 @@ export default function CourseDetail() {
 =======
   const { course, teacher, availableSlots } = useLoaderData<typeof loader>();
 >>>>>>> 3b88034 (feat(api): enhance booking and slot management)
+=======
+  const { course, teacher, availabilities, availableSlots } = useLoaderData<typeof loader>();
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
 
   return (
     <main>
@@ -113,12 +130,16 @@ export default function CourseDetail() {
           <div>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
 =======
+=======
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
             <BookingCard
               course={course}
               teacher={teacher}
               availabilities={availabilities}
+<<<<<<< HEAD
               bookings={bookings}
               availableSlots={availableSlots}
             />
@@ -126,6 +147,10 @@ export default function CourseDetail() {
 =======
             <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
 >>>>>>> 3b88034 (feat(api): enhance booking and slot management)
+=======
+              availableSlots={availableSlots}
+            />
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
           </div>
         </div>
       </div>

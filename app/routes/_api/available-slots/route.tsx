@@ -1,9 +1,14 @@
 import type { LoaderFunctionArgs } from 'react-router';
+<<<<<<< HEAD
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots.server';
+=======
+import { getAvailabileSlots } from '~/services/availabilities/get-available-slots.server';
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const teacherId = url.searchParams.get('teacherId');
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   if (!teacherId) {
@@ -25,4 +30,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return getAvailableSlots(teacherId || '', Number.isFinite(minDurationMinutes) ? minDurationMinutes : 0);
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+
+  return getAvailabileSlots(teacherId || '');
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
 }

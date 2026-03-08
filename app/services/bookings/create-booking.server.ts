@@ -7,9 +7,13 @@ import type { CreateBookingResponse } from '../types';
 /**
  * Create a new booking in database
  */
+<<<<<<< HEAD
 export async function createBooking(
   bookingData: CreateBookingInput,
 ): Promise<CreateBookingResponse> {
+=======
+export async function createBooking(bookingData: CreateBookingInput): Promise<CreateBookingResponse> {
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
   try {
     const [createdBooking] = await db
       .insert(bookings)
@@ -22,14 +26,22 @@ export async function createBooking(
 
     return {
       success: true,
+<<<<<<< HEAD
       message: 'Réservation créée avec succès.',
+=======
+      message: 'Reservation creee avec succes.',
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
       booking: createdBooking,
     };
   } catch (error) {
     console.error('Error creating booking:', error);
     return {
       success: false,
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la création de la réservation.",
+=======
+      error: "Une erreur s'est produite lors de la creation de la reservation.",
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
     };
   }
 }

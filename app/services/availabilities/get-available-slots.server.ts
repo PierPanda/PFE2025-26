@@ -1,10 +1,15 @@
+<<<<<<< HEAD
 import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
+=======
+import type { GetAvailableSlotsResponse } from '../types';
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
 import { getAvailabilityByTeacherId } from './get-availability.server';
 import { getBookingsByTeacherId } from '../bookings/get-bookings.server';
 
 /**
  * Get all available slot for a teacher
  */
+<<<<<<< HEAD
 <<<<<<< HEAD
 export async function getAvailableSlots(
   teacherId: string,
@@ -13,6 +18,9 @@ export async function getAvailableSlots(
 =======
 export async function getAvailableSlots(teacherId: string, minDurationMinutes = 0): Promise<GetAvailableSlotsResponse> {
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+export async function getAvailabileSlots(teacherId: string): Promise<GetAvailableSlotsResponse> {
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
   try {
     const availabilitiesResult = await getAvailabilityByTeacherId(teacherId);
     if (!availabilitiesResult.success) {
@@ -24,6 +32,7 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return bookingsResult;
     }
 
+<<<<<<< HEAD
     const slots = availabilitiesResult.availabilities.flatMap((availability) => {
       const availabilityStart = availability.startTime;
       const availabilityEnd = availability.endTime;
@@ -107,6 +116,22 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
     };
   } catch (error) {
     console.error('Error computing available slots for teacher:', error);
+=======
+    const slots = availabilitiesResult.availabilities.map((availability) => {
+      const isBooked = bookingsResult.bookings.some((booking) => booking.availabilityId === availability.id);
+      return {
+        ...availability,
+        isAvailable: !isBooked,
+      };
+    });
+
+    return {
+      success: true,
+      availabilities: slots,
+    };
+  } catch (error) {
+    console.error('Error fetching availability by teacher ID:', error);
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
     return {
       success: false,
       error: "Une erreur s'est produite lors de la récupération des disponibilités.",

@@ -1,8 +1,13 @@
 import { data, type ActionFunctionArgs, type LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
+<<<<<<< HEAD
 import { createBookingSchema, updateBookingSchema } from '~/lib/validation';
 import { getLearnerByUserId } from '~/services/learners/get-learner.server';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
+=======
+import { createBookingSchema, deleteBookingSchema, updateBookingSchema } from '~/lib/validation';
+import { getLearnerByUserId } from '~/services/learners/get-learner.server';
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
 import { createBooking } from '~/services/bookings/create-booking.server';
 import {
   getBooking,
@@ -11,13 +16,20 @@ import {
   getBookingsByLearnerId,
   getBookingsByTeacherId,
 } from '~/services/bookings/get-bookings.server';
+<<<<<<< HEAD
 import { getCourseById } from '~/services/courses/get-course.server';
 import { getAvailability } from '~/services/availabilities/get-availability.server';
+=======
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
 import { updateBooking } from '~/services/bookings/update-booking.server';
 import { deleteBooking } from '~/services/bookings/delete-booking.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
+<<<<<<< HEAD
   const session = await authentifyUser(request);
+=======
+  await authentifyUser(request);
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
 
   const url = new URL(request.url);
   const bookingId = url.searchParams.get('id');
@@ -26,6 +38,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const courseId = url.searchParams.get('courseId');
   const availabilityId = url.searchParams.get('availabilityId');
 
+<<<<<<< HEAD
   const [learnerResult, teacherResult] = await Promise.all([
     getLearnerByUserId(session.user.id),
     getTeacherByUserId(session.user.id),
@@ -62,10 +75,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
       return data({ error: 'Non autorisé.' }, { status: 403 });
     }
 
+=======
+  if (bookingId) {
+    const result = await getBooking(bookingId);
+    if (!result.success) {
+      return data({ error: result.error }, { status: 404 });
+    }
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
     return result;
   }
 
   if (learnerId) {
+<<<<<<< HEAD
     if (!currentLearnerId || learnerId !== currentLearnerId) {
       return data({ error: 'Non autorisé.' }, { status: 403 });
     }
@@ -95,10 +116,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
       return data({ error: 'Non autorisé.' }, { status: 403 });
     }
 
+=======
+    return getBookingsByLearnerId(learnerId);
+  }
+
+  if (teacherId) {
+    return getBookingsByTeacherId(teacherId);
+  }
+
+  if (courseId) {
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
     return getBookingsByCourseId(courseId);
   }
 
   if (availabilityId) {
+<<<<<<< HEAD
     if (!currentTeacherId) {
       return data({ error: 'Non autorisé.' }, { status: 403 });
     }
@@ -116,12 +148,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   return data({ error: 'ID de réservation ou filtre requis' }, { status: 400 });
+=======
+    return getBookingsByAvailabilityId(availabilityId);
+  }
+
+  return data({ error: 'Booking ID or filter required' }, { status: 400 });
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const session = await authentifyUser(request);
   const method = request.method.toUpperCase();
 
+<<<<<<< HEAD
   const [learnerResult, teacherResult] = await Promise.all([
     getLearnerByUserId(session.user.id),
     getTeacherByUserId(session.user.id),
@@ -137,12 +176,15 @@ export async function action({ request }: ActionFunctionArgs) {
   const currentTeacherId = teacherResult.success && teacherResult.teacher ? teacherResult.teacher.id : null;
 >>>>>>> 3b88034 (feat(api): enhance booking and slot management)
 
+=======
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
   switch (method) {
     case 'POST': {
       const body = await request.json();
       const parsed = createBookingSchema.safeParse(body);
 
       if (!parsed.success) {
+<<<<<<< HEAD
         return data(
           {
             success: false,
@@ -158,6 +200,18 @@ export async function action({ request }: ActionFunctionArgs) {
 
       if (currentLearnerId !== parsed.data.learnerId) {
         return data({ success: false, error: 'Non autorisé.' }, { status: 403 });
+=======
+        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+      }
+
+      const learnerResult = await getLearnerByUserId(session.user.id);
+      if (!learnerResult.success || !learnerResult.learner) {
+        return data({ success: false, error: 'Apprenant introuvable.' }, { status: 403 });
+      }
+
+      if (learnerResult.learner.id !== parsed.data.learnerId) {
+        return data({ success: false, error: 'Non autorise.' }, { status: 403 });
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
       }
 
       const result = await createBooking(parsed.data);
@@ -169,6 +223,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const bookingId = url.searchParams.get('id');
 
       if (!bookingId) {
+<<<<<<< HEAD
         return data({ success: false, error: 'ID de réservation requis' }, { status: 400 });
       }
 
@@ -190,12 +245,16 @@ export async function action({ request }: ActionFunctionArgs) {
 
       if (!isLearnerOwner && !isTeacherOwner) {
         return data({ success: false, error: 'Non autorisé.' }, { status: 403 });
+=======
+        return data({ success: false, error: 'Booking ID required' }, { status: 400 });
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
       }
 
       const body = await request.json();
       const parsed = updateBookingSchema.safeParse(body);
 
       if (!parsed.success) {
+<<<<<<< HEAD
         return data(
           {
             success: false,
@@ -203,6 +262,9 @@ export async function action({ request }: ActionFunctionArgs) {
           },
           { status: 400 },
         );
+=======
+        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
       }
 
       const result = await updateBooking(bookingId, parsed.data);
@@ -214,6 +276,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const bookingId = url.searchParams.get('id');
 
       if (!bookingId) {
+<<<<<<< HEAD
         return data({ success: false, error: 'ID de réservation requis' }, { status: 400 });
       }
 
@@ -235,6 +298,17 @@ export async function action({ request }: ActionFunctionArgs) {
 
       if (!isLearnerOwner && !isTeacherOwner) {
         return data({ success: false, error: 'Non autorisé.' }, { status: 403 });
+=======
+        const body = await request.json();
+        const parsed = deleteBookingSchema.safeParse(body);
+
+        if (!parsed.success) {
+          return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+        }
+
+        const result = await deleteBooking(parsed.data.id);
+        return data(result, { status: result.success ? 200 : 404 });
+>>>>>>> 38ec649 (feat(bookings): implement booking management features)
       }
 
       const result = await deleteBooking(bookingId);
