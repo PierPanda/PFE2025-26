@@ -1,8 +1,8 @@
-import { eq, sql } from "drizzle-orm";
-import { db } from "~/server/lib/db/index.server";
-import { bookings } from "~/server/lib/db/schema";
-import type { UpdateBookingInput } from "~/types/booking";
-import type { UpdateBookingResponse } from "../types";
+import { eq, sql } from 'drizzle-orm';
+import { db } from '~/server/lib/db/index.server';
+import { bookings } from '~/server/lib/db/schema';
+import type { UpdateBookingInput } from '~/types/booking';
+import type { UpdateBookingResponse } from '../types';
 
 /**
  * Update an existing booking in database
@@ -21,21 +21,20 @@ export async function updateBooking(
     if (!updatedBooking) {
       return {
         success: false,
-        error: "Réservation introuvable.",
+        error: 'Reservation introuvable.',
       };
     }
 
     return {
       success: true,
-      message: "Réservation mise à jour avec succès.",
+      message: 'Reservation mise a jour avec succes.',
       booking: updatedBooking,
     };
   } catch (error) {
-    console.error("Error updating booking:", error);
+    console.error('Error updating booking:', error);
     return {
       success: false,
-      error:
-        "Une erreur s'est produite lors de la mise a jour de la réservation.",
+      error: "Une erreur s'est produite lors de la mise a jour de la reservation.",
     };
   }
 }

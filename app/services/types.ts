@@ -6,7 +6,7 @@ import {
   availabilities,
   bookings,
   ratings,
-} from "~/server/lib/db/schema";
+} from '~/server/lib/db/schema';
 
 /**
  * Base models inferred from Drizzle schema using $inferSelect
@@ -125,7 +125,7 @@ export type GetAvailabilitiesResponse = ServiceResponse<{
 }>;
 
 export type GetAvailableSlotsResponse = ServiceResponse<{
-  slots: AvailableSlot[];
+  availabilities: AvailabilityWithTeacher[];
 }>;
 
 export type GetBookingResponse = ServiceResponse<{
