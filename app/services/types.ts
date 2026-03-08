@@ -1,4 +1,12 @@
-import { user, teachers, learners, courses, availabilities, bookings, ratings } from '~/server/lib/db/schema';
+import {
+  user,
+  teachers,
+  learners,
+  courses,
+  availabilities,
+  bookings,
+  ratings,
+} from "~/server/lib/db/schema";
 
 /**
  * Base models inferred from Drizzle schema using $inferSelect
