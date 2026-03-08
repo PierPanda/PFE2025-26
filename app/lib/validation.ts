@@ -75,6 +75,32 @@ export const batchAvailabilitySchema = z.object({
   delete: z.array(uuidSchema).default([]),
 });
 
+const bookingStatusValues = ['pending', 'confirmed', 'cancelled'] as const;
+
+export const bookingFormSchema = z.object({
+  courseId: z.string().min(1, "L'ID du cours est requis."),
+  availabilityId: z.string().min(1, "L'ID de disponibilité est requis."),
+  learnerId: z.string().min(1, "L'ID apprenant est requis."),
+  startTime: z.coerce.date(),
+  endTime: z.coerce.date(),
+  priceAtBooking: z.coerce
+    .number()
+    .min(0, 'Le prix doit être supérieur ou égal à 0.')
+    .transform((val) => val.toFixed(2)),
+  status: z.enum(bookingStatusValues),
+  paymentIntentId: z.string().optional(),
+});
+
+export const createBookingSchema = bookingFormSchema.extend({
+  id: uuidSchema,
+});
+
+export const updateBookingSchema = bookingFormSchema.partial();
+
+export const deleteBookingSchema = z.object({
+  id: uuidSchema,
+});
+
 export const createTeacherSchema = z.object({
   id: uuidSchema,
   userId: z.string().min(1, "L'ID utilisateur est requis."),

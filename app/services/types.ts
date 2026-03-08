@@ -54,6 +54,12 @@ export type LearnerWithUserAndBookings = DbLearner & {
   bookings: DbBooking[];
 };
 
+export type BookingWithRelations = DbBooking & {
+  course: CourseWithTeacher;
+  availability: AvailabilityWithTeacher;
+  learner: LearnerWithUser;
+};
+
 /**
  * Service response types - Discriminated union pattern
  */
@@ -103,6 +109,18 @@ export type GetAvailabilitiesResponse = ServiceResponse<{
   availabilities: AvailabilityWithTeacher[];
 }>;
 
+export type GetAvailableSlotsResponse = ServiceResponse<{
+  availabilities: AvailabilityWithTeacher[];
+}>;
+
+export type GetBookingResponse = ServiceResponse<{
+  booking: BookingWithRelations | null;
+}>;
+
+export type GetBookingsResponse = ServiceResponse<{
+  bookings: BookingWithRelations[];
+}>;
+
 export type GetAppStatsResponse = ServiceResponse<{
   stats: {
     coursesCount: number;
@@ -126,3 +144,7 @@ export type DeleteAvailabilityResponse = ServiceResponse<object>;
 export type CreateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
 export type UpdateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
 export type DeleteLearnerResponse = ServiceResponse<object>;
+
+export type CreateBookingResponse = ServiceResponse<{ booking: DbBooking }>;
+export type UpdateBookingResponse = ServiceResponse<{ booking: DbBooking }>;
+export type DeleteBookingResponse = ServiceResponse<object>;
