@@ -1,4 +1,4 @@
-import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
+import type { GetAvailableSlotsResponse } from '../types';
 import { getAvailabilityByTeacherId } from './get-availability.server';
 import { getBookingsByTeacherId } from '../bookings/get-bookings.server';
 
