@@ -2,6 +2,7 @@ import { Button, Card, CardBody } from '@heroui/react';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import type {
   CourseWithTeacher,
   TeacherWithUserAndCoursesCount,
@@ -28,6 +29,13 @@ import type {
 =======
 import type { CourseWithTeacher, TeacherWithUserAndCoursesCount, AvailableSlot } from '~/services/types';
 >>>>>>> 5e3f1f6 (style(booking-card): improve formatting and readability)
+=======
+import type {
+  CourseWithTeacher,
+  TeacherWithUserAndCoursesCount,
+  AvailableSlot,
+} from '~/services/types';
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features)
 import TeacherCard from './teacher-card';
 import { formatSlot } from '~/lib/utils';
 
@@ -37,11 +45,16 @@ type BookingCardProps = {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   availabilities?: AvailabilityWithTeacher[] | null;
   bookings?: BookingWithRelations[] | null;
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
   availableSlots?: AvailableSlot[] | null;
+=======
+  availabilities?: AvailabilityWithTeacher[] | null;
+  availableSlots?: AvailabilityWithTeacher[] | null;
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features)
 };
 
 <<<<<<< HEAD
@@ -237,7 +250,9 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
 =======
 >>>>>>> d823109 (feat(api): enhance booking and slot management)
         <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Créneaux restants</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+            Créneaux restants
+          </p>
           <p className="mt-1 text-lg font-bold text-emerald-700">{freeSlots.length}</p>
           <ul className="mt-2 max-h-32 space-y-1 overflow-auto pr-1 text-xs text-emerald-800">
             {freeSlots.length === 0 ? <li>Aucun créneau libre.</li> : null}

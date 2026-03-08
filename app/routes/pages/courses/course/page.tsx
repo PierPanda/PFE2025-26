@@ -7,6 +7,7 @@ import CourseDescription from '~/components/courses/course-description';
 import BookingCard from '~/components/courses/booking-card';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots.server';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -28,6 +29,9 @@ import { getBookingsByTeacherId } from '~/services/bookings/get-bookings.server'
 >>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
 =======
 >>>>>>> d823109 (feat(api): enhance booking and slot management)
+=======
+import { getAvailableSlots } from '~/services/availabilities/get-available-slots.server';
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features)
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
@@ -50,6 +54,9 @@ export async function loader({ params }: Route.LoaderArgs) {
   const teacherResult = await getTeacherSummary(courseResult.course.teacherId);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features)
   const availableSlotsResult = await getAvailableSlots(
     courseResult.course.teacherId,
     courseResult.course.duration,
@@ -64,6 +71,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     courseResult.course.teacherId,
     courseResult.course.duration,
   );
+<<<<<<< HEAD
 
   const availabilitiesResult = await getAvailabilityByTeacherId(courseResult.course.teacherId);
   const bookingsResult = await getBookingsByTeacherId(courseResult.course.teacherId, ['pending', 'confirmed']);
@@ -76,6 +84,8 @@ export async function loader({ params }: Route.LoaderArgs) {
 =======
 >>>>>>> d823109 (feat(api): enhance booking and slot management)
   const availableSlotsResult = await getAvailableSlots(courseResult.course.teacherId, courseResult.course.duration);
+=======
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features)
 
   return {
     course: courseResult.course,

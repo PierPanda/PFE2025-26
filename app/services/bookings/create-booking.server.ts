@@ -7,6 +7,7 @@ import type { CreateBookingResponse } from '../types';
 /**
  * Create a new booking in database
  */
+<<<<<<< HEAD:app/services/bookings/create-booking.server.ts
 <<<<<<< HEAD
 export async function createBooking(
   bookingData: CreateBookingInput,
@@ -14,6 +15,11 @@ export async function createBooking(
 =======
 export async function createBooking(bookingData: CreateBookingInput): Promise<CreateBookingResponse> {
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+export async function createBooking(
+  bookingData: CreateBookingInput,
+): Promise<CreateBookingResponse> {
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features):app/services/bookings/create-booking.ts
   try {
     const [createdBooking] = await db
       .insert(bookings)
@@ -41,6 +47,7 @@ export async function createBooking(bookingData: CreateBookingInput): Promise<Cr
     console.error('Error creating booking:', error);
     return {
       success: false,
+<<<<<<< HEAD:app/services/bookings/create-booking.server.ts
 <<<<<<< HEAD
 <<<<<<< HEAD
       error: "Une erreur s'est produite lors de la création de la réservation.",
@@ -50,6 +57,9 @@ export async function createBooking(bookingData: CreateBookingInput): Promise<Cr
 =======
       error: "Une erreur s'est produite lors de la création de la réservation.",
 >>>>>>> d823109 (feat(api): enhance booking and slot management)
+=======
+      error: "Une erreur s'est produite lors de la creation de la reservation.",
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features):app/services/bookings/create-booking.ts
     };
   }
 }

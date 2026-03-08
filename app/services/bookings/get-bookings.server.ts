@@ -69,14 +69,20 @@ export async function getBookingsByLearnerId(
 ): Promise<GetBookingsResponse> {
   try {
     const bookingsList = await db.query.bookings.findMany({
+<<<<<<< HEAD:app/services/bookings/get-bookings.server.ts
 <<<<<<< HEAD
+=======
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features):app/services/bookings/get-bookings.ts
       where: and(
         eq(bookings.learnerId, learnerId),
         status ? eq(bookings.status, status) : undefined,
       ),
+<<<<<<< HEAD:app/services/bookings/get-bookings.server.ts
 =======
       where: and(eq(bookings.learnerId, learnerId), status ? eq(bookings.status, status) : undefined),
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features):app/services/bookings/get-bookings.ts
       with: bookingRelations,
     });
 
@@ -189,6 +195,7 @@ export async function getBookingsByCourseId(courseId: string): Promise<GetBookin
 /**
  * Get all bookings for an availability
  */
+<<<<<<< HEAD:app/services/bookings/get-bookings.server.ts
 <<<<<<< HEAD
 export async function getBookingsByAvailabilityId(
   availabilityId: string,
@@ -196,6 +203,11 @@ export async function getBookingsByAvailabilityId(
 =======
 export async function getBookingsByAvailabilityId(availabilityId: string): Promise<GetBookingsResponse> {
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+export async function getBookingsByAvailabilityId(
+  availabilityId: string,
+): Promise<GetBookingsResponse> {
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features):app/services/bookings/get-bookings.ts
   try {
     const bookingsList = await db.query.bookings.findMany({
       where: eq(bookings.availabilityId, availabilityId),

@@ -8,13 +8,19 @@ import type { UpdateBookingResponse } from '../types';
  * Update an existing booking in database
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features)
 export async function updateBooking(
   bookingId: string,
   data: UpdateBookingInput,
 ): Promise<UpdateBookingResponse> {
+<<<<<<< HEAD
 =======
 export async function updateBooking(bookingId: string, data: UpdateBookingInput): Promise<UpdateBookingResponse> {
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features)
   try {
     const [updatedBooking] = await db
       .update(bookings)
@@ -27,6 +33,7 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
         success: false,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         error: 'Réservation introuvable.',
 =======
         error: 'Reservation introuvable.',
@@ -34,11 +41,15 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
 =======
         error: 'Réservation introuvable.',
 >>>>>>> d823109 (feat(api): enhance booking and slot management)
+=======
+        error: 'Reservation introuvable.',
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features)
       };
     }
 
     return {
       success: true,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       message: 'Réservation mise à jour avec succès.',
@@ -48,12 +59,16 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
 =======
       message: 'Réservation mise à jour avec succès.',
 >>>>>>> d823109 (feat(api): enhance booking and slot management)
+=======
+      message: 'Reservation mise a jour avec succes.',
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features)
       booking: updatedBooking,
     };
   } catch (error) {
     console.error('Error updating booking:', error);
     return {
       success: false,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       error: "Une erreur s'est produite lors de la mise a jour de la réservation.",
@@ -63,6 +78,9 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
 =======
       error: "Une erreur s'est produite lors de la mise a jour de la réservation.",
 >>>>>>> d823109 (feat(api): enhance booking and slot management)
+=======
+      error: "Une erreur s'est produite lors de la mise a jour de la reservation.",
+>>>>>>> e8a3f28 (feat(bookings): implement booking management features)
     };
   }
 }
