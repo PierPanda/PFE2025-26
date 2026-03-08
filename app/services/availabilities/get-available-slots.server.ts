@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
 =======
 import type { GetAvailableSlotsResponse } from '../types';
@@ -11,6 +12,9 @@ import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
 =======
 import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
 >>>>>>> 6e696d5 (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+import type { GetAvailableSlotsResponse } from '../types';
+>>>>>>> 144a161 (feat(bookings): implement booking management features)
 import { getAvailabilityByTeacherId } from './get-availability.server';
 import { getBookingsByTeacherId } from '../bookings/get-bookings.server';
 

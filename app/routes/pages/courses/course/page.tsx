@@ -8,6 +8,7 @@ import BookingCard from '~/components/courses/booking-card';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots.server';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -32,6 +33,10 @@ import { getBookingsByTeacherId } from '~/services/bookings/get-bookings.server'
 =======
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots.server';
 >>>>>>> e8a3f28 (feat(bookings): implement booking management features)
+=======
+import { getAvailabileSlots } from '~/services/availabilities/get-available-slots.server';
+import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability.server';
+>>>>>>> 144a161 (feat(bookings): implement booking management features)
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
@@ -94,6 +99,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     availableSlots: availableSlotsResult.success ? availableSlotsResult.slots : null,
 =======
     availabilities: availabilitiesResult.success ? availabilitiesResult.availabilities : null,
@@ -111,6 +117,10 @@ export async function loader({ params }: Route.LoaderArgs) {
 =======
     availableSlots: availableSlotsResult.success ? availableSlotsResult.slots : null,
 >>>>>>> d823109 (feat(api): enhance booking and slot management)
+=======
+    availabilities: availabilitiesResult.success ? availabilitiesResult.availabilities : null,
+    availableSlots: availableSlotsResult.success ? availableSlotsResult.availabilities : null,
+>>>>>>> 144a161 (feat(bookings): implement booking management features)
   };
 }
 
@@ -126,6 +136,7 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export default function CourseDetail() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -147,6 +158,9 @@ export default function CourseDetail() {
 =======
   const { course, teacher, availableSlots } = useLoaderData<typeof loader>();
 >>>>>>> d823109 (feat(api): enhance booking and slot management)
+=======
+  const { course, teacher, availabilities, availableSlots } = useLoaderData<typeof loader>();
+>>>>>>> 144a161 (feat(bookings): implement booking management features)
 
   return (
     <main>
@@ -168,14 +182,18 @@ export default function CourseDetail() {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
 =======
 =======
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+>>>>>>> 144a161 (feat(bookings): implement booking management features)
             <BookingCard
               course={course}
               teacher={teacher}
               availabilities={availabilities}
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -194,6 +212,10 @@ export default function CourseDetail() {
 =======
             <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
 >>>>>>> d823109 (feat(api): enhance booking and slot management)
+=======
+              availableSlots={availableSlots}
+            />
+>>>>>>> 144a161 (feat(bookings): implement booking management features)
           </div>
         </div>
       </div>
