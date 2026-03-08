@@ -11,7 +11,10 @@ export default [
   route('/api/stats', 'routes/_api/stats/route.tsx'),
   route('/api/availabilities', 'routes/_api/availabilities/route.tsx'),
   route('/api/bookings', 'routes/_api/bookings/route.tsx'),
+<<<<<<< HEAD
   route('/api/available-slots', 'routes/_api/available-slots/route.tsx'),
+=======
+>>>>>>> 78b9eb3 (feat(bookings): implement booking management features)
 
   // Public Pages
   layout('routes/layouts/public-layout.tsx', [route('/auth', 'routes/pages/auth/page.tsx')]),

@@ -41,6 +41,9 @@ export async function loader({ params }: Route.LoaderArgs) {
     courseResult.course.duration,
   );
 
+  const availabilitiesResult = await getAvailabilityByTeacherId(courseResult.course.teacherId);
+  const availableSlotsResult = await getAvailabileSlots(courseResult.course.teacherId);
+
   return {
     course: courseResult.course,
     teacher: teacherResult.success ? teacherResult.teacher : null,
