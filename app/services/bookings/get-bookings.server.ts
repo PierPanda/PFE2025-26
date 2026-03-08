@@ -1,7 +1,11 @@
-import { and, eq, inArray } from 'drizzle-orm';
-import { db } from '~/server/lib/db/index.server';
-import { bookings, courses } from '~/server/lib/db/schema';
-import type { DbBooking, GetBookingResponse, GetBookingsResponse } from '../types';
+import { and, eq, inArray } from "drizzle-orm";
+import { db } from "~/server/lib/db/index.server";
+import { bookings, courses } from "~/server/lib/db/schema";
+import type {
+  DbBooking,
+  GetBookingResponse,
+  GetBookingsResponse,
+} from "../types";
 
 const bookingRelations = {
   course: {
@@ -32,7 +36,9 @@ const bookingRelations = {
 /**
  * Get a single booking by ID
  */
-export async function getBooking(bookingId: string): Promise<GetBookingResponse> {
+export async function getBooking(
+  bookingId: string,
+): Promise<GetBookingResponse> {
   try {
     const booking = await db.query.bookings.findFirst({
       where: eq(bookings.id, bookingId),
@@ -44,10 +50,11 @@ export async function getBooking(bookingId: string): Promise<GetBookingResponse>
       booking: booking ?? null,
     };
   } catch (error) {
-    console.error('Error fetching booking:', error);
+    console.error("Error fetching booking:", error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation de la réservation.",
+      error:
+        "Une erreur s'est produite lors de la recuperation de la réservation.",
     };
   }
 }
@@ -57,11 +64,14 @@ export async function getBooking(bookingId: string): Promise<GetBookingResponse>
  */
 export async function getBookingsByLearnerId(
   learnerId: string,
-  status?: DbBooking['status'],
+  status?: DbBooking["status"],
 ): Promise<GetBookingsResponse> {
   try {
     const bookingsList = await db.query.bookings.findMany({
-      where: and(eq(bookings.learnerId, learnerId), status ? eq(bookings.status, status) : undefined),
+      where: and(
+        eq(bookings.learnerId, learnerId),
+        status ? eq(bookings.status, status) : undefined,
+      ),
       with: bookingRelations,
     });
 
@@ -70,10 +80,11 @@ export async function getBookingsByLearnerId(
       bookings: bookingsList,
     };
   } catch (error) {
-    console.error('Error fetching bookings by learner ID:', error);
+    console.error("Error fetching bookings by learner ID:", error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation des réservations.",
+      error:
+        "Une erreur s'est produite lors de la récuperation des réservations.",
     };
   }
 }
@@ -83,7 +94,7 @@ export async function getBookingsByLearnerId(
  */
 export async function getBookingsByTeacherId(
   teacherId: string,
-  status?: DbBooking['status'] | DbBooking['status'][],
+  status?: DbBooking["status"] | DbBooking["status"][],
 ): Promise<GetBookingsResponse> {
   try {
     const teacherCourses = await db.query.courses.findMany({
@@ -99,7 +110,10 @@ export async function getBookingsByTeacherId(
       };
     }
 
-    let statusFilter: ReturnType<typeof eq> | ReturnType<typeof inArray> | undefined;
+    let statusFilter:
+      | ReturnType<typeof eq>
+      | ReturnType<typeof inArray>
+      | undefined;
     if (Array.isArray(status)) {
       statusFilter = inArray(bookings.status, status);
     } else if (status) {
@@ -116,10 +130,11 @@ export async function getBookingsByTeacherId(
       bookings: bookingsList,
     };
   } catch (error) {
-    console.error('Error fetching bookings by teacher ID:', error);
+    console.error("Error fetching bookings by teacher ID:", error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation des réservations.",
+      error:
+        "Une erreur s'est produite lors de la récuperation des réservations.",
     };
   }
 }
@@ -127,7 +142,9 @@ export async function getBookingsByTeacherId(
 /**
  * Get all bookings for a course
  */
-export async function getBookingsByCourseId(courseId: string): Promise<GetBookingsResponse> {
+export async function getBookingsByCourseId(
+  courseId: string,
+): Promise<GetBookingsResponse> {
   try {
     const bookingsList = await db.query.bookings.findMany({
       where: eq(bookings.courseId, courseId),
@@ -139,10 +156,11 @@ export async function getBookingsByCourseId(courseId: string): Promise<GetBookin
       bookings: bookingsList,
     };
   } catch (error) {
-    console.error('Error fetching bookings by course ID:', error);
+    console.error("Error fetching bookings by course ID:", error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation des réservations.",
+      error:
+        "Une erreur s'est produite lors de la récuperation des réservations.",
     };
   }
 }
@@ -150,7 +168,9 @@ export async function getBookingsByCourseId(courseId: string): Promise<GetBookin
 /**
  * Get all bookings for an availability
  */
-export async function getBookingsByAvailabilityId(availabilityId: string): Promise<GetBookingsResponse> {
+export async function getBookingsByAvailabilityId(
+  availabilityId: string,
+): Promise<GetBookingsResponse> {
   try {
     const bookingsList = await db.query.bookings.findMany({
       where: eq(bookings.availabilityId, availabilityId),
@@ -162,10 +182,11 @@ export async function getBookingsByAvailabilityId(availabilityId: string): Promi
       bookings: bookingsList,
     };
   } catch (error) {
-    console.error('Error fetching bookings by availability ID:', error);
+    console.error("Error fetching bookings by availability ID:", error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation des réservations.",
+      error:
+        "Une erreur s'est produite lors de la récuperation des réservations.",
     };
   }
 }
