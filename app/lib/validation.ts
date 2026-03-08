@@ -93,6 +93,10 @@ export const createBookingSchema = bookingFormSchema.extend({
 
 export const updateBookingSchema = bookingFormSchema.partial();
 
+export const deleteBookingSchema = z.object({
+  id: uuidSchema,
+});
+
 export const createTeacherSchema = z.object({
   id: uuidSchema,
   userId: z.string().min(1, "L'ID utilisateur est requis."),

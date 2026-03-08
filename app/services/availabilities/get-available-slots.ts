@@ -72,7 +72,7 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 
     const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
     const filteredSlots = minDurationMs
-      ? slots.filter((slot) => slot.endTime.getTime() - slot.startTime.getTime() >= minDurationMs)
+      ? slots.filter((slot: AvailableSlot) => slot.endTime.getTime() - slot.startTime.getTime() >= minDurationMs)
       : slots;
 
     return {
