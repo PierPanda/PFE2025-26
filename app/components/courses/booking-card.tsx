@@ -1,13 +1,17 @@
 import { Button, Card, CardBody } from '@heroui/react';
-import type { CourseWithTeacher, TeacherWithUserAndCoursesCount } from '~/services/types';
+import type { CourseWithTeacher, TeacherWithUserAndCoursesCount, AvailabilityWithTeacher } from '~/services/types';
 import TeacherCard from './teacher-card';
 
 type BookingCardProps = {
   course: CourseWithTeacher;
   teacher: TeacherWithUserAndCoursesCount | null;
+  availabilities?: AvailabilityWithTeacher[] | null;
+  availableSlots?: AvailabilityWithTeacher[] | null;
 };
 
-export default function BookingCard({ course, teacher }: BookingCardProps) {
+export default function BookingCard({ course, teacher, availabilities, availableSlots }: BookingCardProps) {
+  console.log('Availabilities in BookingCard:', availabilities);
+  console.log('Available Slots in BookingCard:', availableSlots);
   return (
     <Card className="sticky top-6 shadow-md">
       <CardBody className="flex flex-col gap-5 p-6">
