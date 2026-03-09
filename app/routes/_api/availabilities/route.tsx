@@ -48,10 +48,24 @@ export async function action({ request }: ActionFunctionArgs) {
 
     case 'DELETE': {
       const url = new URL(request.url);
+<<<<<<< HEAD
       const availabilityId = url.searchParams.get('id');
 
       if (!availabilityId) {
         return data({ success: false, error: 'ID de disponibilité requis' }, { status: 400 });
+=======
+      const id = url.searchParams.get('id');
+      const parsed = deleteAvailabilitySchema.safeParse({ id });
+
+      if (!parsed.success) {
+        return data(
+          {
+            success: false,
+            error: parsed.error.issues.map((e) => e.message).join(', '),
+          },
+          { status: 400 },
+        );
+>>>>>>> fe88c5f (refactor(availabilities): harmoniser le style de code et améliorer la lisibilité)
       }
 
       const result = await deleteAvailability(availabilityId);
