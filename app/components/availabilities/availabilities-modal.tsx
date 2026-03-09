@@ -164,8 +164,8 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
   }, {});
 
   const allDays = Array.from(new Set([...Object.keys(groupedByDay), ...Object.keys(pendingGroupedByDay)]));
-  const daysWithSlotsCount = Object.keys(groupedByDay).length;
-  const totalExisting = availabilities.length;
+  const daysWithSlotsCount = allDays.length;
+  const totalSlots = availabilities.length + pendingAdd.length;
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="4xl" scrollBehavior="inside">
@@ -190,11 +190,11 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
             </div>
 
             <div className="flex flex-1 flex-col gap-6">
-              {(totalExisting > 0 || pendingAdd.length > 0) && (
+              {totalSlots > 0 && (
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-semibold text-gray-700">Tous les créneaux</p>
                   <p className="text-xs text-gray-400">
-                    {totalExisting} créneau{totalExisting > 1 ? 'x' : ''} sur {daysWithSlotsCount} jour
+                    {totalSlots} créneau{totalSlots > 1 ? 'x' : ''} sur {daysWithSlotsCount} jour
                     {daysWithSlotsCount > 1 ? 's' : ''}
                   </p>
                 </div>
