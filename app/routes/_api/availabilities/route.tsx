@@ -25,7 +25,13 @@ export async function action({ request }: ActionFunctionArgs) {
       const parsed = createAvailabilitySchema.safeParse(body);
 
       if (!parsed.success) {
-        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+        return data(
+          {
+            success: false,
+            error: parsed.error.issues.map((e) => e.message).join(', '),
+          },
+          { status: 400 },
+        );
       }
 
       const teacherResult = await getTeacherByUserId(session.user.id);
@@ -41,11 +47,18 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     case 'DELETE': {
-      const body = await request.json();
-      const parsed = deleteAvailabilitySchema.safeParse(body);
+      const url = new URL(request.url);
+      const id = url.searchParams.get('id');
+      const parsed = deleteAvailabilitySchema.safeParse({ id });
 
       if (!parsed.success) {
-        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+        return data(
+          {
+            success: false,
+            error: parsed.error.issues.map((e) => e.message).join(', '),
+          },
+          { status: 400 },
+        );
       }
 
       const teacherResult = await getTeacherByUserId(session.user.id);
@@ -70,7 +83,13 @@ export async function action({ request }: ActionFunctionArgs) {
       const parsed = batchAvailabilitySchema.safeParse(body);
 
       if (!parsed.success) {
-        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+        return data(
+          {
+            success: false,
+            error: parsed.error.issues.map((e) => e.message).join(', '),
+          },
+          { status: 400 },
+        );
       }
 
       const teacherResult = await getTeacherByUserId(session.user.id);
