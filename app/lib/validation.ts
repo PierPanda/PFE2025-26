@@ -66,6 +66,15 @@ export const createAvailabilitySchema = availabilityFormSchema.extend({
 
 export const updateAvailabilitySchema = availabilityFormSchema.partial();
 
+export const deleteAvailabilitySchema = z.object({
+  id: uuidSchema,
+});
+
+export const batchAvailabilitySchema = z.object({
+  add: z.array(createAvailabilitySchema).default([]),
+  delete: z.array(uuidSchema).default([]),
+});
+
 export const createTeacherSchema = z.object({
   id: uuidSchema,
   userId: z.string().min(1, "L'ID utilisateur est requis."),

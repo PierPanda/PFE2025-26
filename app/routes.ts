@@ -9,6 +9,7 @@ export default [
   route('/api/courses', 'routes/_api/courses/route.tsx'),
   route('/api/teachers', 'routes/_api/teachers/route.tsx'),
   route('/api/stats', 'routes/_api/stats/route.tsx'),
+  route('/api/availabilities', 'routes/_api/availabilities/route.tsx'),
 
   // Public Pages
   layout('routes/layouts/public-layout.tsx', [route('/auth', 'routes/pages/auth/page.tsx')]),

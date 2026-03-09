@@ -48,7 +48,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const parsed = createCourseSchema.safeParse(body);
 
       if (!parsed.success) {
-        return data({ success: false, errors: parsed.error.flatten() }, { status: 400 });
+        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
       }
 
       const result = await createCourse(parsed.data);
@@ -67,7 +67,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const parsed = updateCourseSchema.safeParse(body);
 
       if (!parsed.success) {
-        return data({ success: false, errors: parsed.error.flatten() }, { status: 400 });
+        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
       }
 
       const result = await updateCourse(courseId, parsed.data);
