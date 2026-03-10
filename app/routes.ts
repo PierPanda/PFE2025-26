@@ -16,6 +16,7 @@ export default [
   route("/api/stats", "routes/_api/stats/route.tsx"),
   route("/api/availabilities", "routes/_api/availabilities/route.tsx"),
   route("/api/bookings", "routes/_api/bookings/route.tsx"),
+  route("/api/available-slots", "routes/_api/available-slots/route.tsx"),
 
   // Public Pages
   layout("routes/layouts/public-layout.tsx", [
