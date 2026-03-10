@@ -37,7 +37,7 @@ export default function AuthLayout() {
       <Outlet />
 
       <div className="p-4">
-        <footer className="bg-white p-8 mt-12 flex flex-col gap-8 rounded-2xl">
+        <footer className="bg-white p-8 mt-12 flex flex-col gap-4 rounded-2xl">
           <div className="w-full flex">
             <div className="w-1/3 flex flex-col items-center justify-center">
               <img src={logo} alt="Maestroo" className="h-10 w-auto mb-4 self-start" />
@@ -80,7 +80,21 @@ export default function AuthLayout() {
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-center mt-4">
+          <div className="flex items-center justify-center mt-8">
+            <a href="/legal/terms" className="text-sm text-gray-500 hover:text-amber-600">
+              Conditions d'utilisation
+            </a>
+            <a href="/legal/privacy" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
+              Politique de confidentialité
+            </a>
+            <a href="/legal/coookies" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
+              Politique des cookies
+            </a>
+            <a href="/legal/cgv" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
+              Conditions générales de vente
+            </a>
+          </div>
+          <div className="flex items-center justify-center">
             <p className="text-sm text-gray-500">© {currentYear} Maestroo. Tous droits réservés.</p>
           </div>
         </footer>
