@@ -37,6 +37,13 @@ export type AvailabilityWithTeacher = DbAvailability & {
   teacher: TeacherWithUser;
 };
 
+export type AvailableSlot = {
+  availabilityId: string;
+  teacherId: string;
+  startTime: Date;
+  endTime: Date;
+};
+
 export type CourseWithTeacherAndRatings = CourseWithTeacher & {
   ratings: DbRating[];
 };
@@ -106,7 +113,7 @@ export type GetAvailabilitiesResponse = ServiceResponse<{
 }>;
 
 export type GetAvailableSlotsResponse = ServiceResponse<{
-  availabilities: AvailabilityWithTeacher[];
+  availabilities: AvailableSlot[];
 }>;
 
 export type GetBookingResponse = ServiceResponse<{

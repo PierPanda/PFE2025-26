@@ -369,13 +369,30 @@ async function seedBookings(
       const learnerIdx = (i + j) % learnerIds.length; // Distribuer sur les learners
       const learner = learnerIds[learnerIdx];
 
+      const availabilityStart = new Date(availability.startTime);
+      const availabilityEnd = new Date(availability.endTime);
+      const availabilityDurationMs = availabilityEnd.getTime() - availabilityStart.getTime();
+      const courseDurationMs = Number(courseDetail.duration) * 60 * 1000;
+
+      // Ignore impossible bookings when course duration exceeds availability duration.
+      if (!Number.isFinite(courseDurationMs) || courseDurationMs <= 0 || courseDurationMs > availabilityDurationMs) {
+        continue;
+      }
+
+      const maxOffsetMs = availabilityDurationMs - courseDurationMs;
+      const stepMs = 15 * 60 * 1000; // 15-minute granularity
+      const stepCount = Math.floor(maxOffsetMs / stepMs);
+      const offsetStep = stepCount > 0 ? Math.floor(Math.random() * (stepCount + 1)) : 0;
+      const bookingStart = new Date(availabilityStart.getTime() + offsetStep * stepMs);
+      const bookingEnd = new Date(bookingStart.getTime() + courseDurationMs);
+
       const booking: typeof schema.bookings.$inferInsert = {
         id: randomUUID(),
         courseId: courseDetail.courseId,
         availabilityId: availability.id,
         learnerId: learner.learnerId,
-        startTime: new Date(availability.startTime),
-        endTime: new Date(availability.endTime),
+        startTime: bookingStart,
+        endTime: bookingEnd,
         priceAtBooking: courseDetail.price,
         status: statuses[Math.floor(Math.random() * statuses.length)],
         paymentIntentId: Math.random() > 0.3 ? `pi_${randomUUID()}` : undefined,
