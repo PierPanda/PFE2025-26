@@ -96,6 +96,14 @@ export async function getAvailableSlots(
         )
       : slots;
 
+    const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
+    const filteredSlots = minDurationMs
+      ? slots.filter(
+          (slot) =>
+            slot.endTime.getTime() - slot.startTime.getTime() >= minDurationMs,
+        )
+      : slots;
+
     return {
       success: true,
       slots: filteredSlots,
