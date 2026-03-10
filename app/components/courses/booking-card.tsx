@@ -11,7 +11,8 @@ type BookingCardProps = {
   course: CourseWithTeacher;
   teacher: TeacherWithUserAndCoursesCount | null;
   availabilities?: AvailabilityWithTeacher[] | null;
-  availableSlots?: AvailabilityWithTeacher[] | null;
+  bookings?: BookingWithRelations[] | null;
+  availableSlots?: AvailableSlot[] | null;
 };
 
 export default function BookingCard({
