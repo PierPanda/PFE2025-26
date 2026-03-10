@@ -161,9 +161,9 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             'Cours pour débutants. Apprenez les bases du piano: posture, lecture de notes, premiers morceaux.',
           duration: 60,
-          level: 'Débutant' as const,
+          level: 'debutant' as const,
           price: '35.00',
-          category: 'Piano' as const,
+          category: 'piano' as const,
           isPublished: true,
         },
         {
@@ -171,18 +171,18 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           description:
             'Perfectionnez votre technique pianistique. Travail sur les gammes, arpèges et morceaux classiques.',
           duration: 60,
-          level: 'Intermédiaire' as const,
+          level: 'intermediaire' as const,
           price: '45.00',
-          category: 'Piano' as const,
+          category: 'piano' as const,
           isPublished: true,
         },
         {
           title: 'Guitare Acoustique Débutant',
           description: 'Premiers pas à la guitare: accords de base, rythmes simples, chansons populaires.',
           duration: 45,
-          level: 'Débutant' as const,
+          level: 'debutant' as const,
           price: '30.00',
-          category: 'Guitare' as const,
+          category: 'guitare' as const,
           isPublished: true,
         },
       ],
@@ -194,18 +194,18 @@ async function seedCourses(teacherIds: { email: string; teacherId: string }[]) {
           title: 'Batterie - Les Fondamentaux',
           description: 'Maîtrisez les rudiments de la batterie: coordination, rythmes de base, fills simples.',
           duration: 60,
-          level: 'Débutant' as const,
+          level: 'debutant' as const,
           price: '40.00',
-          category: 'Batterie' as const,
+          category: 'batterie' as const,
           isPublished: true,
         },
         {
           title: 'Cours de Chant',
           description: 'Développez votre voix: technique vocale, respiration, interprétation.',
           duration: 45,
-          level: 'Débutant' as const,
+          level: 'debutant' as const,
           price: '38.00',
-          category: 'Chant' as const,
+          category: 'chant' as const,
           isPublished: true,
         },
       ],
@@ -369,13 +369,30 @@ async function seedBookings(
       const learnerIdx = (i + j) % learnerIds.length; // Distribuer sur les learners
       const learner = learnerIds[learnerIdx];
 
+      const availabilityStart = new Date(availability.startTime);
+      const availabilityEnd = new Date(availability.endTime);
+      const availabilityDurationMs = availabilityEnd.getTime() - availabilityStart.getTime();
+      const courseDurationMs = Number(courseDetail.duration) * 60 * 1000;
+
+      // Ignore impossible bookings when course duration exceeds availability duration.
+      if (!Number.isFinite(courseDurationMs) || courseDurationMs <= 0 || courseDurationMs > availabilityDurationMs) {
+        continue;
+      }
+
+      const maxOffsetMs = availabilityDurationMs - courseDurationMs;
+      const stepMs = 15 * 60 * 1000; // 15-minute granularity
+      const stepCount = Math.floor(maxOffsetMs / stepMs);
+      const offsetStep = stepCount > 0 ? Math.floor(Math.random() * (stepCount + 1)) : 0;
+      const bookingStart = new Date(availabilityStart.getTime() + offsetStep * stepMs);
+      const bookingEnd = new Date(bookingStart.getTime() + courseDurationMs);
+
       const booking: typeof schema.bookings.$inferInsert = {
         id: randomUUID(),
         courseId: courseDetail.courseId,
         availabilityId: availability.id,
         learnerId: learner.learnerId,
-        startTime: new Date(availability.startTime),
-        endTime: new Date(availability.endTime),
+        startTime: bookingStart,
+        endTime: bookingEnd,
         priceAtBooking: courseDetail.price,
         status: statuses[Math.floor(Math.random() * statuses.length)],
         paymentIntentId: Math.random() > 0.3 ? `pi_${randomUUID()}` : undefined,
