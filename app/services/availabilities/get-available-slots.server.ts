@@ -1,14 +1,19 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
 =======
 import type { GetAvailableSlotsResponse } from '../types';
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
 import { getAvailabilityByTeacherId } from './get-availability.server';
 import { getBookingsByTeacherId } from '../bookings/get-bookings.server';
 
 /**
  * Get all available slot for a teacher
  */
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 export async function getAvailableSlots(
@@ -21,6 +26,9 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 =======
 export async function getAvailabileSlots(teacherId: string): Promise<GetAvailableSlotsResponse> {
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+export async function getAvailableSlots(teacherId: string, minDurationMinutes = 0): Promise<GetAvailableSlotsResponse> {
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
   try {
     const availabilitiesResult = await getAvailabilityByTeacherId(teacherId);
     if (!availabilitiesResult.success) {
@@ -33,6 +41,9 @@ export async function getAvailabileSlots(teacherId: string): Promise<GetAvailabl
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
     const slots = availabilitiesResult.availabilities.flatMap((availability) => {
       const availabilityStart = availability.startTime;
       const availabilityEnd = availability.endTime;
@@ -40,12 +51,16 @@ export async function getAvailabileSlots(teacherId: string): Promise<GetAvailabl
       const overlappingBookings = bookingsResult.bookings
         .filter((booking) => booking.availabilityId === availability.id)
 <<<<<<< HEAD
+<<<<<<< HEAD
         .filter(
           (booking) => booking.endTime > availabilityStart && booking.startTime < availabilityEnd,
         )
 =======
         .filter((booking) => booking.endTime > availabilityStart && booking.startTime < availabilityEnd)
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+        .filter((booking) => booking.endTime > availabilityStart && booking.startTime < availabilityEnd)
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
         .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
       if (overlappingBookings.length === 0) {
@@ -64,11 +79,15 @@ export async function getAvailabileSlots(teacherId: string): Promise<GetAvailabl
 
       for (const booking of overlappingBookings) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         const bookingStart =
           booking.startTime > availabilityStart ? booking.startTime : availabilityStart;
 =======
         const bookingStart = booking.startTime > availabilityStart ? booking.startTime : availabilityStart;
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+        const bookingStart = booking.startTime > availabilityStart ? booking.startTime : availabilityStart;
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
         const bookingEnd = booking.endTime < availabilityEnd ? booking.endTime : availabilityEnd;
 
         if (bookingStart > cursor) {
@@ -95,6 +114,7 @@ export async function getAvailabileSlots(teacherId: string): Promise<GetAvailabl
       }
 
       return remainingSlots;
+<<<<<<< HEAD
     });
 
     const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
@@ -123,11 +143,18 @@ export async function getAvailabileSlots(teacherId: string): Promise<GetAvailabl
         ...availability,
         isAvailable: !isBooked,
       };
+=======
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
     });
+
+    const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
+    const filteredSlots = minDurationMs
+      ? slots.filter((slot) => slot.endTime.getTime() - slot.startTime.getTime() >= minDurationMs)
+      : slots;
 
     return {
       success: true,
-      availabilities: slots,
+      availabilities: filteredSlots,
     };
   } catch (error) {
     console.error('Error fetching availability by teacher ID:', error);

@@ -1,5 +1,6 @@
 import { Button, Card, CardBody } from '@heroui/react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import type {
   CourseWithTeacher,
   TeacherWithUserAndCoursesCount,
@@ -14,6 +15,15 @@ import type {
 =======
 import type { CourseWithTeacher, TeacherWithUserAndCoursesCount, AvailabilityWithTeacher } from '~/services/types';
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+import type {
+  CourseWithTeacher,
+  TeacherWithUserAndCoursesCount,
+  AvailabilityWithTeacher,
+  AvailableSlot,
+  BookingWithRelations,
+} from '~/services/types';
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
 import TeacherCard from './teacher-card';
 import { formatSlot } from '~/lib/utils';
 
@@ -70,13 +80,42 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
 
 =======
   availabilities?: AvailabilityWithTeacher[] | null;
-  availableSlots?: AvailabilityWithTeacher[] | null;
+  bookings?: BookingWithRelations[] | null;
+  availableSlots?: AvailableSlot[] | null;
 };
 
+<<<<<<< HEAD
 export default function BookingCard({ course, teacher, availabilities, availableSlots }: BookingCardProps) {
   console.log('Availabilities in BookingCard:', availabilities);
   console.log('Available Slots in BookingCard:', availableSlots);
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+function formatSlot(start: Date, end: Date) {
+  const date = new Intl.DateTimeFormat('fr-FR', {
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit',
+  }).format(start);
+
+  const startTime = new Intl.DateTimeFormat('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(start);
+
+  const endTime = new Intl.DateTimeFormat('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(end);
+
+  return `${date} - ${startTime} a ${endTime}`;
+}
+
+export default function BookingCard({ course, teacher, availabilities, bookings, availableSlots }: BookingCardProps) {
+  const bookedSlots = bookings ?? [];
+  const totalAvailabilities = availabilities ?? [];
+  const freeSlots = availableSlots ?? [];
+
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
   return (
     <Card className="sticky top-6 shadow-md">
       <CardBody className="flex flex-col gap-5 p-6">
@@ -107,6 +146,7 @@ export default function BookingCard({ course, teacher, availabilities, available
         </Button>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div className="grid gap-3 text-sm">
           <div className="rounded-xl border border-gray-200 p-3">
 <<<<<<< HEAD
@@ -116,6 +156,11 @@ export default function BookingCard({ course, teacher, availabilities, available
 =======
             <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Disponibilites du prof</p>
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+        <div className="grid gap-3 text-sm">
+          <div className="rounded-xl border border-gray-200 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Disponibilites du prof</p>
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
             <p className="mt-1 text-lg font-bold text-gray-900">{totalAvailabilities.length}</p>
             <ul className="mt-2 max-h-32 space-y-1 overflow-auto pr-1 text-xs text-gray-700">
               {totalAvailabilities.length === 0 ? <li>Aucune disponibilite.</li> : null}
@@ -129,12 +174,16 @@ export default function BookingCard({ course, teacher, availabilities, available
 
           <div className="rounded-xl border border-red-200 bg-red-50/60 p-3">
 <<<<<<< HEAD
+<<<<<<< HEAD
             <p className="text-xs font-semibold uppercase tracking-wide text-red-700">
               Creneaux reserves
             </p>
 =======
             <p className="text-xs font-semibold uppercase tracking-wide text-red-700">Creneaux reserves</p>
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+            <p className="text-xs font-semibold uppercase tracking-wide text-red-700">Creneaux reserves</p>
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
             <p className="mt-1 text-lg font-bold text-red-700">{bookedSlots.length}</p>
             <ul className="mt-2 max-h-32 space-y-1 overflow-auto pr-1 text-xs text-red-800">
               {bookedSlots.length === 0 ? <li>Aucune reservation active.</li> : null}
@@ -148,12 +197,16 @@ export default function BookingCard({ course, teacher, availabilities, available
 
           <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3">
 <<<<<<< HEAD
+<<<<<<< HEAD
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
               Creneaux restants
             </p>
 =======
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Creneaux restants</p>
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Creneaux restants</p>
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
             <p className="mt-1 text-lg font-bold text-emerald-700">{freeSlots.length}</p>
             <ul className="mt-2 max-h-32 space-y-1 overflow-auto pr-1 text-xs text-emerald-800">
               {freeSlots.length === 0 ? <li>Aucun creneau libre.</li> : null}
@@ -167,6 +220,7 @@ export default function BookingCard({ course, teacher, availabilities, available
               ))}
             </ul>
           </div>
+<<<<<<< HEAD
 =======
         <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Creneaux restants</p>
@@ -183,6 +237,8 @@ export default function BookingCard({ course, teacher, availabilities, available
             ))}
           </ul>
 >>>>>>> 3b88034 (feat(api): enhance booking and slot management)
+=======
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
         </div>
 
         {teacher && (

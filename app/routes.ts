@@ -14,6 +14,7 @@ export default [
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   route('/api/available-slots', 'routes/_api/available-slots/route.tsx'),
 =======
 >>>>>>> 78b9eb3 (feat(bookings): implement booking management features)
@@ -22,6 +23,9 @@ export default [
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
 =======
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+  route('/api/available-slots', 'routes/_api/available-slots/route.tsx'),
+>>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
 
   // Public Pages
   layout('routes/layouts/public-layout.tsx', [route('/auth', 'routes/pages/auth/page.tsx')]),
