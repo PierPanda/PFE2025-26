@@ -151,6 +151,7 @@ const session = await authentifyUser(request);
 ```
 
 Do NOT:
+
 - Put auth logic in layout components
 - Use `<Navigate />` or client-side redirects for auth
 - Check auth exclusively on the client
@@ -191,7 +192,7 @@ export type NewCourse = typeof courses.$inferInsert;
 
 ```tsx
 // ❌ Avoid
-const ui = cond1 ? (cond2 ? <A /> : <B />) : <C />;
+const ui = cond1 ? cond2 ? <A /> : <B /> : <C />;
 
 // ✅ Prefer
 const ui = (() => {
@@ -241,6 +242,7 @@ type(scope): message title
 **Scopes**: `app`, `auth`, `db`, `courses`, `teachers`, `learners`, `availabilities`, `dashboard`, `profile`, `ci`, or any other descriptive scope.
 
 **Examples**:
+
 - `feat(courses): add course filtering by category`
 - `fix(auth): redirect to login on expired session`
 - `refactor(services): remove .server suffix from service files`
@@ -248,6 +250,7 @@ type(scope): message title
 - `chore(deps): upgrade drizzle-orm to v0.45.1`
 
 **Guidelines**:
+
 1. Keep message title under 50 characters
 2. Use imperative mood ("add" not "added" or "adds")
 3. Do not capitalise the first letter of the title

@@ -1,32 +1,49 @@
-import { Button, Card, CardBody } from "@heroui/react";
+import { Button, Card, CardBody } from '@heroui/react';
 import type {
   CourseWithTeacher,
   TeacherWithUserAndCoursesCount,
+  AvailabilityWithTeacher,
   AvailableSlot,
-} from "~/services/types";
-import TeacherCard from "./teacher-card";
-import { formatSlot } from "~/lib/utils";
+  BookingWithRelations,
+} from '~/services/types';
+import TeacherCard from './teacher-card';
 
 type BookingCardProps = {
   course: CourseWithTeacher;
   teacher: TeacherWithUserAndCoursesCount | null;
+  availabilities?: AvailabilityWithTeacher[] | null;
+  bookings?: BookingWithRelations[] | null;
   availableSlots?: AvailableSlot[] | null;
 };
 
-export default function BookingCard({
-  course,
-  teacher,
-  availableSlots,
-}: BookingCardProps) {
+function formatSlot(start: Date, end: Date) {
+  const date = new Intl.DateTimeFormat('fr-FR', {
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit',
+  }).format(start);
+
+  const startTime = new Intl.DateTimeFormat('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(start);
+
+  const endTime = new Intl.DateTimeFormat('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(end);
+
+  return `${date} - ${startTime} a ${endTime}`;
+}
+
+export default function BookingCard({ course, teacher, availableSlots }: BookingCardProps) {
   const freeSlots = availableSlots ?? [];
 
   return (
     <Card className="sticky top-6 shadow-md">
       <CardBody className="flex flex-col gap-5 p-6">
         <div>
-          <p className="text-3xl font-bold text-gray-900">
-            {course.price ? `${course.price} €` : "Gratuit"}
-          </p>
+          <p className="text-3xl font-bold text-gray-900">{course.price ? `${course.price} €` : 'Gratuit'}</p>
           <p className="text-sm text-gray-500">par séance</p>
         </div>
 
@@ -45,23 +62,15 @@ export default function BookingCard({
           </div>
         </div>
 
-        <Button
-          color="warning"
-          size="lg"
-          className="w-full font-semibold text-white"
-        >
+        <Button color="warning" size="lg" className="w-full font-semibold text-white">
           Réserver
         </Button>
 
         <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
-            Créneaux restants
-          </p>
-          <p className="mt-1 text-lg font-bold text-emerald-700">
-            {freeSlots.length}
-          </p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Créneaux restants</p>
+          <p className="mt-1 text-lg font-bold text-emerald-700">{freeSlots.length}</p>
           <ul className="mt-2 max-h-32 space-y-1 overflow-auto pr-1 text-xs text-emerald-800">
-            {freeSlots.length === 0 ? <li>Aucun creneau libre.</li> : null}
+            {freeSlots.length === 0 ? <li>Aucun créneau libre.</li> : null}
             {freeSlots.map((slot) => (
               <li
                 key={`${slot.availabilityId}-${slot.startTime.toISOString()}-${slot.endTime.toISOString()}`}
