@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
 =======
 import type { GetAvailableSlotsResponse } from '../types';
@@ -7,6 +8,9 @@ import type { GetAvailableSlotsResponse } from '../types';
 =======
 import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
 >>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
+>>>>>>> 6e696d5 (feat(get available slots): create service and api route to get available slots to booking a course)
 import { getAvailabilityByTeacherId } from './get-availability.server';
 import { getBookingsByTeacherId } from '../bookings/get-bookings.server';
 
@@ -16,10 +20,14 @@ import { getBookingsByTeacherId } from '../bookings/get-bookings.server';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6e696d5 (feat(get available slots): create service and api route to get available slots to booking a course)
 export async function getAvailableSlots(
   teacherId: string,
   minDurationMinutes = 0,
 ): Promise<GetAvailableSlotsResponse> {
+<<<<<<< HEAD
 =======
 export async function getAvailableSlots(teacherId: string, minDurationMinutes = 0): Promise<GetAvailableSlotsResponse> {
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
@@ -29,6 +37,8 @@ export async function getAvailabileSlots(teacherId: string): Promise<GetAvailabl
 =======
 export async function getAvailableSlots(teacherId: string, minDurationMinutes = 0): Promise<GetAvailableSlotsResponse> {
 >>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+>>>>>>> 6e696d5 (feat(get available slots): create service and api route to get available slots to booking a course)
   try {
     const availabilitiesResult = await getAvailabilityByTeacherId(teacherId);
     if (!availabilitiesResult.success) {
@@ -42,14 +52,18 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+>>>>>>> 6e696d5 (feat(get available slots): create service and api route to get available slots to booking a course)
     const slots = availabilitiesResult.availabilities.flatMap((availability) => {
       const availabilityStart = availability.startTime;
       const availabilityEnd = availability.endTime;
 
       const overlappingBookings = bookingsResult.bookings
         .filter((booking) => booking.availabilityId === availability.id)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         .filter(
@@ -61,6 +75,11 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 =======
         .filter((booking) => booking.endTime > availabilityStart && booking.startTime < availabilityEnd)
 >>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+        .filter(
+          (booking) => booking.endTime > availabilityStart && booking.startTime < availabilityEnd,
+        )
+>>>>>>> 6e696d5 (feat(get available slots): create service and api route to get available slots to booking a course)
         .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
       if (overlappingBookings.length === 0) {
@@ -80,6 +99,7 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       for (const booking of overlappingBookings) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         const bookingStart =
           booking.startTime > availabilityStart ? booking.startTime : availabilityStart;
 =======
@@ -88,6 +108,10 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 =======
         const bookingStart = booking.startTime > availabilityStart ? booking.startTime : availabilityStart;
 >>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+        const bookingStart =
+          booking.startTime > availabilityStart ? booking.startTime : availabilityStart;
+>>>>>>> 6e696d5 (feat(get available slots): create service and api route to get available slots to booking a course)
         const bookingEnd = booking.endTime < availabilityEnd ? booking.endTime : availabilityEnd;
 
         if (bookingStart > cursor) {
@@ -115,6 +139,9 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 
       return remainingSlots;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6e696d5 (feat(get available slots): create service and api route to get available slots to booking a course)
     });
 
     const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
@@ -124,6 +151,7 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 
     return {
       success: true,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       slots: filteredSlots,
@@ -159,6 +187,12 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
   } catch (error) {
     console.error('Error fetching availability by teacher ID:', error);
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+      availabilities: filteredSlots,
+    };
+  } catch (error) {
+    console.error('Error fetching availability by teacher ID:', error);
+>>>>>>> 6e696d5 (feat(get available slots): create service and api route to get available slots to booking a course)
     return {
       success: false,
       error: "Une erreur s'est produite lors de la récupération des disponibilités.",

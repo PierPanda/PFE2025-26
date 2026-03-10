@@ -53,8 +53,13 @@ type BookingCardProps = {
   availableSlots?: AvailableSlot[] | null;
 =======
   availabilities?: AvailabilityWithTeacher[] | null;
+<<<<<<< HEAD
   availableSlots?: AvailabilityWithTeacher[] | null;
 >>>>>>> e8a3f28 (feat(bookings): implement booking management features)
+=======
+  bookings?: BookingWithRelations[] | null;
+  availableSlots?: AvailableSlot[] | null;
+>>>>>>> 6e696d5 (feat(get available slots): create service and api route to get available slots to booking a course)
 };
 
 <<<<<<< HEAD
