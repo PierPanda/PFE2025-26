@@ -6,6 +6,11 @@ import CourseHeader from '~/components/courses/course-header';
 import CourseDescription from '~/components/courses/course-description';
 import BookingCard from '~/components/courses/booking-card';
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots.server';
+<<<<<<< HEAD
+=======
+import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability.server';
+import { getBookingsByTeacherId } from '~/services/bookings/get-bookings.server';
+>>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
@@ -42,12 +47,19 @@ export async function loader({ params }: Route.LoaderArgs) {
   );
 
   const availabilitiesResult = await getAvailabilityByTeacherId(courseResult.course.teacherId);
-  const availableSlotsResult = await getAvailabileSlots(courseResult.course.teacherId);
+  const bookingsResult = await getBookingsByTeacherId(courseResult.course.teacherId, ['pending', 'confirmed']);
+  const availableSlotsResult = await getAvailableSlots(courseResult.course.teacherId, courseResult.course.duration);
 
   return {
     course: courseResult.course,
     teacher: teacherResult.success ? teacherResult.teacher : null,
+<<<<<<< HEAD
     availableSlots: availableSlotsResult.success ? availableSlotsResult.slots : null,
+=======
+    availabilities: availabilitiesResult.success ? availabilitiesResult.availabilities : null,
+    bookings: bookingsResult.success ? bookingsResult.bookings : null,
+    availableSlots: availableSlotsResult.success ? availableSlotsResult.availabilities : null,
+>>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
   };
 }
 
@@ -63,7 +75,11 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export default function CourseDetail() {
+<<<<<<< HEAD
   const { course, teacher, availableSlots } = useLoaderData<typeof loader>();
+=======
+  const { course, teacher, availabilities, bookings, availableSlots } = useLoaderData<typeof loader>();
+>>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
 
   return (
     <main>
@@ -81,7 +97,17 @@ export default function CourseDetail() {
             <CourseDescription description={course.description ?? null} />
           </div>
           <div>
+<<<<<<< HEAD
             <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
+=======
+            <BookingCard
+              course={course}
+              teacher={teacher}
+              availabilities={availabilities}
+              bookings={bookings}
+              availableSlots={availableSlots}
+            />
+>>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
           </div>
         </div>
       </div>

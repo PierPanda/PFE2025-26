@@ -2,7 +2,13 @@ import { Button, Card, CardBody } from '@heroui/react';
 import type {
   CourseWithTeacher,
   TeacherWithUserAndCoursesCount,
+<<<<<<< HEAD
   AvailableSlot,
+=======
+  AvailabilityWithTeacher,
+  AvailableSlot,
+  BookingWithRelations,
+>>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
 } from '~/services/types';
 import TeacherCard from './teacher-card';
 import { formatSlot } from '~/lib/utils';
@@ -10,6 +16,11 @@ import { formatSlot } from '~/lib/utils';
 type BookingCardProps = {
   course: CourseWithTeacher;
   teacher: TeacherWithUserAndCoursesCount | null;
+<<<<<<< HEAD
+=======
+  availabilities?: AvailabilityWithTeacher[] | null;
+  bookings?: BookingWithRelations[] | null;
+>>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
   availableSlots?: AvailableSlot[] | null;
 };
 
@@ -33,6 +44,7 @@ function formatSlot(start: Date, end: Date) {
   return `${date} - ${startTime} a ${endTime}`;
 }
 
+<<<<<<< HEAD
 export default function BookingCard({
   course,
   teacher,
@@ -40,6 +52,9 @@ export default function BookingCard({
   bookings,
   availableSlots,
 }: BookingCardProps) {
+=======
+export default function BookingCard({ course, teacher, availabilities, bookings, availableSlots }: BookingCardProps) {
+>>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
   const bookedSlots = bookings ?? [];
   const totalAvailabilities = availabilities ?? [];
   const freeSlots = availableSlots ?? [];
@@ -75,9 +90,13 @@ export default function BookingCard({
 
         <div className="grid gap-3 text-sm">
           <div className="rounded-xl border border-gray-200 p-3">
+<<<<<<< HEAD
             <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
               Disponibilites du prof
             </p>
+=======
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Disponibilites du prof</p>
+>>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
             <p className="mt-1 text-lg font-bold text-gray-900">{totalAvailabilities.length}</p>
             <ul className="mt-2 max-h-32 space-y-1 overflow-auto pr-1 text-xs text-gray-700">
               {totalAvailabilities.length === 0 ? <li>Aucune disponibilite.</li> : null}
@@ -90,9 +109,13 @@ export default function BookingCard({
           </div>
 
           <div className="rounded-xl border border-red-200 bg-red-50/60 p-3">
+<<<<<<< HEAD
             <p className="text-xs font-semibold uppercase tracking-wide text-red-700">
               Creneaux reserves
             </p>
+=======
+            <p className="text-xs font-semibold uppercase tracking-wide text-red-700">Creneaux reserves</p>
+>>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
             <p className="mt-1 text-lg font-bold text-red-700">{bookedSlots.length}</p>
             <ul className="mt-2 max-h-32 space-y-1 overflow-auto pr-1 text-xs text-red-800">
               {bookedSlots.length === 0 ? <li>Aucune reservation active.</li> : null}
@@ -105,9 +128,13 @@ export default function BookingCard({
           </div>
 
           <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3">
+<<<<<<< HEAD
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
               Creneaux restants
             </p>
+=======
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Creneaux restants</p>
+>>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
             <p className="mt-1 text-lg font-bold text-emerald-700">{freeSlots.length}</p>
             <ul className="mt-2 max-h-32 space-y-1 overflow-auto pr-1 text-xs text-emerald-800">
               {freeSlots.length === 0 ? <li>Aucun creneau libre.</li> : null}
