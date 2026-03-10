@@ -125,7 +125,7 @@ export type GetAvailabilitiesResponse = ServiceResponse<{
 }>;
 
 export type GetAvailableSlotsResponse = ServiceResponse<{
-  availabilities: AvailabilityWithTeacher[];
+  availabilities: AvailableSlot[];
 }>;
 
 export type GetBookingResponse = ServiceResponse<{
