@@ -6,6 +6,7 @@ import { formatSlot } from '~/lib/utils';
 type BookingCardProps = {
   course: CourseWithTeacher;
   teacher: TeacherWithUserAndCoursesCount | null;
+
   availableSlots?: AvailableSlot[] | null;
 };
 
