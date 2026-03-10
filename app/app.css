@@ -5,8 +5,36 @@
 
 @theme {
   --font-sans:
-    'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+    'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
   --color-brand: #ffaa00;
-  --color-brand-secondary: #ff7031;
+  --color-brand-primary: #ff7031;
+  --color-brand-secondary: #ffc200;
+  --color-brand-tertiary: #191918;
+
+  /* Title */
+
+  --color-title: #ff7031;
+  --color-sub-title: #ffc200;
+  --color-paragraph: #191918;
+  --color-accent: #ff7031;
+  --color-button-title: #fffef6;
+  --color-button-title-hover: #ffc200;
+  --color-chips-title: #fffef6;
+  --color-price-title: #191918;
+
+  /* Button */
+
+  --color-bg-button: #ff7031;
+  --color-bg-button-hover: 'transparent';
+
+  /*Font sizes*/
+
+  --text-title: 'text-6xl';
+  --text-sub-title: 'text-4xl';
+  --text-paragraph: 'text-lg';
+  --text-button: 'text-sm';
+  --text-chip: 'text-sm';
+  --text-menu: 'text-sm';
+  --text-price: 'text-3xl';
 }
