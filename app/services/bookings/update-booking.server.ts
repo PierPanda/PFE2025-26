@@ -18,20 +18,20 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
     if (!updatedBooking) {
       return {
         success: false,
-        error: 'Reservation introuvable.',
+        error: 'Réservation introuvable.',
       };
     }
 
     return {
       success: true,
-      message: 'Reservation mise a jour avec succes.',
+      message: 'Réservation mise à jour avec succès.',
       booking: updatedBooking,
     };
   } catch (error) {
     console.error('Error updating booking:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la mise a jour de la reservation.",
+      error: "Une erreur s'est produite lors de la mise a jour de la réservation.",
     };
   }
 }
