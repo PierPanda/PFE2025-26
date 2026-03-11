@@ -1,7 +1,8 @@
 import { data, type ActionFunctionArgs, type LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
-import { createBookingSchema, deleteBookingSchema, updateBookingSchema } from '~/lib/validation';
+import { createBookingSchema, updateBookingSchema } from '~/lib/validation';
 import { getLearnerByUserId } from '~/services/learners/get-learner.server';
+import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
 import { createBooking } from '~/services/bookings/create-booking.server';
 import {
   getBooking,
@@ -10,11 +11,13 @@ import {
   getBookingsByLearnerId,
   getBookingsByTeacherId,
 } from '~/services/bookings/get-bookings.server';
+import { getCourseById } from '~/services/courses/get-course.server';
+import { getAvailability } from '~/services/availabilities/get-availability.server';
 import { updateBooking } from '~/services/bookings/update-booking.server';
 import { deleteBooking } from '~/services/bookings/delete-booking.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await authentifyUser(request);
+  const session = await authentifyUser(request);
 
   const url = new URL(request.url);
   const bookingId = url.searchParams.get('id');
@@ -23,36 +26,97 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const courseId = url.searchParams.get('courseId');
   const availabilityId = url.searchParams.get('availabilityId');
 
+  const [learnerResult, teacherResult] = await Promise.all([
+    getLearnerByUserId(session.user.id),
+    getTeacherByUserId(session.user.id),
+  ]);
+
+  const currentLearnerId = learnerResult.success && learnerResult.learner ? learnerResult.learner.id : null;
+  const currentTeacherId = teacherResult.success && teacherResult.teacher ? teacherResult.teacher.id : null;
+
   if (bookingId) {
     const result = await getBooking(bookingId);
     if (!result.success || !result.booking) {
-      return data({ error: result.error ?? 'Booking not found' }, { status: 404 });
+      return data({ error: 'Réservation introuvable' }, { status: 404 });
     }
+
+    const isLearnerOwner = currentLearnerId !== null && result.booking.learnerId === currentLearnerId;
+    const isTeacherOwner =
+      currentTeacherId !== null &&
+      (result.booking.course.teacherId === currentTeacherId ||
+        result.booking.availability.teacherId === currentTeacherId);
+
+    if (!isLearnerOwner && !isTeacherOwner) {
+      return data({ error: 'Non autorisé.' }, { status: 403 });
+    }
+
     return result;
   }
 
   if (learnerId) {
-    return getBookingsByLearnerId(learnerId);
+    if (!currentLearnerId || learnerId !== currentLearnerId) {
+      return data({ error: 'Non autorisé.' }, { status: 403 });
+    }
+
+    return getBookingsByLearnerId(currentLearnerId);
   }
 
   if (teacherId) {
-    return getBookingsByTeacherId(teacherId);
+    if (!currentTeacherId || teacherId !== currentTeacherId) {
+      return data({ error: 'Non autorisé.' }, { status: 403 });
+    }
+
+    return getBookingsByTeacherId(currentTeacherId);
   }
 
   if (courseId) {
+    if (!currentTeacherId) {
+      return data({ error: 'Non autorisé.' }, { status: 403 });
+    }
+
+    const courseResult = await getCourseById(courseId);
+    if (!courseResult.success || !courseResult.course) {
+      return data({ error: 'Cours introuvable' }, { status: 404 });
+    }
+
+    if (courseResult.course.teacherId !== currentTeacherId) {
+      return data({ error: 'Non autorisé.' }, { status: 403 });
+    }
+
     return getBookingsByCourseId(courseId);
   }
 
   if (availabilityId) {
+    if (!currentTeacherId) {
+      return data({ error: 'Non autorisé.' }, { status: 403 });
+    }
+
+    const availabilityResult = await getAvailability(availabilityId);
+    if (!availabilityResult.success || !availabilityResult.availability) {
+      return data({ error: 'Disponibilité introuvable' }, { status: 404 });
+    }
+
+    if (availabilityResult.availability.teacherId !== currentTeacherId) {
+      return data({ error: 'Non autorisé.' }, { status: 403 });
+    }
+
     return getBookingsByAvailabilityId(availabilityId);
   }
 
-  return data({ error: 'Booking ID or filter required' }, { status: 400 });
+  return data({ error: 'ID de réservation ou filtre requis' }, { status: 400 });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const session = await authentifyUser(request);
   const method = request.method.toUpperCase();
+
+  const [learnerResult, teacherResult] = await Promise.all([
+    getLearnerByUserId(session.user.id),
+    getTeacherByUserId(session.user.id),
+  ]);
+
+  const currentLearnerId = learnerResult.success && learnerResult.learner ? learnerResult.learner.id : null;
+  const currentTeacherId = teacherResult.success && teacherResult.teacher ? teacherResult.teacher.id : null;
 
   switch (method) {
     case 'POST': {
@@ -60,16 +124,21 @@ export async function action({ request }: ActionFunctionArgs) {
       const parsed = createBookingSchema.safeParse(body);
 
       if (!parsed.success) {
-        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+        return data(
+          {
+            success: false,
+            error: parsed.error.issues.map((e) => e.message).join(', '),
+          },
+          { status: 400 },
+        );
       }
 
-      const learnerResult = await getLearnerByUserId(session.user.id);
-      if (!learnerResult.success || !learnerResult.learner) {
+      if (!currentLearnerId) {
         return data({ success: false, error: 'Apprenant introuvable.' }, { status: 403 });
       }
 
-      if (learnerResult.learner.id !== parsed.data.learnerId) {
-        return data({ success: false, error: 'Non autorise.' }, { status: 403 });
+      if (currentLearnerId !== parsed.data.learnerId) {
+        return data({ success: false, error: 'Non autorisé.' }, { status: 403 });
       }
 
       const result = await createBooking(parsed.data);
@@ -81,14 +150,35 @@ export async function action({ request }: ActionFunctionArgs) {
       const bookingId = url.searchParams.get('id');
 
       if (!bookingId) {
-        return data({ success: false, error: 'Booking ID required' }, { status: 400 });
+        return data({ success: false, error: 'ID de réservation requis' }, { status: 400 });
+      }
+
+      const bookingResult = await getBooking(bookingId);
+      if (!bookingResult.success || !bookingResult.booking) {
+        return data({ success: false, error: 'Réservation introuvable.' }, { status: 404 });
+      }
+
+      const isLearnerOwner = currentLearnerId !== null && bookingResult.booking.learnerId === currentLearnerId;
+      const isTeacherOwner =
+        currentTeacherId !== null &&
+        (bookingResult.booking.course.teacherId === currentTeacherId ||
+          bookingResult.booking.availability.teacherId === currentTeacherId);
+
+      if (!isLearnerOwner && !isTeacherOwner) {
+        return data({ success: false, error: 'Non autorisé.' }, { status: 403 });
       }
 
       const body = await request.json();
       const parsed = updateBookingSchema.safeParse(body);
 
       if (!parsed.success) {
-        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+        return data(
+          {
+            success: false,
+            error: parsed.error.issues.map((e) => e.message).join(', '),
+          },
+          { status: 400 },
+        );
       }
 
       const result = await updateBooking(bookingId, parsed.data);
@@ -100,15 +190,22 @@ export async function action({ request }: ActionFunctionArgs) {
       const bookingId = url.searchParams.get('id');
 
       if (!bookingId) {
-        const body = await request.json();
-        const parsed = deleteBookingSchema.safeParse(body);
+        return data({ success: false, error: 'ID de réservation requis' }, { status: 400 });
+      }
 
-        if (!parsed.success) {
-          return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
-        }
+      const bookingResult = await getBooking(bookingId);
+      if (!bookingResult.success || !bookingResult.booking) {
+        return data({ success: false, error: 'Réservation introuvable.' }, { status: 404 });
+      }
 
-        const result = await deleteBooking(parsed.data.id);
-        return data(result, { status: result.success ? 200 : 404 });
+      const isLearnerOwner = currentLearnerId !== null && bookingResult.booking.learnerId === currentLearnerId;
+      const isTeacherOwner =
+        currentTeacherId !== null &&
+        (bookingResult.booking.course.teacherId === currentTeacherId ||
+          bookingResult.booking.availability.teacherId === currentTeacherId);
+
+      if (!isLearnerOwner && !isTeacherOwner) {
+        return data({ success: false, error: 'Non autorisé.' }, { status: 403 });
       }
 
       const result = await deleteBooking(bookingId);
