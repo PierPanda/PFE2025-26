@@ -7,6 +7,7 @@ import type {
   BookingWithRelations,
 } from '~/services/types';
 import TeacherCard from './teacher-card';
+import { formatSlot } from '~/lib/utils';
 
 type BookingCardProps = {
   course: CourseWithTeacher;
