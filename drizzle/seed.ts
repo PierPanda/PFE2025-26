@@ -338,10 +338,10 @@ async function seedBookings(
   }[],
   learnerIds: { email: string; learnerId: string }[],
 ): Promise<number> {
-  console.log('\n=== Creation des reservations (bookings) ===\n');
+  console.log('\n=== Creation des réservations (bookings) ===\n');
 
   if (learnerIds.length === 0) {
-    console.log('[SKIP] Aucun learner disponible pour les reservations');
+    console.log('[SKIP] Aucun learner disponible pour les réservations');
     return 0;
   }
 

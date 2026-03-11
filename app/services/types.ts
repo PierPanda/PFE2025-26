@@ -113,7 +113,7 @@ export type GetAvailabilitiesResponse = ServiceResponse<{
 }>;
 
 export type GetAvailableSlotsResponse = ServiceResponse<{
-  availabilities: AvailableSlot[];
+  slots: AvailableSlot[];
 }>;
 
 export type GetBookingResponse = ServiceResponse<{
@@ -140,8 +140,12 @@ export type CreateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type UpdateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type DeleteTeacherResponse = ServiceResponse<object>;
 
-export type CreateAvailabilityResponse = ServiceResponse<{ availability: DbAvailability }>;
-export type UpdateAvailabilityResponse = ServiceResponse<{ availability: DbAvailability }>;
+export type CreateAvailabilityResponse = ServiceResponse<{
+  availability: DbAvailability;
+}>;
+export type UpdateAvailabilityResponse = ServiceResponse<{
+  availability: DbAvailability;
+}>;
 export type DeleteAvailabilityResponse = ServiceResponse<object>;
 
 export type CreateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
