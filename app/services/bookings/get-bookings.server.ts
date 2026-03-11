@@ -84,7 +84,7 @@ export async function getBookingsByLearnerId(
     return {
       success: false,
       error:
-        "Une erreur s'est produite lors de la récuperation des réservations.",
+        "Une erreur s'est produite lors de la recuperation des réservations.",
     };
   }
 }
@@ -134,7 +134,7 @@ export async function getBookingsByTeacherId(
     return {
       success: false,
       error:
-        "Une erreur s'est produite lors de la récuperation des réservations.",
+        "Une erreur s'est produite lors de la recuperation des réservations.",
     };
   }
 }
@@ -160,7 +160,7 @@ export async function getBookingsByCourseId(
     return {
       success: false,
       error:
-        "Une erreur s'est produite lors de la récuperation des réservations.",
+        "Une erreur s'est produite lors de la recuperation des réservations.",
     };
   }
 }
@@ -186,7 +186,7 @@ export async function getBookingsByAvailabilityId(
     return {
       success: false,
       error:
-        "Une erreur s'est produite lors de la récuperation des réservations.",
+        "Une erreur s'est produite lors de la recuperation des réservations.",
     };
   }
 }
