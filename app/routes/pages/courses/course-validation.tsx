@@ -85,7 +85,7 @@ export default function CourseValidation({ values, createCourse, onBack }: Cours
         <Button
           type="button"
           variant="bordered"
-          className="h-12 w-full rounded-xl border-brand-secondary font-semibold text-brand-secondary hover:bg-brand-secondary/5"
+          className="h-12 w-full rounded-xl border-primary font-semibold text-primary hover:bg-primary/5"
           startContent={<Icon icon="solar:diskette-bold" width={17} />}
           onPress={() => createCourse(false)}
         >
