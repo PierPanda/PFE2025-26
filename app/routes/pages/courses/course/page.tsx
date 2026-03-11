@@ -40,9 +40,12 @@ import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availa
 >>>>>>> 144a161 (feat(bookings): implement booking management features)
 =======
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots.server';
+<<<<<<< HEAD
 import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability.server';
 import { getBookingsByTeacherId } from '~/services/bookings/get-bookings.server';
 >>>>>>> ed94af3 (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+>>>>>>> 1ea8115 (feat(api): enhance booking and slot management)
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
@@ -195,6 +198,7 @@ export default function CourseDetail() {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
 =======
 =======
@@ -231,6 +235,9 @@ export default function CourseDetail() {
               availableSlots={availableSlots}
             />
 >>>>>>> 144a161 (feat(bookings): implement booking management features)
+=======
+            <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
+>>>>>>> 1ea8115 (feat(api): enhance booking and slot management)
           </div>
         </div>
       </div>
