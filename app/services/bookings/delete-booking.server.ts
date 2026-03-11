@@ -8,17 +8,17 @@ import type { DeleteBookingResponse } from '../types';
  */
 export async function deleteBooking(bookingId: string): Promise<DeleteBookingResponse> {
   try {
-    await db.delete(bookings).where(eq(bookings.id, bookingId));
+    await db.delete(bookings).where(eq(bookings.id, bookingId)).returning();
 
     return {
       success: true,
-      message: 'Reservation supprimee avec succes.',
+      message: 'Réservation supprimée avec succès.',
     };
   } catch (error) {
     console.error('Error deleting booking:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la suppression de la reservation.",
+      error: "Une erreur s'est produite lors de la suppression de la réservation.",
     };
   }
 }
