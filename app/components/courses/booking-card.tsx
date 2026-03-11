@@ -17,26 +17,6 @@ type BookingCardProps = {
   availableSlots?: AvailableSlot[] | null;
 };
 
-function formatSlot(start: Date, end: Date) {
-  const date = new Intl.DateTimeFormat('fr-FR', {
-    weekday: 'short',
-    day: '2-digit',
-    month: '2-digit',
-  }).format(start);
-
-  const startTime = new Intl.DateTimeFormat('fr-FR', {
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(start);
-
-  const endTime = new Intl.DateTimeFormat('fr-FR', {
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(end);
-
-  return `${date} - ${startTime} a ${endTime}`;
-}
-
 export default function BookingCard({ course, teacher, availableSlots }: BookingCardProps) {
   const freeSlots = availableSlots ?? [];
 
