@@ -18,7 +18,14 @@ export default [
   layout('routes/layouts/auth-layout.tsx', [
     index('routes/pages/dashboard/page.tsx'),
     route('/profile', 'routes/pages/profile/page.tsx'),
-    route('/courses/create', 'routes/pages/courses/create-course-form.tsx'),
     route('/courses/:id', 'routes/pages/courses/course/page.tsx'),
+
+    // Teacher-only Pages (nested: hérite du header auth-layout)
+    layout('routes/layouts/teacher-layout.tsx', [
+      route('/courses/create', 'routes/pages/courses/create-course-form.tsx'),
+    ]),
+
+    // Admin-only Pages (nested: hérite du header auth-layout)
+    layout('routes/layouts/admin-layout.tsx', [route('/admin', 'routes/pages/admin/page.tsx')]),
   ]),
 ] satisfies RouteConfig;

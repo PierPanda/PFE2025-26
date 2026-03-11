@@ -299,17 +299,54 @@ export type NewCourse = typeof courses.$inferInsert;
 
 ## Layouts
 
-### Layouts simples (sans auth)
+### Layout simple (sans guard)
+
+Les layouts qui ne font que structurer l'UI (header, shell) restent simples, sans vérification auth :
 
 ```tsx
 // app/routes/layouts/auth-layout.tsx
 import { Outlet } from "react-router";
 
 export default function AuthLayout() {
-  // PAS de vérification auth ici
-  // L'auth est gérée dans chaque loader avec authentifyUser
   return <Outlet />;
 }
+```
+
+### Layout guard (protection par rôle)
+
+Pour protéger un groupe de routes par rôle, on utilise un layout avec loader. Toutes les routes imbriquées héritent automatiquement de la protection. Ce pattern évite de dupliquer le check dans chaque page.
+
+```tsx
+// app/routes/layouts/teacher-layout.tsx
+import type { LoaderFunctionArgs } from 'react-router';
+import { Outlet } from 'react-router';
+import { checkPermission } from '~/server/utils/check-permission.server';
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  return await checkPermission(request, {
+    allowedRoles: ['teacher'],
+    redirectTo: '/',
+  });
+}
+
+export default function TeacherLayout() {
+  return <Outlet />;
+}
+```
+
+Les layout guards sont **toujours imbriqués** dans le layout parent (ex: `auth-layout`) pour hériter du shell UI :
+
+```typescript
+// app/routes.ts
+layout('routes/layouts/auth-layout.tsx', [
+  index('routes/pages/dashboard/page.tsx'),
+  layout('routes/layouts/teacher-layout.tsx', [
+    route('/courses/create', 'routes/pages/courses/create-course-form.tsx'),
+  ]),
+  layout('routes/layouts/admin-layout.tsx', [
+    route('/admin', 'routes/pages/admin/page.tsx'),
+  ]),
+]),
 ```
 
 ---
@@ -320,11 +357,12 @@ export default function AuthLayout() {
 |-------|-------------|
 | **kebab-case** | Tous les fichiers en kebab-case |
 | **`.server.ts`** | Code serveur uniquement |
-| **`authentifyUser`** | Dans chaque loader protégé |
+| **`authentifyUser`** | Dans chaque loader protégé ou via `checkPermission` |
+| **`checkPermission`** | Dans les layout guards pour protéger un groupe de routes par rôle |
 | **Validation** | Centralisée dans `lib/validation.ts` |
 | **Routes API** | Dans `routes/_api/` avec loader/action |
 | **TanStack Query** | Pour les appels API côté client |
-| **Layouts** | Simples, sans vérification auth |
+| **Layout guard** | Imbriqué dans le layout parent, loader avec `checkPermission` |
 | **Redirections** | Côté serveur uniquement |
 
 ---

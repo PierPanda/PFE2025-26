@@ -7,7 +7,6 @@ import type { LoaderFunctionArgs, ActionFunctionArgs } from 'react-router';
 import { uuidv7 } from 'uuidv7';
 import { createCourse } from '~/services/courses/create-course.server';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
-import { createTeacher } from '~/services/teachers/create-teacher.server';
 import { cn } from '~/lib/utils';
 import { courseFormSchema, createCourseSchema } from '~/lib/validation';
 import type { CourseFormInput, CreateCourseInput } from '~/types/course';
@@ -30,25 +29,10 @@ export async function action({ request }: ActionFunctionArgs) {
   const data = Object.fromEntries(formData);
 
   const teacherResult = await getTeacherByUserId(session.user.id);
-  let teacherId: string;
-
-  if (teacherResult.success && teacherResult.teacher) {
-    teacherId = teacherResult.teacher.id;
-  } else {
-    const newTeacherId = uuidv7();
-    const teacherCreation = await createTeacher({
-      id: newTeacherId,
-      userId: session.user.id,
-    });
-
-    if (!teacherCreation.success) {
-      return {
-        success: false,
-        error: 'Erreur lors de la création du profil enseignant.',
-      };
-    }
-    teacherId = newTeacherId;
+  if (!teacherResult.success || !teacherResult.teacher) {
+    return { success: false, error: 'Profil enseignant introuvable.' };
   }
+  const teacherId = teacherResult.teacher.id;
 
   const courseData = { ...data, teacherId };
 
