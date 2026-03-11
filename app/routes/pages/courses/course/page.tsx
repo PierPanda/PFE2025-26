@@ -38,6 +38,16 @@ export async function loader({ params }: Route.LoaderArgs) {
     courseResult.course.teacherId,
   );
 
+  const sanitizedBookings =
+    bookingsResult.success && bookingsResult.bookings
+      ? bookingsResult.bookings.map((booking) => ({
+          id: booking.id,
+          startTime: booking.startTime,
+          endTime: booking.endTime,
+          status: booking.status,
+        }))
+      : null;
+
   return {
     course: courseResult.course,
     teacher: teacherResult.success ? teacherResult.teacher : null,
