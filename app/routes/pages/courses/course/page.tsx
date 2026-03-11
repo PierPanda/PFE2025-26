@@ -33,11 +33,21 @@ export async function loader({ params }: Route.LoaderArgs) {
   const bookingsResult = await getBookingsByTeacherId(courseResult.course.teacherId, ['pending', 'confirmed']);
   const availableSlotsResult = await getAvailableSlots(courseResult.course.teacherId, courseResult.course.duration);
 
+  const sanitizedBookings =
+    bookingsResult.success && bookingsResult.bookings
+      ? bookingsResult.bookings.map((booking) => ({
+          id: booking.id,
+          startTime: booking.startTime,
+          endTime: booking.endTime,
+          status: booking.status,
+        }))
+      : null;
+
   return {
     course: courseResult.course,
     teacher: teacherResult.success ? teacherResult.teacher : null,
     availabilities: availabilitiesResult.success ? availabilitiesResult.availabilities : null,
-    bookings: bookingsResult.success ? bookingsResult.bookings : null,
+    bookings: sanitizedBookings,
     availableSlots: availableSlotsResult.success ? availableSlotsResult.availabilities : null,
   };
 }
