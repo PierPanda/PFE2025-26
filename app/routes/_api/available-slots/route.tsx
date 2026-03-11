@@ -16,6 +16,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   if (!teacherId) {
     throw new Response('teacherId is required', { status: 400 });
   }
@@ -31,6 +32,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw new Response('teacherId is required', { status: 400 });
   }
 >>>>>>> 3b88034 (feat(api): enhance booking and slot management)
+=======
+  if (!teacherId) {
+    throw new Response('teacherId is required', { status: 400 });
+  }
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
   const minDurationMinutes = Number(url.searchParams.get('minDurationMinutes') ?? '0');
 
   return getAvailableSlots(teacherId || '', Number.isFinite(minDurationMinutes) ? minDurationMinutes : 0);

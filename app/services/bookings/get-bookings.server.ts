@@ -48,10 +48,14 @@ export async function getBooking(bookingId: string): Promise<GetBookingResponse>
     return {
       success: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la recuperation de la réservation.",
 =======
       error: "Une erreur s'est produite lors de la recuperation de la reservation.",
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+      error: "Une erreur s'est produite lors de la recuperation de la réservation.",
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
     };
   }
 }
@@ -85,10 +89,14 @@ export async function getBookingsByLearnerId(
     return {
       success: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la recuperation des réservations.",
 =======
       error: "Une erreur s'est produite lors de la recuperation des reservations.",
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+      error: "Une erreur s'est produite lors de la recuperation des réservations.",
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
     };
   }
 }
@@ -135,10 +143,14 @@ export async function getBookingsByTeacherId(
     return {
       success: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la recuperation des réservations.",
 =======
       error: "Une erreur s'est produite lors de la recuperation des reservations.",
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+      error: "Une erreur s'est produite lors de la recuperation des réservations.",
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
     };
   }
 }
@@ -162,10 +174,14 @@ export async function getBookingsByCourseId(courseId: string): Promise<GetBookin
     return {
       success: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la recuperation des réservations.",
 =======
       error: "Une erreur s'est produite lors de la recuperation des reservations.",
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+      error: "Une erreur s'est produite lors de la recuperation des réservations.",
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
     };
   }
 }
@@ -195,10 +211,14 @@ export async function getBookingsByAvailabilityId(availabilityId: string): Promi
     return {
       success: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la recuperation des réservations.",
 =======
       error: "Une erreur s'est produite lors de la recuperation des reservations.",
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+      error: "Une erreur s'est produite lors de la recuperation des réservations.",
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
     };
   }
 }

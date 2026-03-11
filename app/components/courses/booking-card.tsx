@@ -85,6 +85,7 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default function BookingCard({ course, teacher, availabilities, availableSlots }: BookingCardProps) {
   console.log('Availabilities in BookingCard:', availabilities);
   console.log('Available Slots in BookingCard:', availableSlots);
@@ -113,6 +114,9 @@ function formatSlot(start: Date, end: Date) {
 export default function BookingCard({ course, teacher, availabilities, bookings, availableSlots }: BookingCardProps) {
   const bookedSlots = bookings ?? [];
   const totalAvailabilities = availabilities ?? [];
+=======
+export default function BookingCard({ course, teacher, availableSlots }: BookingCardProps) {
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
   const freeSlots = availableSlots ?? [];
 
 >>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
@@ -145,6 +149,7 @@ export default function BookingCard({ course, teacher, availabilities, bookings,
           Réserver
         </Button>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         <div className="grid gap-3 text-sm">
@@ -222,6 +227,8 @@ export default function BookingCard({ course, teacher, availabilities, bookings,
           </div>
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
         <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Creneaux restants</p>
           <p className="mt-1 text-lg font-bold text-emerald-700">{freeSlots.length}</p>
@@ -236,9 +243,12 @@ export default function BookingCard({ course, teacher, availabilities, bookings,
               </li>
             ))}
           </ul>
+<<<<<<< HEAD
 >>>>>>> 3b88034 (feat(api): enhance booking and slot management)
 =======
 >>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
         </div>
 
         {teacher && (

@@ -49,6 +49,7 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'DELETE': {
       const url = new URL(request.url);
 <<<<<<< HEAD
+<<<<<<< HEAD
       const availabilityId = url.searchParams.get('id');
 
       if (!availabilityId) {
@@ -66,6 +67,12 @@ export async function action({ request }: ActionFunctionArgs) {
           { status: 400 },
         );
 >>>>>>> fe88c5f (refactor(availabilities): harmoniser le style de code et améliorer la lisibilité)
+=======
+      const availabilityId = url.searchParams.get('id');
+
+      if (!availabilityId) {
+        return data({ success: false, error: 'ID de disponibilité requis' }, { status: 400 });
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
       }
 
       const result = await deleteAvailability(availabilityId);

@@ -22,9 +22,12 @@ import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availa
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
 =======
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots.server';
+<<<<<<< HEAD
 import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability.server';
 import { getBookingsByTeacherId } from '~/services/bookings/get-bookings.server';
 >>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
@@ -45,6 +48,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     throw new Response('Cours non trouvé', { status: 404 });
   }
   const teacherResult = await getTeacherSummary(courseResult.course.teacherId);
+<<<<<<< HEAD
 <<<<<<< HEAD
   const availableSlotsResult = await getAvailableSlots(
     courseResult.course.teacherId,
@@ -69,11 +73,14 @@ export async function loader({ params }: Route.LoaderArgs) {
 
   const availabilitiesResult = await getAvailabilityByTeacherId(courseResult.course.teacherId);
   const bookingsResult = await getBookingsByTeacherId(courseResult.course.teacherId, ['pending', 'confirmed']);
+=======
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
   const availableSlotsResult = await getAvailableSlots(courseResult.course.teacherId, courseResult.course.duration);
 
   return {
     course: courseResult.course,
     teacher: teacherResult.success ? teacherResult.teacher : null,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -91,6 +98,9 @@ export async function loader({ params }: Route.LoaderArgs) {
     bookings: bookingsResult.success ? bookingsResult.bookings : null,
     availableSlots: availableSlotsResult.success ? availableSlotsResult.availabilities : null,
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+    availableSlots: availableSlotsResult.success ? availableSlotsResult.slots : null,
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
   };
 }
 
@@ -110,6 +120,7 @@ export default function CourseDetail() {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const { course, teacher, availableSlots } = useLoaderData<typeof loader>();
 =======
   const { course, teacher, availabilities, bookings, availableSlots } = useLoaderData<typeof loader>();
@@ -123,6 +134,9 @@ export default function CourseDetail() {
 =======
   const { course, teacher, availabilities, bookings, availableSlots } = useLoaderData<typeof loader>();
 >>>>>>> 3e5347a (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+  const { course, teacher, availableSlots } = useLoaderData<typeof loader>();
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
 
   return (
     <main>
@@ -140,6 +154,7 @@ export default function CourseDetail() {
             <CourseDescription description={course.description ?? null} />
           </div>
           <div>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -166,6 +181,9 @@ export default function CourseDetail() {
               availableSlots={availableSlots}
             />
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
+=======
+            <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
+>>>>>>> d823109 (feat(api): enhance booking and slot management)
           </div>
         </div>
       </div>
