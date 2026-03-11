@@ -24,6 +24,7 @@ type BookingCardProps = {
   availableSlots?: AvailableSlot[] | null;
 };
 
+<<<<<<< HEAD
 function formatSlot(start: Date, end: Date) {
   const date = new Intl.DateTimeFormat('fr-FR', {
     weekday: 'short',
@@ -57,6 +58,9 @@ export default function BookingCard({ course, teacher, availabilities, bookings,
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
   const bookedSlots = bookings ?? [];
   const totalAvailabilities = availabilities ?? [];
+=======
+export default function BookingCard({ course, teacher, availableSlots }: BookingCardProps) {
+>>>>>>> 3b88034 (feat(api): enhance booking and slot management)
   const freeSlots = availableSlots ?? [];
 
   return (
@@ -88,6 +92,7 @@ export default function BookingCard({ course, teacher, availabilities, bookings,
           Réserver
         </Button>
 
+<<<<<<< HEAD
         <div className="grid gap-3 text-sm">
           <div className="rounded-xl border border-gray-200 p-3">
 <<<<<<< HEAD
@@ -148,6 +153,22 @@ export default function BookingCard({ course, teacher, availabilities, bookings,
               ))}
             </ul>
           </div>
+=======
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Creneaux restants</p>
+          <p className="mt-1 text-lg font-bold text-emerald-700">{freeSlots.length}</p>
+          <ul className="mt-2 max-h-32 space-y-1 overflow-auto pr-1 text-xs text-emerald-800">
+            {freeSlots.length === 0 ? <li>Aucun creneau libre.</li> : null}
+            {freeSlots.map((slot) => (
+              <li
+                key={`${slot.availabilityId}-${slot.startTime.toISOString()}-${slot.endTime.toISOString()}`}
+                className="rounded-md bg-emerald-100/80 px-2 py-1"
+              >
+                {formatSlot(slot.startTime, slot.endTime)}
+              </li>
+            ))}
+          </ul>
+>>>>>>> 3b88034 (feat(api): enhance booking and slot management)
         </div>
 
         {teacher && (

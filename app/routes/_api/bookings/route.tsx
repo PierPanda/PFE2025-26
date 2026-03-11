@@ -31,10 +31,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
     getTeacherByUserId(session.user.id),
   ]);
 
+<<<<<<< HEAD
   const currentLearnerId =
     learnerResult.success && learnerResult.learner ? learnerResult.learner.id : null;
   const currentTeacherId =
     teacherResult.success && teacherResult.teacher ? teacherResult.teacher.id : null;
+=======
+  const currentLearnerId = learnerResult.success && learnerResult.learner ? learnerResult.learner.id : null;
+  const currentTeacherId = teacherResult.success && teacherResult.teacher ? teacherResult.teacher.id : null;
+>>>>>>> 3b88034 (feat(api): enhance booking and slot management)
 
   if (bookingId) {
     const result = await getBooking(bookingId);
@@ -42,8 +47,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
       return data({ error: 'Réservation introuvable' }, { status: 404 });
     }
 
+<<<<<<< HEAD
     const isLearnerOwner =
       currentLearnerId !== null && result.booking.learnerId === currentLearnerId;
+=======
+    const isLearnerOwner = currentLearnerId !== null && result.booking.learnerId === currentLearnerId;
+>>>>>>> 3b88034 (feat(api): enhance booking and slot management)
     const isTeacherOwner =
       currentTeacherId !== null &&
       (result.booking.course.teacherId === currentTeacherId ||
@@ -118,10 +127,15 @@ export async function action({ request }: ActionFunctionArgs) {
     getTeacherByUserId(session.user.id),
   ]);
 
+<<<<<<< HEAD
   const currentLearnerId =
     learnerResult.success && learnerResult.learner ? learnerResult.learner.id : null;
   const currentTeacherId =
     teacherResult.success && teacherResult.teacher ? teacherResult.teacher.id : null;
+=======
+  const currentLearnerId = learnerResult.success && learnerResult.learner ? learnerResult.learner.id : null;
+  const currentTeacherId = teacherResult.success && teacherResult.teacher ? teacherResult.teacher.id : null;
+>>>>>>> 3b88034 (feat(api): enhance booking and slot management)
 
   switch (method) {
     case 'POST': {
@@ -163,8 +177,12 @@ export async function action({ request }: ActionFunctionArgs) {
         return data({ success: false, error: 'Réservation introuvable.' }, { status: 404 });
       }
 
+<<<<<<< HEAD
       const isLearnerOwner =
         currentLearnerId !== null && bookingResult.booking.learnerId === currentLearnerId;
+=======
+      const isLearnerOwner = currentLearnerId !== null && bookingResult.booking.learnerId === currentLearnerId;
+>>>>>>> 3b88034 (feat(api): enhance booking and slot management)
       const isTeacherOwner =
         currentTeacherId !== null &&
         (bookingResult.booking.course.teacherId === currentTeacherId ||
@@ -204,8 +222,12 @@ export async function action({ request }: ActionFunctionArgs) {
         return data({ success: false, error: 'Réservation introuvable.' }, { status: 404 });
       }
 
+<<<<<<< HEAD
       const isLearnerOwner =
         currentLearnerId !== null && bookingResult.booking.learnerId === currentLearnerId;
+=======
+      const isLearnerOwner = currentLearnerId !== null && bookingResult.booking.learnerId === currentLearnerId;
+>>>>>>> 3b88034 (feat(api): enhance booking and slot management)
       const isTeacherOwner =
         currentTeacherId !== null &&
         (bookingResult.booking.course.teacherId === currentTeacherId ||

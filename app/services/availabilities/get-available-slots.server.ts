@@ -96,10 +96,14 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
     return {
       success: true,
 <<<<<<< HEAD
+<<<<<<< HEAD
       slots: filteredSlots,
 =======
       availabilities: filteredSlots,
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+      slots: filteredSlots,
+>>>>>>> 3b88034 (feat(api): enhance booking and slot management)
     };
   } catch (error) {
     console.error('Error computing available slots for teacher:', error);

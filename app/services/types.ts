@@ -126,10 +126,14 @@ export type GetAvailabilitiesResponse = ServiceResponse<{
 
 export type GetAvailableSlotsResponse = ServiceResponse<{
 <<<<<<< HEAD
+<<<<<<< HEAD
   slots: AvailableSlot[];
 =======
   availabilities: AvailableSlot[];
 >>>>>>> 93dbced (feat(get available slots): create service and api route to get available slots to booking a course)
+=======
+  slots: AvailableSlot[];
+>>>>>>> 3b88034 (feat(api): enhance booking and slot management)
 }>;
 
 export type GetBookingResponse = ServiceResponse<{
