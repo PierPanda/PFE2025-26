@@ -80,7 +80,7 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       availabilities: filteredSlots,
     };
   } catch (error) {
-    console.error('Error fetching availability by teacher ID:', error);
+    console.error('Error computing available slots for teacher:', error);
     return {
       success: false,
       error: "Une erreur s'est produite lors de la récupération des disponibilités.",
