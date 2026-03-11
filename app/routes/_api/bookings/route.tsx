@@ -25,8 +25,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (bookingId) {
     const result = await getBooking(bookingId);
-    if (!result.success) {
-      return data({ error: result.error }, { status: 404 });
+    if (!result.success || !result.booking) {
+      return data({ error: result.error ?? 'Booking not found' }, { status: 404 });
     }
     return result;
   }
