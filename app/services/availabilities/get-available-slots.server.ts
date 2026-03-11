@@ -154,6 +154,7 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       slots: filteredSlots,
 =======
       availabilities: filteredSlots,
@@ -189,6 +190,9 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 >>>>>>> 38ec649 (feat(bookings): implement booking management features)
 =======
       availabilities: filteredSlots,
+=======
+      slots: filteredSlots,
+>>>>>>> 7a9389b (feat(api): enhance booking and slot management)
     };
   } catch (error) {
     console.error('Error fetching availability by teacher ID:', error);

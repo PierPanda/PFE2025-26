@@ -34,6 +34,7 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         error: 'Réservation introuvable.',
 =======
         error: 'Reservation introuvable.',
@@ -44,6 +45,9 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
 =======
         error: 'Reservation introuvable.',
 >>>>>>> e8a3f28 (feat(bookings): implement booking management features)
+=======
+        error: 'Réservation introuvable.',
+>>>>>>> 7a9389b (feat(api): enhance booking and slot management)
       };
     }
 
@@ -52,6 +56,7 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       message: 'Réservation mise à jour avec succès.',
 =======
       message: 'Reservation mise a jour avec succes.',
@@ -62,6 +67,9 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
 =======
       message: 'Reservation mise a jour avec succes.',
 >>>>>>> e8a3f28 (feat(bookings): implement booking management features)
+=======
+      message: 'Réservation mise à jour avec succès.',
+>>>>>>> 7a9389b (feat(api): enhance booking and slot management)
       booking: updatedBooking,
     };
   } catch (error) {
@@ -71,6 +79,7 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       error: "Une erreur s'est produite lors de la mise a jour de la réservation.",
 =======
       error: "Une erreur s'est produite lors de la mise a jour de la reservation.",
@@ -81,6 +90,9 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
 =======
       error: "Une erreur s'est produite lors de la mise a jour de la reservation.",
 >>>>>>> e8a3f28 (feat(bookings): implement booking management features)
+=======
+      error: "Une erreur s'est produite lors de la mise a jour de la réservation.",
+>>>>>>> 7a9389b (feat(api): enhance booking and slot management)
     };
   }
 }
