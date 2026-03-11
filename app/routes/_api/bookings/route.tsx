@@ -1,7 +1,8 @@
 import { data, type ActionFunctionArgs, type LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
-import { createBookingSchema, deleteBookingSchema, updateBookingSchema } from '~/lib/validation';
+import { createBookingSchema, updateBookingSchema } from '~/lib/validation';
 import { getLearnerByUserId } from '~/services/learners/get-learner.server';
+import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
 import { createBooking } from '~/services/bookings/create-booking.server';
 import {
   getBooking,
@@ -35,20 +36,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const currentTeacherId =
     teacherResult.success && teacherResult.teacher ? teacherResult.teacher.id : null;
 
-  const [learnerResult, teacherResult] = await Promise.all([
-    getLearnerByUserId(session.user.id),
-    getTeacherByUserId(session.user.id),
-  ]);
-
-  const currentLearnerId =
-    learnerResult.success && learnerResult.learner ? learnerResult.learner.id : null;
-  const currentTeacherId =
-    teacherResult.success && teacherResult.teacher ? teacherResult.teacher.id : null;
-
   if (bookingId) {
     const result = await getBooking(bookingId);
     if (!result.success || !result.booking) {
-      return data({ error: result.error ?? 'Booking not found' }, { status: 404 });
+      return data({ error: 'Réservation introuvable' }, { status: 404 });
     }
 
     const isLearnerOwner =

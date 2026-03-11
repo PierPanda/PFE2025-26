@@ -47,7 +47,7 @@ export async function getBooking(bookingId: string): Promise<GetBookingResponse>
     console.error('Error fetching booking:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation de la reservation.",
+      error: "Une erreur s'est produite lors de la recuperation de la réservation.",
     };
   }
 }
@@ -76,7 +76,7 @@ export async function getBookingsByLearnerId(
     console.error('Error fetching bookings by learner ID:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation des reservations.",
+      error: "Une erreur s'est produite lors de la recuperation des réservations.",
     };
   }
 }
@@ -122,7 +122,7 @@ export async function getBookingsByTeacherId(
     console.error('Error fetching bookings by teacher ID:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation des reservations.",
+      error: "Une erreur s'est produite lors de la recuperation des réservations.",
     };
   }
 }
@@ -145,7 +145,7 @@ export async function getBookingsByCourseId(courseId: string): Promise<GetBookin
     console.error('Error fetching bookings by course ID:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation des reservations.",
+      error: "Une erreur s'est produite lors de la recuperation des réservations.",
     };
   }
 }
@@ -170,7 +170,7 @@ export async function getBookingsByAvailabilityId(
     console.error('Error fetching bookings by availability ID:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation des reservations.",
+      error: "Une erreur s'est produite lors de la recuperation des réservations.",
     };
   }
 }
