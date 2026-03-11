@@ -2,7 +2,7 @@ import { Button, Card, CardBody } from "@heroui/react";
 import type {
   CourseWithTeacher,
   TeacherWithUserAndCoursesCount,
-  AvailabilityWithTeacher,
+  AvailableSlot,
 } from "~/services/types";
 import TeacherCard from "./teacher-card";
 import { formatSlot } from "~/lib/utils";
@@ -10,19 +10,16 @@ import { formatSlot } from "~/lib/utils";
 type BookingCardProps = {
   course: CourseWithTeacher;
   teacher: TeacherWithUserAndCoursesCount | null;
-  availabilities?: AvailabilityWithTeacher[] | null;
-  bookings?: BookingWithRelations[] | null;
   availableSlots?: AvailableSlot[] | null;
 };
 
 export default function BookingCard({
   course,
   teacher,
-  availabilities,
   availableSlots,
 }: BookingCardProps) {
-  console.log("Availabilities in BookingCard:", availabilities);
-  console.log("Available Slots in BookingCard:", availableSlots);
+  const freeSlots = availableSlots ?? [];
+
   return (
     <Card className="sticky top-6 shadow-md">
       <CardBody className="flex flex-col gap-5 p-6">
@@ -58,7 +55,7 @@ export default function BookingCard({
 
         <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
-            Creneaux restants
+            Créneaux restants
           </p>
           <p className="mt-1 text-lg font-bold text-emerald-700">
             {freeSlots.length}
