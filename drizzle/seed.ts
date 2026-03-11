@@ -76,6 +76,19 @@ async function seedUsers() {
   return createdUsers;
 }
 
+async function seedAdminRoles(users: { email: string; id: string }[]) {
+  console.log('\n=== Attribution des roles admin ===\n');
+
+  const adminUser = users.find((u) => u.email === ADMIN_USER.email);
+  if (!adminUser) {
+    console.log('[SKIP] Utilisateur admin non trouvé');
+    return;
+  }
+
+  await db.update(schema.user).set({ role: 'admin' }).where(eq(schema.user.id, adminUser.id));
+  console.log(`[OK] Role admin attribué à ${ADMIN_USER.email}`);
+}
+
 async function seedTeachersAndLearners(users: { email: string; id: string }[]) {
   console.log('\n=== Creation des profils teachers/learners ===\n');
 
@@ -502,6 +515,8 @@ async function seed() {
   }
 
   const users = await seedUsers();
+
+  await seedAdminRoles(users);
 
   const { teacherIds, learnerIds } = await seedTeachersAndLearners(users);
 
