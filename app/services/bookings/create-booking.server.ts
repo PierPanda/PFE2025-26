@@ -20,14 +20,14 @@ export async function createBooking(bookingData: CreateBookingInput): Promise<Cr
 
     return {
       success: true,
-      message: 'Reservation creee avec succes.',
+      message: 'Réservation créée avec succès.',
       booking: createdBooking,
     };
   } catch (error) {
     console.error('Error creating booking:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la creation de la reservation.",
+      error: "Une erreur s'est produite lors de la création de la réservation.",
     };
   }
 }

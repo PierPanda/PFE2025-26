@@ -77,7 +77,7 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 
     return {
       success: true,
-      availabilities: filteredSlots,
+      slots: filteredSlots,
     };
   } catch (error) {
     console.error('Error computing available slots for teacher:', error);
