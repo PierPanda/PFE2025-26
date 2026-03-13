@@ -45,6 +45,8 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
 
   const setCategoryParam = (value: string | null) => {
     const next = new URLSearchParams(searchParams);
+    next.delete('cursor');
+    next.delete('direction');
     if (value) next.set('category', value);
     else next.delete('category');
     setSearchParams(next, { preventScrollReset: true });
@@ -63,6 +65,8 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
   const handleLevelChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     const next = new URLSearchParams(searchParams);
+    next.delete('cursor');
+    next.delete('direction');
     if (value) next.set('level', value);
     else next.delete('level');
     setSearchParams(next, { preventScrollReset: true });
@@ -70,6 +74,8 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
 
   const handlePriceRangeChange = (value: number | number[]) => {
     const next = new URLSearchParams(searchParams);
+    next.delete('cursor');
+    next.delete('direction');
     if (Array.isArray(value)) {
       next.set('minPrice', value[0].toString());
       next.set('maxPrice', value[1].toString());
@@ -169,6 +175,8 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
             variant="light"
             onPress={() => {
               const next = new URLSearchParams(searchParams);
+              next.delete('cursor');
+              next.delete('direction');
               next.delete('category');
               next.delete('level');
               next.delete('minPrice');

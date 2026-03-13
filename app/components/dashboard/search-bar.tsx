@@ -25,6 +25,8 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(function S
   const commitSearch = useCallback(
     (value: string) => {
       const next = new URLSearchParams(searchParams);
+      next.delete('cursor');
+      next.delete('direction');
       if (value) next.set('search', value);
       else next.delete('search');
       setSearchParams(next, { preventScrollReset: true });
