@@ -1,11 +1,12 @@
 import type { LoaderFunctionArgs } from 'react-router';
-import { Card, CardBody, Pagination } from '@heroui/react';
+import { Card, CardBody } from '@heroui/react';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { useFetcher, useLoaderData, useSearchParams } from 'react-router';
 import { useEffect, useRef, useState } from 'react';
 import CourseCard from '~/components/ui/course-card';
 import Filters from '~/components/dashboard/filters';
 import Banner from '~/components/dashboard/banner';
+import CoursesPagination from '~/components/dashboard/courses-pagination';
 import { getCoursesPaginated, getCoursesPriceBounds } from '~/services/courses/get-courses-paginated.server';
 import { getAppStats } from '~/services/stats/get-app-stats.server';
 import { cursorPaginationSchema, validateSearchParams } from '~/lib/validation';
@@ -54,7 +55,7 @@ export function meta() {
 }
 
 const HEADER_HEIGHT = 100;
-const COURSES_PER_PAGE = 4;
+const COURSES_PER_PAGE = 12;
 
 export default function Home() {
   const initialData = useLoaderData<typeof loader>();
@@ -67,7 +68,7 @@ export default function Home() {
   const maxPrice = filters.maxPrice ?? 1000;
   const searchBarRef = useRef<HTMLInputElement>(null);
   const pendingPage = useRef<number | null>(null);
-  const pageCursors = useRef<Record<number, string | null>>({
+  const pageTokens = useRef<Record<number, string | null>>({
     1: null,
     2: initialData.coursesPage.nextCursor,
   });
@@ -76,7 +77,7 @@ export default function Home() {
     setCoursesPage(initialData.coursesPage);
     setCurrentPage(1);
     pendingPage.current = null;
-    pageCursors.current = {
+    pageTokens.current = {
       1: null,
       2: initialData.coursesPage.nextCursor,
     };
@@ -88,9 +89,7 @@ export default function Home() {
       if (pendingPage.current !== null) {
         const targetPage = pendingPage.current;
         setCurrentPage(targetPage);
-        if (fetcher.data.coursesPage.nextCursor) {
-          pageCursors.current[targetPage + 1] = fetcher.data.coursesPage.nextCursor;
-        }
+        pageTokens.current[targetPage + 1] = fetcher.data.coursesPage.nextCursor;
       }
       pendingPage.current = null;
     }
@@ -99,29 +98,33 @@ export default function Home() {
   const isLoadingPage = fetcher.state !== 'idle';
   const totalPages = Math.max(1, Math.ceil(coursesPage.total / COURSES_PER_PAGE));
 
-  const loadPage = (cursor: string, direction: 'next' | 'prev', targetPage: number) => {
+  const loadPage = (targetPage: number) => {
     pendingPage.current = targetPage;
     const nextParams = new URLSearchParams(searchParams);
+    const targetCursor = targetPage === 1 ? null : pageTokens.current[targetPage];
+
+    if (targetPage > 1 && !targetCursor) {
+      pendingPage.current = null;
+      return;
+    }
+
     nextParams.set('index', '');
-    nextParams.set('cursor', cursor);
-    nextParams.set('direction', direction);
+
+    if (targetCursor) {
+      nextParams.set('cursor', targetCursor);
+      nextParams.set('direction', 'next');
+    } else {
+      nextParams.delete('cursor');
+      nextParams.delete('direction');
+    }
+
     fetcher.load(`/?${nextParams.toString()}`);
   };
 
   const handlePaginationChange = (page: number) => {
     if (isLoadingPage || page === currentPage) return;
 
-    if (page === currentPage + 1) {
-      const nextCursor = coursesPage.nextCursor ?? pageCursors.current[page];
-      if (!nextCursor) return;
-      loadPage(nextCursor, 'next', page);
-      return;
-    }
-
-    if (page === currentPage - 1 && coursesPage.prevCursor) {
-      loadPage(coursesPage.prevCursor, 'prev', page);
-      return;
-    }
+    loadPage(page);
   };
 
   const handleFindCourses = () => {
@@ -171,16 +174,12 @@ export default function Home() {
               </ul>
             )}
           </CardBody>
-          <div className="flex items-center justify-center px-8 pb-8">
-            <Pagination
-              page={currentPage}
-              total={totalPages}
-              showControls
-              isDisabled={isLoadingPage}
-              onChange={handlePaginationChange}
-              color="warning"
-            />
-          </div>
+          <CoursesPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            isLoading={isLoadingPage}
+            onPageChange={handlePaginationChange}
+          />
         </Card>
       </section>
     </main>
