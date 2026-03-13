@@ -29,7 +29,7 @@ export default function CourseValidation({ values, createCourse, onBack }: Cours
       <motion.div variants={fadeUp} className="overflow-hidden rounded-xl border border-gray-100">
         <div className="p-5">
           <div className="mb-3 flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold capitalize text-brand">
+            <span className="inline-flex items-center gap-1 rounded-full bg-bg/10 px-3 py-1 text-xs font-semibold capitalize text-bg">
               <Icon icon="solar:tag-bold" width={11} />
               {values.category}
             </span>
@@ -44,7 +44,7 @@ export default function CourseValidation({ values, createCourse, onBack }: Cours
       </motion.div>
 
       <motion.div variants={fadeUp} className="flex gap-3 rounded-xl bg-gray-50 p-4">
-        <Icon icon="solar:document-text-bold" width={15} className="mt-0.5 shrink-0 text-brand" />
+        <Icon icon="solar:document-text-bold" width={15} className="mt-0.5 shrink-0 text-bg" />
         <div>
           <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">Description</p>
           <p className="text-sm leading-relaxed text-gray-600">{values.description}</p>
@@ -52,10 +52,10 @@ export default function CourseValidation({ values, createCourse, onBack }: Cours
       </motion.div>
 
       <motion.div variants={fadeUp} className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-brand/20 bg-brand/5 p-4">
+        <div className="rounded-xl border border-bg/20 bg-bg/5 p-4">
           <div className="mb-1.5 flex items-center gap-1.5">
-            <Icon icon="solar:wallet-bold" width={13} className="text-brand" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-brand/70">Prix</span>
+            <Icon icon="solar:wallet-bold" width={13} className="text-bg" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-bg/70">Prix</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{formatPrice(values.price)}</p>
         </div>

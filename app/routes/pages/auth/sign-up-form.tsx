@@ -119,7 +119,7 @@ export function SignUpForm({ onToggleForm }: SignUpFormProps) {
       {onToggleForm && (
         <p className="mt-6 text-center text-sm text-gray-500">
           Déjà membre ?{' '}
-          <button onClick={onToggleForm} className="font-semibold text-brand hover:underline">
+          <button onClick={onToggleForm} className="font-semibold text-bg hover:underline">
             Se connecter
           </button>
         </p>
