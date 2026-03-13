@@ -93,7 +93,7 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
           variant="flat"
           radius="lg"
           startContent={<InlineIcon icon="lucide:list-filter-plus" />}
-          className="bg-brand font-medium"
+          className="bg-bg font-medium"
         >
           Filtrer
         </Button>

@@ -12,7 +12,7 @@ export default function PublicLayout() {
     { label: 'Créer un cours', to: '/courses/create' },
   ];
   return (
-    <div className="min-h-screen bg-brand/10">
+    <div className="min-h-screen bg-bg/10">
       <header className="sticky top-0 z-50 bg-white p-2">
         <div className="flex h-16 w-full items-center justify-between px-12">
           <Link to="/" className="shrink-0">
