@@ -1,13 +1,14 @@
 import type { LoaderFunctionArgs } from 'react-router';
-import { Card, CardBody } from '@heroui/react';
+import { Card, CardBody, Pagination } from '@heroui/react';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
-import { useLoaderData, useSearchParams } from 'react-router';
-import { useRef } from 'react';
+import { useFetcher, useLoaderData, useSearchParams } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
 import CourseCard from '~/components/ui/course-card';
 import Filters from '~/components/dashboard/filters';
 import Banner from '~/components/dashboard/banner';
-import { getCourses } from '~/services/courses/get-courses.server';
+import { getCoursesPaginated, getCoursesPriceBounds } from '~/services/courses/get-courses-paginated.server';
 import { getAppStats } from '~/services/stats/get-app-stats.server';
+import { cursorPaginationSchema, validateSearchParams } from '~/lib/validation';
 
 import type { CourseCategory, CourseLevel } from '~/types/course';
 import { SearchBar } from '~/components/dashboard/search-bar';
@@ -16,21 +17,34 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
 
   const url = new URL(request.url);
-  const category = (url.searchParams.get('category') as CourseCategory | undefined) ?? undefined;
-  const level = (url.searchParams.get('level') as CourseLevel | undefined) ?? undefined;
-  const minPrice = url.searchParams.get('minPrice') ?? undefined;
-  const maxPrice = url.searchParams.get('maxPrice') ?? undefined;
-  const search = url.searchParams.get('search') ?? undefined;
+  const rawPagination = validateSearchParams(url, cursorPaginationSchema);
+  const pagination = { ...rawPagination, limit: COURSES_PER_PAGE };
 
-  const [result, statsResult] = await Promise.all([
-    getCourses(category, level, minPrice, maxPrice, search),
+  const category = (url.searchParams.get('category') as CourseCategory | null) ?? null;
+  const level = (url.searchParams.get('level') as CourseLevel | null) ?? null;
+  const minPrice = url.searchParams.get('minPrice');
+  const maxPrice = url.searchParams.get('maxPrice');
+  const search = url.searchParams.get('search');
+
+  const [coursesPage, priceBounds, statsResult] = await Promise.all([
+    getCoursesPaginated(
+      {
+        category,
+        level,
+        minPrice,
+        maxPrice,
+        search,
+      },
+      pagination,
+    ),
+    getCoursesPriceBounds(),
     getAppStats(),
   ]);
 
   return {
     user: session.user,
-    courses: result.success ? result.courses : [],
-    filters: result.success ? result.filters : undefined,
+    coursesPage,
+    filters: priceBounds,
     stats: statsResult.success ? statsResult.stats : { coursesCount: 0, teachersCount: 0, learnersCount: 0 },
   };
 }
@@ -40,13 +54,75 @@ export function meta() {
 }
 
 const HEADER_HEIGHT = 100;
+const COURSES_PER_PAGE = 4;
 
 export default function Home() {
+  const initialData = useLoaderData<typeof loader>();
+  const fetcher = useFetcher<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { courses, filters, user, stats } = useLoaderData<typeof loader>();
-  const minPrice = filters?.minPrice ?? 0;
-  const maxPrice = filters?.maxPrice ?? 1000;
+  const { filters, user, stats } = initialData;
+  const [coursesPage, setCoursesPage] = useState(initialData.coursesPage);
+  const [currentPage, setCurrentPage] = useState(1);
+  const minPrice = filters.minPrice ?? 0;
+  const maxPrice = filters.maxPrice ?? 1000;
   const searchBarRef = useRef<HTMLInputElement>(null);
+  const pendingPage = useRef<number | null>(null);
+  const pageCursors = useRef<Record<number, string | null>>({
+    1: null,
+    2: initialData.coursesPage.nextCursor,
+  });
+
+  useEffect(() => {
+    setCoursesPage(initialData.coursesPage);
+    setCurrentPage(1);
+    pendingPage.current = null;
+    pageCursors.current = {
+      1: null,
+      2: initialData.coursesPage.nextCursor,
+    };
+  }, [initialData.coursesPage]);
+
+  useEffect(() => {
+    if (fetcher.data?.coursesPage) {
+      setCoursesPage(fetcher.data.coursesPage);
+      if (pendingPage.current !== null) {
+        const targetPage = pendingPage.current;
+        setCurrentPage(targetPage);
+        if (fetcher.data.coursesPage.nextCursor) {
+          pageCursors.current[targetPage + 1] = fetcher.data.coursesPage.nextCursor;
+        }
+      }
+      pendingPage.current = null;
+    }
+  }, [fetcher.data]);
+
+  const isLoadingPage = fetcher.state !== 'idle';
+  const totalPages = Math.max(1, Math.ceil(coursesPage.total / COURSES_PER_PAGE));
+
+  const loadPage = (cursor: string, direction: 'next' | 'prev', targetPage: number) => {
+    pendingPage.current = targetPage;
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set('index', '');
+    nextParams.set('cursor', cursor);
+    nextParams.set('direction', direction);
+    fetcher.load(`/?${nextParams.toString()}`);
+  };
+
+  const handlePaginationChange = (page: number) => {
+    if (isLoadingPage || page === currentPage) return;
+
+    if (page === currentPage + 1) {
+      const nextCursor = coursesPage.nextCursor ?? pageCursors.current[page];
+      if (!nextCursor) return;
+      loadPage(nextCursor, 'next', page);
+      return;
+    }
+
+    if (page === currentPage - 1 && coursesPage.prevCursor) {
+      loadPage(coursesPage.prevCursor, 'prev', page);
+      return;
+    }
+  };
 
   const handleFindCourses = () => {
     const coursesSection = document.getElementById('courses');
@@ -64,14 +140,14 @@ export default function Home() {
       <Banner userName={user?.name} stats={stats} onFindCourses={handleFindCourses} />
 
       <section id="courses" className="mt-48">
-        <Card radius="lg" shadow="none">
+        <Card radius="lg" shadow="none" className="p-8">
           <CardBody className="p-6 md:p-8">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-foreground">Cours disponibles</h2>
                 <p className="text-sm text-default-500">
-                  {courses?.length ?? 0} résultat
-                  {(courses?.length ?? 0) > 1 ? 's' : ''}
+                  {coursesPage.items.length} / {coursesPage.total} résultat
+                  {coursesPage.total > 1 ? 's' : ''}
                 </p>
               </div>
               <div className="flex gap-2">
@@ -85,16 +161,26 @@ export default function Home() {
               </div>
             </div>
 
-            {courses?.length === 0 ? (
+            {coursesPage.items.length === 0 ? (
               <p className="py-10 text-center text-default-500">Aucun cours disponible pour le moment.</p>
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {courses.map((course) => (
+                {coursesPage.items.map((course) => (
                   <CourseCard key={course.id} course={course} />
                 ))}
               </ul>
             )}
           </CardBody>
+          <div className="flex items-center justify-center px-8 pb-8">
+            <Pagination
+              page={currentPage}
+              total={totalPages}
+              showControls
+              isDisabled={isLoadingPage}
+              onChange={handlePaginationChange}
+              color="warning"
+            />
+          </div>
         </Card>
       </section>
     </main>

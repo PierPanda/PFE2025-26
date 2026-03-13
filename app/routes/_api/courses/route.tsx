@@ -3,7 +3,9 @@ import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { createCourseSchema, updateCourseSchema } from '~/lib/validation';
 import { createCourse } from '~/services/courses/create-course.server';
 import { getCourseById } from '~/services/courses/get-course.server';
-import { getCourses, getCoursesByTeacher } from '~/services/courses/get-courses.server';
+import { getCoursesByTeacher } from '~/services/courses/get-courses.server';
+import { cursorPaginationSchema, validateSearchParams } from '~/lib/validation';
+import { getCoursesPaginated, getCoursesPriceBounds } from '~/services/courses/get-courses-paginated.server';
 import { updateCourse } from '~/services/courses/update-course.server';
 import { deleteCourse } from '~/services/courses/delete-course.server';
 import type { CourseCategory, CourseLevel } from '~/types/course';
@@ -33,8 +35,33 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return result;
   }
 
-  const result = await getCourses(category, level, minPrice, maxPrice, search);
-  return result;
+  const pagination = validateSearchParams(url, cursorPaginationSchema);
+
+  const [paginatedResult, filters] = await Promise.all([
+    getCoursesPaginated(
+      {
+        category,
+        level,
+        minPrice,
+        maxPrice,
+        search,
+      },
+      pagination,
+    ),
+    getCoursesPriceBounds(),
+  ]);
+
+  return {
+    success: true,
+    courses: paginatedResult.items,
+    pagination: {
+      nextCursor: paginatedResult.nextCursor,
+      prevCursor: paginatedResult.prevCursor,
+      hasMore: paginatedResult.hasMore,
+      total: paginatedResult.total,
+    },
+    filters,
+  };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
