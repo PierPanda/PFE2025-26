@@ -2,13 +2,13 @@ import CourseForm from './course-form';
 import { useState } from 'react';
 import CourseValidation from './course-validation';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
-import { useLoaderData, useFetcher, Form } from 'react-router';
+import { useLoaderData, useFetcher } from 'react-router';
 import type { LoaderFunctionArgs, ActionFunctionArgs } from 'react-router';
 import { uuidv7 } from 'uuidv7';
-import { createCourse } from '~/services/courses/create-course.server';
-import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
+import { createCourse } from '~/services/courses/create-course';
+import { getTeacherByUserId } from '~/services/teachers/get-teacher';
 import { cn } from '~/lib/utils';
-import { courseFormSchema, createCourseSchema } from '~/lib/validation';
+import { createCourseSchema } from '~/lib/validation';
 import type { CourseFormInput, CreateCourseInput } from '~/types/course';
 export type { CourseFormInput, CreateCourseInput };
 
@@ -48,23 +48,11 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function CreateCourse() {
   const [submitted, setSubmitted] = useState<CourseFormInput | null>(null);
   const [formValidated, setFormValidated] = useState(false);
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   useLoaderData<typeof loader>();
   const fetcher = useFetcher();
 
-  const onSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formData = Object.fromEntries(new FormData(e.currentTarget));
-
-    const dataParsed = courseFormSchema.safeParse(formData);
-    if (!dataParsed.success) {
-      const fieldErrors = dataParsed.error.flatten().fieldErrors;
-      setFormErrors(Object.fromEntries(Object.entries(fieldErrors).map(([key, msgs]) => [key, msgs?.[0] ?? ''])));
-      return;
-    }
-    setFormErrors({});
-    setSubmitted(dataParsed.data);
+  const handleValidSubmit = (data: CourseFormInput) => {
+    setSubmitted(data);
     setFormValidated(true);
   };
 
@@ -132,16 +120,14 @@ export default function CreateCourse() {
 
         {/* Carte formulaire */}
         <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-lg shadow-black/5">
-          <Form className="w-full" onSubmit={onSubmit}>
-            {!formValidated && <CourseForm values={submitted} errors={formErrors} />}
-            {formValidated && submitted && (
-              <CourseValidation
-                values={submitted}
-                createCourse={handleCreateCourse}
-                onBack={() => setFormValidated(false)}
-              />
-            )}
-          </Form>
+          {!formValidated && <CourseForm values={submitted} onValidSubmit={handleValidSubmit} />}
+          {formValidated && submitted && (
+            <CourseValidation
+              values={submitted}
+              createCourse={handleCreateCourse}
+              onBack={() => setFormValidated(false)}
+            />
+          )}
 
           {fetcher.data?.success && (
             <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-center text-sm text-emerald-700">

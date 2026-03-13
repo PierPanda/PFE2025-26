@@ -1,7 +1,7 @@
 import type { CreateAvailabilityInput } from '~/types/availability';
 import type { ServiceResponse } from '../types';
-import { createAvailability } from './create-availability.server';
-import { deleteAvailability } from './delete-availability.server';
+import { createAvailability } from './create-availability';
+import { deleteAvailability } from './delete-availability';
 
 /**
  * Batch insert + delete availabilities.

@@ -1,13 +1,17 @@
 import { useLoaderData } from 'react-router';
-import type { Route } from './+types/page';
-import { getCourseById } from '~/services/courses/get-course.server';
-import { getTeacherSummary } from '~/services/teachers/get-teacher.server';
+import type { LoaderFunctionArgs } from 'react-router';
+import { getCourseById } from '~/services/courses/get-course';
+import { getTeacherSummary } from '~/services/teachers/get-teacher';
 import CourseHeader from '~/components/courses/course-header';
 import CourseDescription from '~/components/courses/course-description';
 import BookingCard from '~/components/courses/booking-card';
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
+
+  if (!id) {
+    throw new Response('ID du cours manquant', { status: 400 });
+  }
 
   const courseResult = await getCourseById(id);
 
@@ -28,7 +32,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   };
 }
 
-export function meta({ data }: Route.MetaArgs) {
+export function meta({ data }: { data: Awaited<ReturnType<typeof loader>> | undefined }) {
   return [
     {
       title: data?.course?.title ? `${data.course.title} | Maestroo` : 'Maestroo',

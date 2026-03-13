@@ -43,11 +43,11 @@ export default function CourseValidation({ values, createCourse, onBack }: Cours
         </div>
       </motion.div>
 
-      <motion.div variants={fadeUp} className="flex gap-3 rounded-xl bg-gray-50 p-4">
+      <motion.div variants={fadeUp} className="flex gap-3 rounded-xl bg-gray-50 p-4 overflow-hidden">
         <Icon icon="solar:document-text-bold" width={15} className="mt-0.5 shrink-0 text-brand" />
-        <div>
+        <div className="min-w-0">
           <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">Description</p>
-          <p className="text-sm leading-relaxed text-gray-600">{values.description}</p>
+          <p className="text-sm leading-relaxed text-gray-600 break-words">{values.description}</p>
         </div>
       </motion.div>
 

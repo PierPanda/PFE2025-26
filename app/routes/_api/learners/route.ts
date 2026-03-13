@@ -1,10 +1,10 @@
 import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { createLearnerSchema, updateLearnerSchema } from '~/lib/validation';
-import { createLearner } from '~/services/learners/create-learner.server';
-import { getLearner, getLearnerByUserId } from '~/services/learners/get-learner.server';
-import { updateLearner } from '~/services/learners/update-learner.server';
-import { deleteLearner } from '~/services/learners/delete-learner.server';
+import { createLearner } from '~/services/learners/create-learner';
+import { getLearner, getLearnerByUserId } from '~/services/learners/get-learner';
+import { updateLearner } from '~/services/learners/update-learner';
+import { deleteLearner } from '~/services/learners/delete-learner';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await authentifyUser(request);

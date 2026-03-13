@@ -7,21 +7,42 @@ import {
   Select,
   SelectItem,
   Textarea,
+  Form,
 } from '@heroui/react';
 import { useState } from 'react';
 import { categoryOptions, levelOptions } from '~/lib/constant';
+import { courseFormSchema } from '~/lib/validation';
 import type { CourseFormInput } from './create-course-form';
 
 type CourseFormProps = {
   values: CourseFormInput | null;
-  errors: Record<string, string>;
+  onValidSubmit: (data: CourseFormInput) => void;
 };
 
-export default function CourseForm({ values, errors }: CourseFormProps) {
+/** Valide un champ via le schéma Zod et retourne le message d'erreur ou undefined */
+function validateField<K extends keyof typeof courseFormSchema.shape>(field: K, value: unknown): string | undefined {
+  const fieldSchema = courseFormSchema.shape[field];
+  const result = fieldSchema.safeParse(value);
+  if (!result.success) {
+    return result.error.issues[0]?.message;
+  }
+}
+
+export default function CourseForm({ values, onValidSubmit }: CourseFormProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>(values?.category ?? '');
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = Object.fromEntries(new FormData(e.currentTarget));
+
+    const parsed = courseFormSchema.safeParse(formData);
+    if (!parsed.success) return; // La validation HeroUI affiche déjà les erreurs
+
+    onValidSubmit(parsed.data);
+  };
+
   return (
-    <div className="flex flex-col gap-5">
+    <Form className="flex flex-col gap-5" validationBehavior="native" onSubmit={handleSubmit}>
       <Input
         isRequired
         color="warning"
@@ -31,11 +52,11 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         placeholder="Ex : Cours de piano jazz"
         type="text"
         defaultValue={values?.title || ''}
-        isInvalid={errors.title ? true : undefined}
-        errorMessage={errors.title}
+        validate={(value) => validateField('title', value)}
       />
 
       <div className="grid grid-cols-2 gap-4">
+        <input type="hidden" name="category" value={selectedCategory} />
         <Autocomplete
           isRequired
           color="warning"
@@ -43,11 +64,9 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           defaultItems={categoryOptions}
           label="Catégorie"
           placeholder="Instrument…"
-          name="category"
           selectedKey={selectedCategory || null}
           onSelectionChange={(key) => setSelectedCategory(typeof key === 'string' ? key : '')}
-          isInvalid={errors.category ? true : undefined}
-          errorMessage={errors.category}
+          validate={() => validateField('category', selectedCategory)}
         >
           {(item) => <AutocompleteItem key={item.key}>{item.value}</AutocompleteItem>}
         </Autocomplete>
@@ -60,8 +79,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           placeholder="Choisir…"
           name="level"
           defaultSelectedKeys={values?.level ? [values.level] : []}
-          isInvalid={errors.level ? true : undefined}
-          errorMessage={errors.level}
+          validate={(value) => validateField('level', value)}
         >
           {levelOptions.map((levelItem) => (
             <SelectItem key={levelItem.key}>{levelItem.value}</SelectItem>
@@ -77,9 +95,8 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
         label="Description"
         placeholder="Décrivez votre cours en quelques mots…"
         name="description"
-        isInvalid={errors.description ? true : undefined}
-        errorMessage={errors.description}
         defaultValue={values?.description || ''}
+        validate={(value) => validateField('description', value)}
       />
 
       <div className="grid grid-cols-2 gap-4">
@@ -90,8 +107,7 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Prix (€)"
           name="price"
           placeholder="0"
-          isInvalid={errors.price ? true : undefined}
-          errorMessage={errors.price}
+          validate={(value) => validateField('price', value)}
         />
         <NumberInput
           isRequired
@@ -100,14 +116,13 @@ export default function CourseForm({ values, errors }: CourseFormProps) {
           label="Durée (min)"
           name="duration"
           placeholder="60"
-          isInvalid={errors.duration ? true : undefined}
-          errorMessage={errors.duration}
+          validate={(value) => validateField('duration', value)}
         />
       </div>
 
       <Button type="submit" color="warning" className="mt-2 h-12 w-full rounded-xl font-semibold tracking-wide">
         Continuer →
       </Button>
-    </div>
+    </Form>
   );
 }
