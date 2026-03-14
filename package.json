@@ -8,18 +8,18 @@
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc --noEmit",
     "lint": "oxlint --fix",
-    "lint:check": "oxlint",
+    "lint check": "oxlint",
     "format": "oxfmt .",
     "test": "vitest",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
+    "test run": "vitest run",
+    "test coverage": "vitest run --coverage",
     "prepare": "husky",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx drizzle/seed.ts",
-    "db:reset": "tsx drizzle/seed.ts --reset"
+    "db generate": "drizzle-kit generate",
+    "db migrate": "drizzle-kit migrate",
+    "db push": "drizzle-kit push",
+    "db studio": "drizzle-kit studio",
+    "db seed": "tsx drizzle/seed.ts",
+    "db reset": "tsx drizzle/seed.ts --reset"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -50,7 +50,11 @@
   "pnpm": {
     "overrides": {
       "@internationalized/date": "3.10.1"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@heroui/shared-utils",
+      "esbuild"
+    ]
   },
   "devDependencies": {
     "@iconify/react": "^6.0.2",
@@ -62,9 +66,8 @@
     "@vitest/coverage-v8": "^4.0.18",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "oxfmt": "^0.14.0",
-    "oxlint": "^1.49.0",
-    "prettier-plugin-tailwindcss": "^0.6.11",
+    "oxfmt": "^0.40.0",
+    "oxlint": "^1.55.0",
     "tailwindcss": "^4.1.18",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",

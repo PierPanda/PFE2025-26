@@ -1,5 +1,5 @@
 import { data } from 'react-router';
-import { getAppStats } from '~/services/stats/get-app-stats.server';
+import { getAppStats } from '~/services/stats/get-app-stats';
 
 export async function loader() {
   const result = await getAppStats();

@@ -1,6 +1,6 @@
 import { redirect } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
-import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
+import { getTeacherByUserId } from '~/services/teachers/get-teacher';
 
 /**
  * Les permissions sont vérifiées de deux façons distinctes et intentionnelles :

@@ -6,8 +6,8 @@ import { useRef } from 'react';
 import CourseCard from '~/components/ui/course-card';
 import Filters from '~/components/dashboard/filters';
 import Banner from '~/components/dashboard/banner';
-import { getCourses } from '~/services/courses/get-courses.server';
-import { getAppStats } from '~/services/stats/get-app-stats.server';
+import { getCourses } from '~/services/courses/get-courses';
+import { getAppStats } from '~/services/stats/get-app-stats';
 
 import type { CourseCategory, CourseLevel } from '~/types/course';
 import { SearchBar } from '~/components/dashboard/search-bar';

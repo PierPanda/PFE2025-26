@@ -1,11 +1,11 @@
 import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { createCourseSchema, updateCourseSchema } from '~/lib/validation';
-import { createCourse } from '~/services/courses/create-course.server';
-import { getCourseById } from '~/services/courses/get-course.server';
-import { getCourses, getCoursesByTeacher } from '~/services/courses/get-courses.server';
-import { updateCourse } from '~/services/courses/update-course.server';
-import { deleteCourse } from '~/services/courses/delete-course.server';
+import { createCourse } from '~/services/courses/create-course';
+import { getCourseById } from '~/services/courses/get-course';
+import { getCourses, getCoursesByTeacher } from '~/services/courses/get-courses';
+import { updateCourse } from '~/services/courses/update-course';
+import { deleteCourse } from '~/services/courses/delete-course';
 import type { CourseCategory, CourseLevel } from '~/types/course';
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -48,7 +48,13 @@ export async function action({ request }: ActionFunctionArgs) {
       const parsed = createCourseSchema.safeParse(body);
 
       if (!parsed.success) {
-        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+        return data(
+          {
+            success: false,
+            error: parsed.error.issues.map((e) => e.message).join(', '),
+          },
+          { status: 400 },
+        );
       }
 
       const result = await createCourse(parsed.data);
@@ -67,7 +73,13 @@ export async function action({ request }: ActionFunctionArgs) {
       const parsed = updateCourseSchema.safeParse(body);
 
       if (!parsed.success) {
-        return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+        return data(
+          {
+            success: false,
+            error: parsed.error.issues.map((e) => e.message).join(', '),
+          },
+          { status: 400 },
+        );
       }
 
       const result = await updateCourse(courseId, parsed.data);

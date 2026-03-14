@@ -8,6 +8,7 @@ import {
   Calendar,
   Select,
   SelectItem,
+  cn,
 } from '@heroui/react';
 import { uuidv7 } from 'uuidv7';
 import { useFetcher } from 'react-router';
@@ -297,11 +298,12 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
                               return (
                                 <span
                                   key={a.id}
-                                  className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                                  className={cn(
+                                    'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors',
                                     isMarked
                                       ? 'bg-danger-50 text-danger-600 line-through opacity-60'
-                                      : 'bg-amber-50 text-gray-700'
-                                  }`}
+                                      : 'bg-amber-50 text-gray-700',
+                                  )}
                                 >
                                   <InlineIcon
                                     icon="mdi:clock-outline"
@@ -312,9 +314,12 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
                                   <button
                                     type="button"
                                     onClick={() => handleToggleDelete(a.id)}
-                                    className={`ml-0.5 transition-colors ${
-                                      isMarked ? 'text-danger hover:text-danger-700' : 'text-gray-400 hover:text-danger'
-                                    }`}
+                                    className={cn(
+                                      'ml-0.5 transition-colors',
+                                      isMarked
+                                        ? 'text-danger hover:text-danger-700'
+                                        : 'text-gray-400 hover:text-danger',
+                                    )}
                                     aria-label={isMarked ? 'Annuler la suppression' : 'Marquer pour suppression'}
                                   >
                                     <InlineIcon icon={isMarked ? 'mdi:arrow-u-left-top' : 'mdi:close'} width="13" />

@@ -1,11 +1,11 @@
 import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { createAvailabilitySchema, deleteAvailabilitySchema, batchAvailabilitySchema } from '~/lib/validation';
-import { getAvailability, getAvailabilityByTeacherId } from '~/services/availabilities/get-availability.server';
-import { createAvailability } from '~/services/availabilities/create-availability.server';
-import { deleteAvailability } from '~/services/availabilities/delete-availability.server';
-import { batchUpdateAvailabilities } from '~/services/availabilities/batch-availabilities.server';
-import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
+import { getAvailability, getAvailabilityByTeacherId } from '~/services/availabilities/get-availability';
+import { createAvailability } from '~/services/availabilities/create-availability';
+import { deleteAvailability } from '~/services/availabilities/delete-availability';
+import { batchUpdateAvailabilities } from '~/services/availabilities/batch-availabilities';
+import { getTeacherByUserId } from '~/services/teachers/get-teacher';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request);

@@ -1,10 +1,10 @@
 import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { createTeacherSchema, updateTeacherSchema } from '~/lib/validation';
-import { createTeacher } from '~/services/teachers/create-teacher.server';
-import { getTeacher, getTeacherByUserId } from '~/services/teachers/get-teacher.server';
-import { updateTeacher } from '~/services/teachers/update-teacher.server';
-import { deleteTeacher } from '~/services/teachers/delete-teacher.server';
+import { createTeacher } from '~/services/teachers/create-teacher';
+import { getTeacher, getTeacherByUserId } from '~/services/teachers/get-teacher';
+import { updateTeacher } from '~/services/teachers/update-teacher';
+import { deleteTeacher } from '~/services/teachers/delete-teacher';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);

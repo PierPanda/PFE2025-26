@@ -1,17 +1,17 @@
 import { useLoaderData, Link } from 'react-router';
+import type { LoaderFunctionArgs, ActionFunctionArgs } from 'react-router';
 import { useState } from 'react';
-import type { Route } from './+types/page';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
-import { getCoursesByTeacher } from '~/services/courses/get-courses.server';
-import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
-import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability.server';
+import { getCoursesByTeacher } from '~/services/courses/get-courses';
+import { getTeacherByUserId } from '~/services/teachers/get-teacher';
+import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability';
 import CardCourse from '~/components/ui/card-course';
 import UserProfile from '~/components/profile/user-profile';
 import { AvailabilitiesModal } from '~/components/availabilities/availabilities-modal';
 import { Button } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
 
   const teacherResult = await getTeacherByUserId(session.user.id);
@@ -31,10 +31,10 @@ export async function loader({ request }: Route.LoaderArgs) {
   };
 }
 
-export async function action({ request }: Route.ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   await authentifyUser(request, { redirectTo: '/auth' });
 
-  const { deleteCourse } = await import('~/services/courses/delete-course.server');
+  const { deleteCourse } = await import('~/services/courses/delete-course');
   const formData = await request.formData();
   const courseId = formData.get('courseId') as string;
 
