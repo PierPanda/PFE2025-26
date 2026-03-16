@@ -1,5 +1,5 @@
 import { useLoaderData, Link } from 'react-router';
-import type { LoaderFunctionArgs, ActionFunctionArgs } from 'react-router';
+import type { Route } from './+types/page';
 import { useState } from 'react';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { getCoursesByTeacher } from '~/services/courses/get-courses';
@@ -11,7 +11,7 @@ import { AvailabilitiesModal } from '~/components/availabilities/availabilities-
 import { Button } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
 
   const teacherResult = await getTeacherByUserId(session.user.id);
@@ -31,7 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   };
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   await authentifyUser(request, { redirectTo: '/auth' });
 
   const { deleteCourse } = await import('~/services/courses/delete-course');
