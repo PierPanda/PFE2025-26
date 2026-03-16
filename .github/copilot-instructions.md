@@ -1,189 +1,234 @@
-# Copilot Instructions for suricarte
+# Copilot Instructions — Maestroo
 
-Practical guidance for AI agents to work productively in this monorepo. Focus on real patterns and commands present in the codebase; call out planned integrations separately.
+AI agent guidance for working productively in this codebase. Focus on real patterns present in the code.
 
-> **📚 React Router v7 Reference:** See [docs/react-router-v7-framework-mode.md](../docs/react-router-v7-framework-mode.md) for comprehensive routing patterns, data loading strategies, and best practices optimized for AI agents.
+## Stack
 
-## Overview
-
-- Monorepo managed by `pnpm` per [pnpm-workspace.yaml](pnpm-workspace.yaml); primary app is in [apps/app](apps/app). `packages/*` is reserved for shared libs (DB schema, auth, utilities).
-- React Router v7 with SSR enabled in [apps/app/react-router.config.ts](apps/app/react-router.config.ts); Vite handles dev/build via [apps/app/vite.config.ts](apps/app/vite.config.ts).
-- Tailwind v4 styling in [apps/app/app/app.css](apps/app/app/app.css). TS path alias `~/*` → `app/*` from [apps/app/tsconfig.json](apps/app/tsconfig.json).
-- Local infra via [docker-compose.yml](docker-compose.yml): Postgres, MinIO, and Drizzle Gateway (service available; no app integration yet).
-- Domain: internal, API‑first system to track vending machine stock and sales.
+- **Framework**: React Router v7 (SSR mode)
+- **UI**: HeroUI (based on NextUI) + Tailwind CSS v4
+- **Database**: PostgreSQL with Drizzle ORM
+- **Authentication**: Better Auth
+- **Validation**: Zod v4 (centralised in `app/lib/validation.ts`)
+- **State management**: TanStack Query (client-side fetches)
+- **Language**: TypeScript
+- **Bundler**: Vite
+- **Package manager**: pnpm
+- **Linter / formatter**: oxlint + oxfmt
+- **Tests**: Vitest
+- **Git hooks**: Husky + lint-staged
 
 ## Developer Workflow
 
-- Install deps:
-
 ```bash
-pnpm install
-```
-
-- Dev server (SSR + HMR):
-
-```bash
-pnpm dev
-```
-
-- Typegen + typecheck:
-
-```bash
-pnpm --filter app run typecheck
-```
-
-- Build and serve:
-
-```bash
-pnpm --filter app build
-pnpm --filter app start
+pnpm install          # install dependencies
+pnpm dev              # dev server (SSR + HMR)
+pnpm typecheck        # run typegen then tsc --noEmit
+pnpm lint             # lint and auto-fix
+pnpm lint:check       # lint without auto-fix (CI)
+pnpm format           # format with oxfmt
+pnpm test             # run tests interactively
+pnpm test:run         # run tests once (CI)
+pnpm build            # production build
+pnpm start            # serve production build
+pnpm "db generate"    # generate Drizzle migrations
+pnpm "db migrate"     # run migrations
+pnpm "db push"        # push schema directly (dev only)
+pnpm "db studio"      # open Drizzle Studio
+pnpm "db seed"        # seed the database
+pnpm "db reset"       # reset and re-seed
 ```
 
 ## Architecture & Conventions
 
-- SSR‑first: `ssr: true` in [apps/app/react-router.config.ts](apps/app/react-router.config.ts). Only flip to SPA if explicitly required.
-- Routing is imperative in [apps/app/app/routes.ts](apps/app/app/routes.ts); do not add file‑system routing.
-- App shell + error handling in [apps/app/app/root.tsx](apps/app/app/root.tsx) via `Layout`, `links()`, `Meta`, `Scripts`, `ErrorBoundary`.
-- File naming: use kebab‑case for all files and folders.
-- Data conventions: DB tables should use singular names (e.g., `machine`, `product`, `sale`, `stock`).
-- Shared logic should live under `packages/*` when introduced; app‑specific components/utilities stay under [apps/app/app](apps/app/app) and import via `~/*`.
+- **SSR-first**: `ssr: true` in `react-router.config.ts`. Do not switch to SPA mode.
+- **Imperative routing** via `app/routes.ts` — no file-system routing.
+- **TypeScript path alias**: `~/*` → `app/*` (defined in `tsconfig.json`).
+- **File naming**: kebab-case for all files and folders.
+- **Server-only code**: DB access and server utilities live under `app/server/`. Auth helpers use `.server.ts` suffix.
 
-### JSX Conditional Patterns
+## Project Structure
 
-- Nested ternaries are considered bad practice; avoid them for readability and maintainability.
-- For inline complex conditions in JSX, prefer an immediately invoked function expression (IIFE): `(() => { /* branching */ return <UI /> })()`.
-- Keep single, flat ternaries only for simple binary cases that fit on one short line.
-- Example:
+```
+app/
+├── auth.server.ts              # Better Auth config
+├── lib/
+│   ├── auth-client.ts          # auth client
+│   ├── validation.ts           # centralised Zod schemas
+│   ├── constant.ts             # shared constants (categories, levels…)
+│   └── utils.ts                # shared utilities (cn helper, etc.)
+├── routes/
+│   ├── _api/                   # API routes (loader / action, no JSX)
+│   │   ├── auth/route.ts
+│   │   ├── courses/route.ts
+│   │   ├── teachers/route.ts
+│   │   ├── learners/route.ts
+│   │   ├── availabilities/route.ts
+│   │   └── stats/route.ts
+│   ├── layouts/                # shared layouts (auth-layout, public-layout)
+│   └── pages/                  # UI pages
+├── server/
+│   ├── lib/db/                 # Drizzle schema + client
+│   └── utils/
+│       └── authentify-user.server.ts
+├── services/                   # business logic (one file per operation)
+│   ├── courses/
+│   ├── teachers/
+│   ├── learners/
+│   ├── availabilities/
+│   └── stats/
+├── types/                      # shared TypeScript types
+├── components/                 # shared React components
+└── hooks/                      # custom React hooks
+```
+
+## API Routes (`routes/_api/`)
+
+Files use `.ts` extension (no JSX). Service imports have no `.server` suffix.
+Loaders handle GET; actions handle POST/PUT/DELETE.
+
+```ts
+// app/routes/_api/courses/route.ts
+import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-router';
+import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { createCourseSchema } from '~/lib/validation';
+import { createCourse } from '~/services/courses/create-course';
+import { getCourses } from '~/services/courses/get-courses';
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  return getCourses();
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  await authentifyUser(request);
+  const body = await request.json();
+  const parsed = createCourseSchema.safeParse(body);
+  if (!parsed.success) {
+    return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
+  }
+  return createCourse(parsed.data);
+}
+```
+
+## Page Routes (`routes/pages/`)
+
+**Always** use auto-generated route types — do NOT fall back to generic `LoaderFunctionArgs`.
+Run `pnpm typecheck` (which calls `react-router typegen`) to generate or refresh `+types/` files.
+
+```ts
+// app/routes/pages/profile/page.tsx
+import type { Route } from './+types/page';
+import { authentifyUser } from '~/server/utils/authentify-user.server';
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const session = await authentifyUser(request, { redirectTo: '/auth' });
+  return { user: session.user };
+}
+
+export async function action({ request }: Route.ActionArgs) {
+  await authentifyUser(request, { redirectTo: '/auth' });
+  // ...
+}
+
+export function meta({ data }: Route.MetaArgs) {
+  return [{ title: data?.user ? 'Profil | Maestroo' : 'Maestroo' }];
+}
+
+export default function Page() {
+  const { user } = useLoaderData<typeof loader>();
+}
+```
+
+## Authentication
+
+Use `authentifyUser` in every protected loader:
+
+```ts
+// With redirect (page routes)
+const session = await authentifyUser(request, { redirectTo: '/auth' });
+
+// Without redirect — returns 401 (API routes)
+const session = await authentifyUser(request);
+```
+
+Do NOT:
+- Put auth logic in layout components
+- Use `<Navigate />` or client-side redirects for auth
+- Check auth exclusively on the client
+
+## Centralised Validation (`lib/validation.ts`)
+
+```ts
+// Schemas
+export const createCourseSchema = z.object({ ... });
+export const updateCourseSchema = createCourseSchema.partial().extend({ ... });
+
+// Inferred types
+export type CreateCourseInput = z.infer<typeof createCourseSchema>;
+
+// Helpers
+export function validateSearchParams<T>(url: URL, schema: T): z.infer<T>;
+export async function validateJsonBody<T>(request: Request, schema: T): Promise<z.infer<T>>;
+export async function validateFormData<T>(request: Request, schema: T): Promise<z.infer<T>>;
+export function validateParams<T>(params: Record<string, string>, schema: T): z.infer<T>;
+```
+
+## Drizzle Types
+
+Infer types directly from the schema — do not write manual interfaces for DB entities:
+
+```ts
+// app/types/course.ts
+import { courses } from '~/server/lib/db/schema-definition/courses';
+
+export type Course = typeof courses.$inferSelect;
+export type NewCourse = typeof courses.$inferInsert;
+```
+
+## JSX Conditional Patterns
+
+- Avoid nested ternaries.
+- For complex inline conditions, use an IIFE:
 
 ```tsx
-// Avoid
+// ❌ Avoid
 const ui = cond1 ? (cond2 ? <A /> : <B />) : <C />;
 
-// Prefer
+// ✅ Prefer
 const ui = (() => {
   if (cond1) {
     if (cond2) return <A />;
     return <B />;
   }
   return <C />;
-})()
+})();
 ```
 
-### Styling: `cn` Utility for ClassNames
+## Styling: `cn` Utility
 
-Always use the `cn` utility from `@heroui/react` for dynamic className computations. This improves readability and maintainability.
-
-**Import:**
+Always use `cn` from `@heroui/react` for dynamic className composition:
 
 ```tsx
 import { cn } from '@heroui/react';
-```
 
-**Guidelines:**
+// ✅ Simple conditional
+<div className={cn('flex items-center gap-2', isActive && 'bg-primary')} />
 
-- **Always prefer `cn`** over template literals with conditional logic in `className` props
-- Use inline conditions directly in `cn` for simple logic
-- Use IIFE inside `cn` for complex conditional logic (prefer this over extracting helper functions)
-- `cn` automatically filters out falsy values, making conditionals clean
-
-**Examples:**
-
-```tsx
-// ❌ Avoid: Template literal with IIFE
-<span className={`font-semibold ${(() => {
-  if (quantity === 0) return 'text-danger';
-  if (quantity <= minThreshold) return 'text-warning';
-  return 'text-success';
-})()}`}>
-  {quantity}
-</span>
-
-// ✅ Prefer: IIFE inside cn utility
+// ✅ Complex conditional via IIFE inside cn
 <span className={cn('font-semibold', (() => {
-  if (quantity === 0) return 'text-danger';
-  if (quantity <= minThreshold) return 'text-warning';
+  if (qty === 0) return 'text-danger';
+  if (qty <= min) return 'text-warning';
   return 'text-success';
-})())}>
-  {quantity}
-</span>
+})())} />
 
-// ✅ Good: Simple conditional
-<div className={cn('flex items-center gap-2', isActive && 'bg-primary')}>
-
-// ✅ Good: Multiple conditions
-<button className={cn(
-  'px-4 py-2 rounded',
-  isLoading && 'opacity-50 cursor-wait',
-  isDisabled && 'opacity-30 cursor-not-allowed',
-  variant === 'primary' && 'bg-blue-500 text-white'
-)}>
+// ❌ Avoid template literals with conditional logic
+<span className={`font-semibold ${isActive ? 'text-primary' : 'text-gray-500'}`} />
 ```
-
-**Benefits:**
-
-- Cleaner, more maintainable code
-- Automatic handling of conditional classes (falsy values are ignored)
-- Better readability compared to template literals
-- Consistent pattern across the codebase
-
-## React Router v7: Key Points
-
-- **Imperative routing only** via [apps/app/app/routes.ts](apps/app/app/routes.ts) - NO file-system routing
-- **SSR-first:** Use `loader` for server-side data, `clientLoader` for navigation optimization
-- **Type-safe:** Import types from `./+types/<route-filename>`
-- **Route modules** export: `loader`, `action`, default component, optionally `ErrorBoundary`
-- **Always redirect** after successful `action` mutations
-
-**For detailed patterns, see [docs/react-router-v7-framework-mode.md](../docs/react-router-v7-framework-mode.md)**
-
-## Fetching Data: Use `fetcher` Utility
-
-Always use the typed `fetcher` utility from [apps/app/src/utils/fetcher.ts](apps/app/src/utils/fetcher.ts) instead of raw `fetch()`. It provides:
-
-- **Type-safe API calls** - Automatically infers return types based on the API route path
-- **Error handling** - Throws on non-2xx responses with descriptive error messages
-- **Method detection** - Infers `GET` vs `POST` from options, returns appropriate type (`ApiRouteQueryResult` or `ApiRouteMutationResult`)
-
-### Usage
-
-```typescript
-// Type-safe GET request
-const machines = await fetcher('/api/pifutoys/machines');
-
-// Type-safe POST request
-const updated = await fetcher('/api/products', { method: 'POST', body: JSON.stringify(data) });
-```
-
-The return type is automatically narrowed based on the route path—no manual typing needed. Invalid paths will fail TypeScript compilation.
-
-## Local Services & Integrations
-
-- Postgres at `localhost:5495`, user `postgres`, password `postgres`, db `suricarte`.
-- MinIO API `:9000`, Console `:9001` (user `storage`, password `secret1234`), with a `default` bucket auto‑created.
-- Drizzle Gateway at `:4983` (named volume). App code does not yet consume it; integrate via a `packages/db` module when ready.
-
-## Present vs Planned Stack
-
-- Present: `pnpm`, React Router v7 (SSR), Vite, Tailwind v4, TypeScript.
-- Planned (not yet wired in code): HeroUI, @iconify, Prettier, ESLint, PostHog, Drizzle ORM, Better‑Auth, Zod. When adding, prefer `packages/*` for shared modules (auth, db, analytics) and keep app imports via `~/*`.
 
 ## MCP: Context7 Docs
 
-Always use context7 when I need code generation, setup or configuration steps, or
-library/API documentation. This means you should automatically use the Context7 MCP
-tools to resolve library id and get library docs without me having to explicitly ask.
-
-## Examples from the Codebase
-
-- Fonts and `<link>` tags via `links()` in [apps/app/app/root.tsx](apps/app/app/root.tsx) to preconnect/load Inter.
-- Welcome screen component at [apps/app/app/welcome/welcome.tsx](apps/app/app/welcome/welcome.tsx) with Tailwind classes and SVG assets.
-- Vite plugins in [apps/app/vite.config.ts](apps/app/vite.config.ts): keep plugin order minimal and intact.
+Always use context7 for library documentation and code generation. Resolve the library id first, then fetch the docs. Do this automatically without waiting to be asked.
 
 ## Commit and Pull Request Conventions
-
-**CRITICAL**: This repository follows strict commit and PR naming conventions per [CONTRIBUTING.md](../CONTRIBUTING.md). AI agents **MUST** adhere to these guidelines.
-
-### Commit Message Format
 
 All commits must follow the [Angular Commit Message Convention](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit):
 
@@ -193,47 +238,27 @@ type(scope): message title
 
 **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`
 
-**Scopes**: `app`, `auth`, `db`, `mail`, `dashboard`, `sales`, `stock`, `machines`, or other descriptive scopes
+**Scopes**: `app`, `auth`, `db`, `courses`, `teachers`, `learners`, `availabilities`, `dashboard`, `profile`, `ci`, or any other descriptive scope.
 
 **Examples**:
-- `feat(auth): add JWT token refresh mechanism`
-- `fix(db): resolve connection pool exhaustion issue`
-- `docs(readme): update quick start instructions`
-- `refactor(app): simplify routing configuration`
-- `chore(deps): update drizzle-orm to v0.45.1`
+- `feat(courses): add course filtering by category`
+- `fix(auth): redirect to login on expired session`
+- `refactor(services): remove .server suffix from service files`
+- `ci(workflow): restore lint:check script name`
+- `chore(deps): upgrade drizzle-orm to v0.45.1`
 
 **Guidelines**:
-1. Keep message title concise (50 chars or less recommended)
+1. Keep message title under 50 characters
 2. Use imperative mood ("add" not "added" or "adds")
-3. Don't capitalize the first letter of message title
-4. Don't end message title with a period
-5. See [CONTRIBUTING.md](../CONTRIBUTING.md) for complete guidelines
+3. Do not capitalise the first letter of the title
+4. Do not end the title with a period
 
-### Pull Request Naming
-
-**Pull request titles MUST match the commit message format**:
-
-```
-type(scope): message title
-```
-
-When creating or updating PRs:
-- Use the same format as commits
-- The PR title should describe the overall change
-- If the PR contains a single commit, the PR title should match that commit exactly
-- If the PR contains multiple related commits, the PR title should reflect the primary/most significant change
-
-**Example PR titles**:
-- `feat(dashboard): add real-time stock level indicators`
-- `fix(sales): correct tax calculation for transactions`
-- `docs(contributing): add commit message examples`
+**PR titles follow the same format.** See [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## What to Avoid
 
-- Do not introduce file‑system routing; keep using `RouteConfig` in [apps/app/app/routes.ts](apps/app/app/routes.ts).
-- Do not change SSR mode unless asked; meta tags and flows assume SSR.
-- Do not add backend code inside the app; align with docker services and place shared backend/client code under `packages/*`.
-- **Do not** use arbitrary commit messages like "fix typo", "WIP", "changes", etc.
-- **Do not** create PRs with titles that don't follow the `type(scope): message` format.
-
-If any section needs clarification (e.g., planned Drizzle/Auth/PostHog integration points), please comment so we can refine and codify the conventions.
+- No file-system routing — use `RouteConfig` in `app/routes.ts`.
+- No SPA mode — SSR is assumed throughout.
+- No `LoaderFunctionArgs` / `ActionFunctionArgs` in page routes — use `Route.LoaderArgs` / `Route.ActionArgs` from `./+types/page`.
+- No arbitrary commit messages ("WIP", "fix", "changes", "update").
+- No PR titles that do not follow `type(scope): message` format.
