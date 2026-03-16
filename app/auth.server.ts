@@ -21,7 +21,11 @@ export const auth = betterAuth({
   trustedOrigins:
     env.NODE_ENV === 'development'
       ? ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176']
-      : [env.BETTER_AUTH_URL, ...(env.VERCEL_URL ? [`https://${env.VERCEL_URL}`] : [])],
+      : [
+          env.BETTER_AUTH_URL.replace(/\/$/, ''),
+          ...(env.VERCEL_URL ? [`https://${env.VERCEL_URL}`] : []),
+          ...(env.VERCEL_BRANCH_URL ? [`https://${env.VERCEL_BRANCH_URL}`] : []),
+        ],
   logger: {
     level: 'debug',
   },

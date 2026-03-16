@@ -8,6 +8,7 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
   VERCEL_URL: z.string().optional(),
+  VERCEL_BRANCH_URL: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse({
@@ -18,6 +19,7 @@ const parsed = envSchema.safeParse({
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   VERCEL_URL: process.env.VERCEL_URL,
+  VERCEL_BRANCH_URL: process.env.VERCEL_BRANCH_URL,
 });
 
 if (!parsed.success) {
