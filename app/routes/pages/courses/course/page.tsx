@@ -1,12 +1,12 @@
 import { useLoaderData } from 'react-router';
-import type { LoaderFunctionArgs } from 'react-router';
+import type { Route } from './+types/page';
 import { getCourseById } from '~/services/courses/get-course';
 import { getTeacherSummary } from '~/services/teachers/get-teacher';
 import CourseHeader from '~/components/courses/course-header';
 import CourseDescription from '~/components/courses/course-description';
 import BookingCard from '~/components/courses/booking-card';
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
 
   if (!id) {
@@ -32,7 +32,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   };
 }
 
-export function meta({ data }: { data: Awaited<ReturnType<typeof loader>> | undefined }) {
+export function meta({ data }: Route.MetaArgs) {
   return [
     {
       title: data?.course?.title ? `${data.course.title} | Maestroo` : 'Maestroo',
