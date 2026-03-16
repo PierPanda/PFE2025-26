@@ -65,11 +65,11 @@ export default function Home() {
 
       <section id="courses" className="mt-48">
         <Card radius="lg" shadow="none">
-          <CardBody className="p-6 md:p-8">
+          <CardBody className="p-6 md:p-8 bg-brand">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-foreground">Cours disponibles</h2>
-                <p className="text-sm text-default-500">
+                <h2 className="text-2xl font-bold text-bg">Cours disponibles</h2>
+                <p className="text-sm text-tertiary">
                   {courses?.length ?? 0} résultat
                   {(courses?.length ?? 0) > 1 ? 's' : ''}
                 </p>
