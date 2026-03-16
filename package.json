@@ -34,6 +34,7 @@
     "@react-router/node": "^7.13.0",
     "@react-router/serve": "^7.13.0",
     "@tanstack/react-query": "^5.90.21",
+    "@vercel/react-router": "^1.2.6",
     "bcryptjs": "^3.0.3",
     "better-auth": "^1.4.18",
     "dotenv": "^16.5.0",
