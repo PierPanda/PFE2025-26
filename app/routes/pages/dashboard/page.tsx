@@ -1,35 +1,34 @@
 import {
   getCoursesPaginated,
   getCoursesPriceBounds,
-} from "~/services/courses/get-courses-paginated";
-import { getAppStats } from "~/services/stats/get-app-stats";
-import { cursorPaginationSchema, validateSearchParams } from "~/lib/validation";
-import type { LoaderFunctionArgs } from "react-router";
-import { Card, CardBody } from "@heroui/react";
-import { authentifyUser } from "~/server/utils/authentify-user.server";
-import { useFetcher, useLoaderData, useSearchParams } from "react-router";
-import { useEffect, useRef, useState } from "react";
-import CourseCard from "~/components/ui/course-card";
-import Filters from "~/components/dashboard/filters";
-import Banner from "~/components/dashboard/banner";
-import CoursesPagination from "~/components/dashboard/courses-pagination";
+} from '~/services/courses/get-courses-paginated';
+import { getAppStats } from '~/services/stats/get-app-stats';
+import { cursorPaginationSchema, validateSearchParams } from '~/lib/validation';
+import type { LoaderFunctionArgs } from 'react-router';
+import { Card, CardBody } from '@heroui/react';
+import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { useFetcher, useLoaderData, useSearchParams } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import CourseCard from '~/components/ui/course-card';
+import Filters from '~/components/dashboard/filters';
+import Banner from '~/components/dashboard/banner';
+import CoursesPagination from '~/components/dashboard/courses-pagination';
 
-import type { CourseCategory, CourseLevel } from "~/types/course";
-import { SearchBar } from "~/components/dashboard/search-bar";
+import type { CourseCategory, CourseLevel } from '~/types/course';
+import { SearchBar } from '~/components/dashboard/search-bar';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await authentifyUser(request, { redirectTo: "/auth" });
+  const session = await authentifyUser(request, { redirectTo: '/auth' });
 
   const url = new URL(request.url);
   const rawPagination = validateSearchParams(url, cursorPaginationSchema);
   const pagination = { ...rawPagination, limit: COURSES_PER_PAGE };
 
-  const category =
-    (url.searchParams.get("category") as CourseCategory | null) ?? null;
-  const level = (url.searchParams.get("level") as CourseLevel | null) ?? null;
-  const minPrice = url.searchParams.get("minPrice");
-  const maxPrice = url.searchParams.get("maxPrice");
-  const search = url.searchParams.get("search");
+  const category = (url.searchParams.get('category') as CourseCategory | null) ?? null;
+  const level = (url.searchParams.get('level') as CourseLevel | null) ?? null;
+  const minPrice = url.searchParams.get('minPrice');
+  const maxPrice = url.searchParams.get('maxPrice');
+  const search = url.searchParams.get('search');
 
   const [coursesPage, priceBounds, statsResult] = await Promise.all([
     getCoursesPaginated(
@@ -58,8 +57,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export function meta() {
   return [
-    { title: "Maestroo - Accueil" },
-    { name: "description", content: "Votre musique commence ici." },
+    { title: 'Maestroo - Accueil' },
+    { name: 'description', content: 'Votre musique commence ici.' },
   ];
 }
 
@@ -98,38 +97,33 @@ export default function Home() {
       if (pendingPage.current !== null) {
         const targetPage = pendingPage.current;
         setCurrentPage(targetPage);
-        pageTokens.current[targetPage + 1] =
-          fetcher.data.coursesPage.nextCursor;
+        pageTokens.current[targetPage + 1] = fetcher.data.coursesPage.nextCursor;
       }
       pendingPage.current = null;
     }
   }, [fetcher.data]);
 
-  const isLoadingPage = fetcher.state !== "idle";
-  const totalPages = Math.max(
-    1,
-    Math.ceil(coursesPage.total / COURSES_PER_PAGE),
-  );
+  const isLoadingPage = fetcher.state !== 'idle';
+  const totalPages = Math.max(1, Math.ceil(coursesPage.total / COURSES_PER_PAGE));
 
   const loadPage = (targetPage: number) => {
     pendingPage.current = targetPage;
     const nextParams = new URLSearchParams(searchParams);
-    const targetCursor =
-      targetPage === 1 ? null : pageTokens.current[targetPage];
+    const targetCursor = targetPage === 1 ? null : pageTokens.current[targetPage];
 
     if (targetPage > 1 && !targetCursor) {
       pendingPage.current = null;
       return;
     }
 
-    nextParams.set("index", "");
+    nextParams.set('index', '');
 
     if (targetCursor) {
-      nextParams.set("cursor", targetCursor);
-      nextParams.set("direction", "next");
+      nextParams.set('cursor', targetCursor);
+      nextParams.set('direction', 'next');
     } else {
-      nextParams.delete("cursor");
-      nextParams.delete("direction");
+      nextParams.delete('cursor');
+      nextParams.delete('direction');
     }
 
     fetcher.load(`/?${nextParams.toString()}`);
@@ -142,12 +136,11 @@ export default function Home() {
   };
 
   const handleFindCourses = () => {
-    const coursesSection = document.getElementById("courses");
+    const coursesSection = document.getElementById('courses');
     if (!coursesSection) return;
 
-    const sectionTop =
-      coursesSection.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: sectionTop - HEADER_HEIGHT, behavior: "smooth" });
+    const sectionTop = coursesSection.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: sectionTop - HEADER_HEIGHT, behavior: 'smooth' });
     setTimeout(() => {
       searchBarRef.current?.focus();
     }, 300);
@@ -155,23 +148,17 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-10">
-      <Banner
-        userName={user?.name}
-        stats={stats}
-        onFindCourses={handleFindCourses}
-      />
+      <Banner userName={user?.name} stats={stats} onFindCourses={handleFindCourses} />
 
       <section id="courses" className="mt-48">
-        <Card radius="lg" shadow="none" className="p-8">
-          <CardBody className="p-6 md:p-8">
+        <Card radius="lg" shadow="none">
+          <CardBody className="p-6 md:p-8 bg-brand">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-foreground">
-                  Cours disponibles
-                </h2>
-                <p className="text-sm text-default-500">
-                  {coursesPage.items.length} / {coursesPage.total} résultat
-                  {coursesPage.total > 1 ? "s" : ""}
+                <h2 className="text-2xl font-bold text-bg">Cours disponibles</h2>
+                <p className="text-sm text-tertiary">
+                  {courses?.length ?? 0} résultat
+                  {(courses?.length ?? 0) > 1 ? 's' : ''}
                 </p>
               </div>
               <div className="flex gap-2">
