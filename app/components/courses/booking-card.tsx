@@ -46,6 +46,7 @@ type BookingCardProps = {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   availabilities?: AvailabilityWithTeacher[] | null;
   bookings?: BookingWithRelations[] | null;
@@ -106,6 +107,8 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
   bookings?: BookingWithRelations[] | null;
 =======
 >>>>>>> 5e3f1f6 (style(booking-card): improve formatting and readability)
+=======
+>>>>>>> 30dc63b (style(booking-card): improve formatting and readability)
   availableSlots?: AvailableSlot[] | null;
 };
 
