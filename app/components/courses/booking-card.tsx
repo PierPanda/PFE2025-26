@@ -1,19 +1,11 @@
 import { Button, Card, CardBody } from '@heroui/react';
-import type {
-  CourseWithTeacher,
-  TeacherWithUserAndCoursesCount,
-  AvailabilityWithTeacher,
-  AvailableSlot,
-  BookingWithRelations,
-} from '~/services/types';
+import type { CourseWithTeacher, TeacherWithUserAndCoursesCount, AvailableSlot } from '~/services/types';
 import TeacherCard from './teacher-card';
 import { formatSlot } from '~/lib/utils';
 
 type BookingCardProps = {
   course: CourseWithTeacher;
   teacher: TeacherWithUserAndCoursesCount | null;
-  availabilities?: AvailabilityWithTeacher[] | null;
-  bookings?: BookingWithRelations[] | null;
   availableSlots?: AvailableSlot[] | null;
 };
 
