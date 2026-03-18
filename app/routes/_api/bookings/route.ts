@@ -1,68 +1,31 @@
-<<<<<<< HEAD
-import {
-  data,
-  type ActionFunctionArgs,
-  type LoaderFunctionArgs,
-} from "react-router";
-import { authentifyUser } from "~/server/utils/authentify-user.server";
-import {
-  createBookingSchema,
-  deleteBookingSchema,
-  updateBookingSchema,
-} from "~/lib/validation";
-import { getLearnerByUserId } from "~/services/learners/get-learner.server";
-import { createBooking } from "~/services/bookings/create-booking.server";
-=======
 import { data, type ActionFunctionArgs, type LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { createBookingSchema, updateBookingSchema } from '~/lib/validation';
-import { getLearnerByUserId } from '~/services/learners/get-learner.server';
-import { getTeacherByUserId } from '~/services/teachers/get-teacher.server';
-import { createBooking } from '~/services/bookings/create-booking.server';
->>>>>>> d823109 (feat(api): enhance booking and slot management)
+import { getLearnerByUserId } from '~/services/learners/get-learner';
+import { getTeacherByUserId } from '~/services/teachers/get-teacher';
+import { createBooking } from '~/services/bookings/create-booking';
+
 import {
   getBooking,
   getBookingsByAvailabilityId,
   getBookingsByCourseId,
   getBookingsByLearnerId,
   getBookingsByTeacherId,
-<<<<<<< HEAD
-} from "~/services/bookings/get-bookings.server";
-import { getCourseById } from "~/services/courses/get-course.server";
-import { getAvailability } from "~/services/availabilities/get-availability.server";
-import { updateBooking } from "~/services/bookings/update-booking.server";
-import { deleteBooking } from "~/services/bookings/delete-booking.server";
-=======
-} from '~/services/bookings/get-bookings.server';
-import { getCourseById } from '~/services/courses/get-course.server';
-import { getAvailability } from '~/services/availabilities/get-availability.server';
-import { updateBooking } from '~/services/bookings/update-booking.server';
-import { deleteBooking } from '~/services/bookings/delete-booking.server';
->>>>>>> d823109 (feat(api): enhance booking and slot management)
+} from '~/services/bookings/get-bookings';
+import { getCourseById } from '~/services/courses/get-course';
+import { getAvailability } from '~/services/availabilities/get-availability';
+import { updateBooking } from '~/services/bookings/update-booking';
+import { deleteBooking } from '~/services/bookings/delete-booking';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request);
 
   const url = new URL(request.url);
-  const bookingId = url.searchParams.get("id");
-  const learnerId = url.searchParams.get("learnerId");
-  const teacherId = url.searchParams.get("teacherId");
-  const courseId = url.searchParams.get("courseId");
-  const availabilityId = url.searchParams.get("availabilityId");
-
-  const [learnerResult, teacherResult] = await Promise.all([
-    getLearnerByUserId(session.user.id),
-    getTeacherByUserId(session.user.id),
-  ]);
-
-  const currentLearnerId =
-    learnerResult.success && learnerResult.learner
-      ? learnerResult.learner.id
-      : null;
-  const currentTeacherId =
-    teacherResult.success && teacherResult.teacher
-      ? teacherResult.teacher.id
-      : null;
+  const bookingId = url.searchParams.get('id');
+  const learnerId = url.searchParams.get('learnerId');
+  const teacherId = url.searchParams.get('teacherId');
+  const courseId = url.searchParams.get('courseId');
+  const availabilityId = url.searchParams.get('availabilityId');
 
   const [learnerResult, teacherResult] = await Promise.all([
     getLearnerByUserId(session.user.id),
@@ -75,30 +38,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (bookingId) {
     const result = await getBooking(bookingId);
     if (!result.success || !result.booking) {
-<<<<<<< HEAD
-      return data({ error: "Réservation introuvable" }, { status: 404 });
-    }
-
-    const isLearnerOwner =
-      currentLearnerId !== null &&
-      result.booking.learnerId === currentLearnerId;
-=======
       return data({ error: 'Réservation introuvable' }, { status: 404 });
     }
 
     const isLearnerOwner = currentLearnerId !== null && result.booking.learnerId === currentLearnerId;
->>>>>>> d823109 (feat(api): enhance booking and slot management)
+
     const isTeacherOwner =
       currentTeacherId !== null &&
       (result.booking.course.teacherId === currentTeacherId ||
         result.booking.availability.teacherId === currentTeacherId);
 
     if (!isLearnerOwner && !isTeacherOwner) {
-<<<<<<< HEAD
-      return data({ error: "Non autorisé." }, { status: 403 });
-=======
       return data({ error: 'Non autorisé.' }, { status: 403 });
->>>>>>> d823109 (feat(api): enhance booking and slot management)
     }
 
     return result;
@@ -106,11 +57,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (learnerId) {
     if (!currentLearnerId || learnerId !== currentLearnerId) {
-<<<<<<< HEAD
-      return data({ error: "Non autorisé." }, { status: 403 });
-=======
       return data({ error: 'Non autorisé.' }, { status: 403 });
->>>>>>> d823109 (feat(api): enhance booking and slot management)
     }
 
     return getBookingsByLearnerId(currentLearnerId);
@@ -118,11 +65,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (teacherId) {
     if (!currentTeacherId || teacherId !== currentTeacherId) {
-<<<<<<< HEAD
-      return data({ error: "Non autorisé." }, { status: 403 });
-=======
       return data({ error: 'Non autorisé.' }, { status: 403 });
->>>>>>> d823109 (feat(api): enhance booking and slot management)
     }
 
     return getBookingsByTeacherId(currentTeacherId);
@@ -130,28 +73,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (courseId) {
     if (!currentTeacherId) {
-<<<<<<< HEAD
-      return data({ error: "Non autorisé." }, { status: 403 });
-=======
       return data({ error: 'Non autorisé.' }, { status: 403 });
->>>>>>> d823109 (feat(api): enhance booking and slot management)
     }
 
     const courseResult = await getCourseById(courseId);
     if (!courseResult.success || !courseResult.course) {
-<<<<<<< HEAD
-      return data({ error: "Cours introuvable" }, { status: 404 });
-    }
-
-    if (courseResult.course.teacherId !== currentTeacherId) {
-      return data({ error: "Non autorisé." }, { status: 403 });
-=======
       return data({ error: 'Cours introuvable' }, { status: 404 });
     }
 
     if (courseResult.course.teacherId !== currentTeacherId) {
       return data({ error: 'Non autorisé.' }, { status: 403 });
->>>>>>> d823109 (feat(api): enhance booking and slot management)
     }
 
     return getBookingsByCourseId(courseId);
@@ -159,38 +90,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (availabilityId) {
     if (!currentTeacherId) {
-<<<<<<< HEAD
-      return data({ error: "Non autorisé." }, { status: 403 });
-=======
       return data({ error: 'Non autorisé.' }, { status: 403 });
->>>>>>> d823109 (feat(api): enhance booking and slot management)
     }
 
     const availabilityResult = await getAvailability(availabilityId);
     if (!availabilityResult.success || !availabilityResult.availability) {
-<<<<<<< HEAD
-      return data({ error: "Disponibilité introuvable" }, { status: 404 });
-    }
-
-    if (availabilityResult.availability.teacherId !== currentTeacherId) {
-      return data({ error: "Non autorisé." }, { status: 403 });
-=======
       return data({ error: 'Disponibilité introuvable' }, { status: 404 });
     }
 
     if (availabilityResult.availability.teacherId !== currentTeacherId) {
       return data({ error: 'Non autorisé.' }, { status: 403 });
->>>>>>> d823109 (feat(api): enhance booking and slot management)
     }
 
     return getBookingsByAvailabilityId(availabilityId);
   }
 
-<<<<<<< HEAD
-  return data({ error: "ID de réservation ou filtre requis" }, { status: 400 });
-=======
   return data({ error: 'ID de réservation ou filtre requis' }, { status: 400 });
->>>>>>> d823109 (feat(api): enhance booking and slot management)
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -202,22 +117,11 @@ export async function action({ request }: ActionFunctionArgs) {
     getTeacherByUserId(session.user.id),
   ]);
 
-<<<<<<< HEAD
-  const currentLearnerId =
-    learnerResult.success && learnerResult.learner
-      ? learnerResult.learner.id
-      : null;
-  const currentTeacherId =
-    teacherResult.success && teacherResult.teacher
-      ? teacherResult.teacher.id
-      : null;
-=======
   const currentLearnerId = learnerResult.success && learnerResult.learner ? learnerResult.learner.id : null;
   const currentTeacherId = teacherResult.success && teacherResult.teacher ? teacherResult.teacher.id : null;
->>>>>>> d823109 (feat(api): enhance booking and slot management)
 
   switch (method) {
-    case "POST": {
+    case 'POST': {
       const body = await request.json();
       const parsed = createBookingSchema.safeParse(body);
 
@@ -225,45 +129,28 @@ export async function action({ request }: ActionFunctionArgs) {
         return data(
           {
             success: false,
-<<<<<<< HEAD
-            error: parsed.error.issues.map((e) => e.message).join(", "),
-=======
+
             error: parsed.error.issues.map((e) => e.message).join(', '),
->>>>>>> d823109 (feat(api): enhance booking and slot management)
           },
           { status: 400 },
         );
       }
 
       if (!currentLearnerId) {
-<<<<<<< HEAD
-        return data(
-          { success: false, error: "Apprenant introuvable." },
-          { status: 403 },
-        );
-      }
-
-      if (currentLearnerId !== parsed.data.learnerId) {
-        return data(
-          { success: false, error: "Non autorisé." },
-          { status: 403 },
-        );
-=======
         return data({ success: false, error: 'Apprenant introuvable.' }, { status: 403 });
       }
 
       if (currentLearnerId !== parsed.data.learnerId) {
         return data({ success: false, error: 'Non autorisé.' }, { status: 403 });
->>>>>>> d823109 (feat(api): enhance booking and slot management)
       }
 
       const result = await createBooking(parsed.data);
       return data(result, { status: result.success ? 201 : 400 });
     }
 
-    case "PUT": {
+    case 'PUT': {
       const url = new URL(request.url);
-      const bookingId = url.searchParams.get("id");
+      const bookingId = url.searchParams.get('id');
 
       if (!bookingId) {
         return data({ success: false, error: 'ID de réservation requis' }, { status: 400 });
@@ -301,9 +188,9 @@ export async function action({ request }: ActionFunctionArgs) {
       return data(result, { status: result.success ? 200 : 404 });
     }
 
-    case "DELETE": {
+    case 'DELETE': {
       const url = new URL(request.url);
-      const bookingId = url.searchParams.get("id");
+      const bookingId = url.searchParams.get('id');
 
       if (!bookingId) {
         return data({ success: false, error: 'ID de réservation requis' }, { status: 400 });
@@ -329,6 +216,6 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     default:
-      return data({ error: "Method not allowed" }, { status: 405 });
+      return data({ error: 'Method not allowed' }, { status: 405 });
   }
 }
