@@ -48,19 +48,19 @@ L'application sera disponible sur `http://localhost:5173`.
 
 ## Scripts disponibles
 
-| Script | Description |
-|--------|-------------|
-| `pnpm dev` | Serveur de développement |
-| `pnpm build` | Build de production |
-| `pnpm start` | Serveur de production |
-| `pnpm typecheck` | Vérification TypeScript |
-| `pnpm lint` | Linter (oxlint) avec auto-fix |
-| `pnpm lint:check` | Linter sans auto-fix |
-| `pnpm test` | Tests (vitest) |
-| `pnpm test:coverage` | Tests avec couverture |
-| `pnpm db:generate` | Générer les migrations |
-| `pnpm db:push` | Appliquer le schéma |
-| `pnpm db:studio` | Interface Drizzle Studio |
+| Script               | Description                   |
+| -------------------- | ----------------------------- |
+| `pnpm dev`           | Serveur de développement      |
+| `pnpm build`         | Build de production           |
+| `pnpm start`         | Serveur de production         |
+| `pnpm typecheck`     | Vérification TypeScript       |
+| `pnpm lint`          | Linter (oxlint) avec auto-fix |
+| `pnpm lint:check`    | Linter sans auto-fix          |
+| `pnpm test`          | Tests (vitest)                |
+| `pnpm test:coverage` | Tests avec couverture         |
+| `pnpm db:generate`   | Générer les migrations        |
+| `pnpm db:push`       | Appliquer le schéma           |
+| `pnpm db:studio`     | Interface Drizzle Studio      |
 
 ## Structure du projet
 
@@ -108,10 +108,10 @@ app/
 Utiliser `authentifyUser` dans chaque loader :
 
 ```tsx
-import { authentifyUser } from "~/server/utils/authentify-user.server";
+import { authentifyUser } from '~/server/utils/authentify-user.server';
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const session = await authentifyUser(request, { redirectTo: "/auth" });
+  const session = await authentifyUser(request, { redirectTo: '/auth' });
   return { user: session.user };
 }
 ```
@@ -121,7 +121,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 Schémas centralisés dans `app/lib/validation.ts` :
 
 ```tsx
-import { createCourseSchema, validateFormData } from "~/lib/validation";
+import { createCourseSchema, validateFormData } from '~/lib/validation';
 
 export async function action({ request }: Route.ActionArgs) {
   const data = await validateFormData(request, createCourseSchema);

@@ -21,12 +21,6 @@
     "db seed": "tsx drizzle/seed.ts",
     "db reset": "tsx drizzle/seed.ts --reset"
   },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
-  },
   "dependencies": {
     "@heroui/react": "^2.8.8",
     "@internationalized/date": "^3.10.1",
@@ -48,15 +42,6 @@
     "uuidv7": "^1.1.0",
     "zod": "^4.3.6"
   },
-  "pnpm": {
-    "overrides": {
-      "@internationalized/date": "3.10.1"
-    },
-    "onlyBuiltDependencies": [
-      "@heroui/shared-utils",
-      "esbuild"
-    ]
-  },
   "devDependencies": {
     "@iconify/react": "^6.0.2",
     "@react-router/dev": "^7.13.0",
@@ -75,5 +60,20 @@
     "vite": "^7.3.1",
     "vite-tsconfig-paths": "^6.0.5",
     "vitest": "^4.0.18"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "oxlint --fix",
+      "oxfmt"
+    ]
+  },
+  "pnpm": {
+    "overrides": {
+      "@internationalized/date": "3.10.1"
+    },
+    "onlyBuiltDependencies": [
+      "@heroui/shared-utils",
+      "esbuild"
+    ]
   }
 }

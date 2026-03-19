@@ -1,12 +1,12 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "./heroui.ts";
 @source "../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @custom-variant dark (&:is(.dark *));
 
 @theme {
   --font-sans:
-    "Poppins", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
   --color-brand: #ffaa00;
   --color-brand-secondary: #ff7031;
 }
