@@ -95,12 +95,8 @@
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -160,12 +156,8 @@
           "name": "availabilities_teacherId_teachers_id_fk",
           "tableFrom": "availabilities",
           "tableTo": "teachers",
-          "columnsFrom": [
-            "teacherId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teacherId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -256,12 +248,8 @@
           "name": "bookings_courseId_courses_id_fk",
           "tableFrom": "bookings",
           "tableTo": "courses",
-          "columnsFrom": [
-            "courseId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["courseId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -269,12 +257,8 @@
           "name": "bookings_availabilityId_availabilities_id_fk",
           "tableFrom": "bookings",
           "tableTo": "availabilities",
-          "columnsFrom": [
-            "availabilityId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["availabilityId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -282,12 +266,8 @@
           "name": "bookings_learnerId_learners_id_fk",
           "tableFrom": "bookings",
           "tableTo": "learners",
-          "columnsFrom": [
-            "learnerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["learnerId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -379,12 +359,8 @@
           "name": "courses_teacherId_teachers_id_fk",
           "tableFrom": "courses",
           "tableTo": "teachers",
-          "columnsFrom": [
-            "teacherId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teacherId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -432,12 +408,8 @@
           "name": "learners_userId_user_id_fk",
           "tableFrom": "learners",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -509,12 +481,8 @@
           "name": "ratings_courseId_courses_id_fk",
           "tableFrom": "ratings",
           "tableTo": "courses",
-          "columnsFrom": [
-            "courseId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["courseId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -522,12 +490,8 @@
           "name": "ratings_learnerId_learners_id_fk",
           "tableFrom": "ratings",
           "tableTo": "learners",
-          "columnsFrom": [
-            "learnerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["learnerId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -599,12 +563,8 @@
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -614,9 +574,7 @@
         "session_token_unique": {
           "name": "session_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       },
       "policies": {},
@@ -679,12 +637,8 @@
           "name": "teachers_userId_user_id_fk",
           "tableFrom": "teachers",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -778,9 +732,7 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -843,11 +795,7 @@
     "public.booking_status": {
       "name": "booking_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "confirmed",
-        "cancelled"
-      ]
+      "values": ["pending", "confirmed", "cancelled"]
     },
     "public.category": {
       "name": "category",
