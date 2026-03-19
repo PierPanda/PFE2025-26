@@ -14,12 +14,21 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "prepare": "husky",
+<<<<<<< HEAD
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx drizzle/seed.ts",
     "db:reset": "tsx drizzle/seed.ts --reset"
+=======
+    "db generate": "drizzle-kit generate",
+    "db migrate": "drizzle-kit migrate",
+    "db push": "drizzle-kit push",
+    "db studio": "drizzle-kit studio",
+    "db seed": "tsx drizzle/seed.ts",
+    "db reset": "tsx drizzle/seed.ts --reset"
+>>>>>>> 1ef1c43 (style: unify quote style in various files)
   },
   "dependencies": {
     "@heroui/react": "^2.8.8",

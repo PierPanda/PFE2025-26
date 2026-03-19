@@ -72,6 +72,7 @@ L'application sera disponible sur `http://localhost:5173`.
 
 ## Scripts disponibles
 
+<<<<<<< HEAD
 | Script                 | Description                                     |
 | ---------------------- | ----------------------------------------------- |
 | `pnpm dev`             | Serveur de développement                        |
@@ -111,6 +112,21 @@ Service (logique métier)
      ↓
 Drizzle ORM → PostgreSQL
 ```
+=======
+| Script               | Description                   |
+| -------------------- | ----------------------------- |
+| `pnpm dev`           | Serveur de développement      |
+| `pnpm build`         | Build de production           |
+| `pnpm start`         | Serveur de production         |
+| `pnpm typecheck`     | Vérification TypeScript       |
+| `pnpm lint`          | Linter (oxlint) avec auto-fix |
+| `pnpm lint:check`    | Linter sans auto-fix          |
+| `pnpm test`          | Tests (vitest)                |
+| `pnpm test:coverage` | Tests avec couverture         |
+| `pnpm db:generate`   | Générer les migrations        |
+| `pnpm db:push`       | Appliquer le schéma           |
+| `pnpm db:studio`     | Interface Drizzle Studio      |
+>>>>>>> 1ef1c43 (style: unify quote style in various files)
 
 ## Structure du projet
 
