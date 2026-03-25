@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
 import { getCoursesByTeacher } from '~/services/courses/get-courses';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher';
+import { deleteCourse } from '~/services/courses/delete-course';
 import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability';
 import CardCourse from '~/components/ui/card-course';
 import UserProfile from '~/components/profile/user-profile';
@@ -34,7 +35,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 export async function action({ request }: Route.ActionArgs) {
   await authentifyUser(request, { redirectTo: '/auth' });
 
-  const { deleteCourse } = await import('~/services/courses/delete-course');
   const formData = await request.formData();
   const courseId = formData.get('courseId') as string;
 

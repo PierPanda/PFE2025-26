@@ -145,3 +145,11 @@ export function validateParams<T extends z.ZodTypeAny>(
 
   return result.data;
 }
+
+export const cursorPaginationSchema = z.object({
+  cursor: z.string().optional(),
+  limit: z.coerce.number().min(1).max(100).default(20),
+  direction: z.enum(['next', 'prev']).default('next'),
+});
+
+export type CursorPagination = z.infer<typeof cursorPaginationSchema>;
