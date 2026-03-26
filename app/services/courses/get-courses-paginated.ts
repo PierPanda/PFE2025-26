@@ -119,7 +119,9 @@ export async function getCoursesPaginated(
       ratings: true,
     },
     orderBy:
-      direction === 'next' ? [desc(courses.createdAt), desc(courses.id)] : [asc(courses.createdAt), asc(courses.id)],
+      direction === 'next'
+        ? [desc(courses.createdAt), desc(courses.id)]
+        : [asc(courses.createdAt), asc(courses.id)],
     limit,
   });
 
