@@ -33,6 +33,10 @@ export type CourseWithTeacher = DbCourse & {
   teacher: TeacherWithUser;
 };
 
+export type CourseWithRatings = DbCourse & {
+  ratings: DbRating[];
+};
+
 export type AvailabilityWithTeacher = DbAvailability & {
   teacher: TeacherWithUser;
 };
