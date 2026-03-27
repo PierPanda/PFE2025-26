@@ -86,7 +86,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          # push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # A réactiver une fois le workflow testé et validé
+          push: true 
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
