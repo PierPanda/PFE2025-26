@@ -41,8 +41,8 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
         </h1>
         <p className="text-base md:text-lg max-w-3xl text-tertiary leading-relaxed text-center mx-auto">
           {userName ? `${userName}, ` : ''}
-          découvrez des cours adaptés à votre niveau, échangez avec des professeurs passionnés et progressez à votre
-          rythme, en ligne.
+          découvrez des cours adaptés à votre niveau, échangez avec des professeurs passionnés et
+          progressez à votre rythme, en ligne.
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center">
