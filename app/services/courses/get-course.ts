@@ -16,6 +16,7 @@ export async function getCourseById(courseId: string): Promise<GetCourseResponse
             user: true,
           },
         },
+        ratings: true,
       },
     });
 
