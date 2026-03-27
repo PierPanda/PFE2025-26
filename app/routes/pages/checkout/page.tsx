@@ -3,7 +3,7 @@ import { Link, data, type LoaderFunctionArgs, useLoaderData } from 'react-router
 import { formatDateTime, formatPrice } from '~/lib/utils';
 import { getBooking } from '~/services/bookings/get-bookings';
 import { getLearnerByUserId } from '~/services/learners/get-learner';
-import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { authentifyUser } from '~/server/utils/authentify-user';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
