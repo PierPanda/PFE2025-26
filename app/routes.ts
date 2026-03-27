@@ -10,6 +10,8 @@ export default [
   route('/api/teachers', 'routes/_api/teachers/route.ts'),
   route('/api/stats', 'routes/_api/stats/route.ts'),
   route('/api/availabilities', 'routes/_api/availabilities/route.ts'),
+  route('/api/bookings', 'routes/_api/bookings/route.ts'),
+  route('/api/available-slots', 'routes/_api/available-slots/route.ts'),
 
   // Public Pages
   layout('routes/layouts/public-layout.tsx', [route('/auth', 'routes/pages/auth/page.tsx')]),

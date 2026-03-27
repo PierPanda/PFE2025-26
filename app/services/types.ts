@@ -37,6 +37,13 @@ export type AvailabilityWithTeacher = DbAvailability & {
   teacher: TeacherWithUser;
 };
 
+export type AvailableSlot = {
+  availabilityId: string;
+  teacherId: string;
+  startTime: Date;
+  endTime: Date;
+};
+
 export type CourseWithTeacherAndRatings = CourseWithTeacher & {
   ratings: DbRating[];
 };
@@ -48,6 +55,12 @@ export type LearnerWithUser = DbLearner & {
 export type LearnerWithUserAndBookings = DbLearner & {
   user: DbUser;
   bookings: DbBooking[];
+};
+
+export type BookingWithRelations = DbBooking & {
+  course: CourseWithTeacher;
+  availability: AvailabilityWithTeacher;
+  learner: LearnerWithUser;
 };
 
 /**
@@ -99,6 +112,18 @@ export type GetAvailabilitiesResponse = ServiceResponse<{
   availabilities: AvailabilityWithTeacher[];
 }>;
 
+export type GetAvailableSlotsResponse = ServiceResponse<{
+  slots: AvailableSlot[];
+}>;
+
+export type GetBookingResponse = ServiceResponse<{
+  booking: BookingWithRelations | null;
+}>;
+
+export type GetBookingsResponse = ServiceResponse<{
+  bookings: BookingWithRelations[];
+}>;
+
 export type GetAppStatsResponse = ServiceResponse<{
   stats: {
     coursesCount: number;
@@ -115,10 +140,18 @@ export type CreateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type UpdateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type DeleteTeacherResponse = ServiceResponse<object>;
 
-export type CreateAvailabilityResponse = ServiceResponse<{ availability: DbAvailability }>;
-export type UpdateAvailabilityResponse = ServiceResponse<{ availability: DbAvailability }>;
+export type CreateAvailabilityResponse = ServiceResponse<{
+  availability: DbAvailability;
+}>;
+export type UpdateAvailabilityResponse = ServiceResponse<{
+  availability: DbAvailability;
+}>;
 export type DeleteAvailabilityResponse = ServiceResponse<object>;
 
 export type CreateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
 export type UpdateLearnerResponse = ServiceResponse<{ learner: DbLearner }>;
 export type DeleteLearnerResponse = ServiceResponse<object>;
+
+export type CreateBookingResponse = ServiceResponse<{ booking: DbBooking }>;
+export type UpdateBookingResponse = ServiceResponse<{ booking: DbBooking }>;
+export type DeleteBookingResponse = ServiceResponse<object>;

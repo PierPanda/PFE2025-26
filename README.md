@@ -187,11 +187,11 @@ tests/
 Utiliser `authentifyUser` dans chaque loader/action protégé :
 
 ```tsx
-import { authentifyUser } from "~/server/utils/authentify-user.server";
+import { authentifyUser } from '~/server/utils/authentify-user.server';
 
 // Avec redirection (pages)
 export async function loader({ request }: Route.LoaderArgs) {
-  const session = await authentifyUser(request, { redirectTo: "/auth" });
+  const session = await authentifyUser(request, { redirectTo: '/auth' });
   return { user: session.user };
 }
 
@@ -207,7 +207,7 @@ export async function action({ request }: Route.ActionArgs) {
 Schémas centralisés dans `app/lib/validation.ts` :
 
 ```tsx
-import { createCourseSchema, validateFormData } from "~/lib/validation";
+import { createCourseSchema, validateFormData } from '~/lib/validation';
 
 export async function action({ request }: Route.ActionArgs) {
   const data = await validateFormData(request, createCourseSchema);

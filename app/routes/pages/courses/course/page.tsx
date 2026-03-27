@@ -5,6 +5,7 @@ import { getTeacherSummary } from '~/services/teachers/get-teacher';
 import CourseHeader from '~/components/courses/course-header';
 import CourseDescription from '~/components/courses/course-description';
 import BookingCard from '~/components/courses/booking-card';
+import { getAvailableSlots } from '~/services/availabilities/get-available-slots';
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
@@ -25,10 +26,12 @@ export async function loader({ params }: Route.LoaderArgs) {
     throw new Response('Cours non trouvé', { status: 404 });
   }
   const teacherResult = await getTeacherSummary(courseResult.course.teacherId);
+  const availableSlotsResult = await getAvailableSlots(courseResult.course.teacherId, courseResult.course.duration);
 
   return {
     course: courseResult.course,
     teacher: teacherResult.success ? teacherResult.teacher : null,
+    availableSlots: availableSlotsResult.success ? availableSlotsResult.slots : null,
   };
 }
 
@@ -44,7 +47,7 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export default function CourseDetail() {
-  const { course, teacher } = useLoaderData<typeof loader>();
+  const { course, teacher, availableSlots } = useLoaderData<typeof loader>();
 
   return (
     <main>
@@ -62,7 +65,7 @@ export default function CourseDetail() {
             <CourseDescription description={course.description ?? null} />
           </div>
           <div>
-            <BookingCard course={course} teacher={teacher} />
+            <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
           </div>
         </div>
       </div>

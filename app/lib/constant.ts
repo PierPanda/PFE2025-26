@@ -21,7 +21,7 @@ export const categoryOptions = [
   { key: 'mandoline', value: 'Mandoline' },
   { key: 'percussions', value: 'Percussions' },
   { key: 'dj', value: 'DJ' },
-  { key: 'production musicale', value: 'Production musicale' },
+  { key: 'production-musicale', value: 'Production musicale' },
   { key: 'autre', value: 'Autre' },
 ] as const;
 
