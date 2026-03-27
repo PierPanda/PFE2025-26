@@ -73,7 +73,7 @@ export default function CheckoutPage() {
           <Button as={Link} to="/" className="bg-brand-secondary font-semibold text-brand-dark">
             Retour à l'accueil
           </Button>
-          <Button as={Link} to="/profile" variant="bordered" className="border-brand/20 text-brand-dark">
+          <Button as={Link} to="/profile" variant="light">
             Voir mes réservations
           </Button>
         </div>
