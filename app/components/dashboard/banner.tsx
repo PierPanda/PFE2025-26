@@ -36,10 +36,10 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
   return (
     <section className="space-y-12 my-24">
       <div className="space-y-5">
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground text-center">
+        <h1 className="text-4xl md:text-5xl text-primary font-extrabold tracking-tight text-center px-50">
           Maîtrisez la musique avec des cours conçus pour vous.
         </h1>
-        <p className="text-base md:text-lg max-w-3xl text-default-600 leading-relaxed text-center mx-auto">
+        <p className="text-base md:text-lg max-w-3xl text-primary leading-relaxed text-center mx-auto">
           {userName ? `${userName}, ` : ''}
           découvrez des cours adaptés à votre niveau, échangez avec des professeurs passionnés et progressez à votre
           rythme, en ligne.
@@ -50,8 +50,8 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
             onPress={onFindCourses}
             size="lg"
             radius="lg"
-            color="warning"
-            className="font-semibold"
+            color="secondary"
+            className="font-semibold bg-secondary text-tertiary border-2 border-secondary hover:border-secondary hover:bg-transparent hover:text-secondary"
             startContent={<InlineIcon icon="lucide:search" />}
           >
             Trouver un cours
@@ -63,7 +63,7 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
             size="lg"
             radius="lg"
             variant="flat"
-            className="font-semibold"
+            className="font-semibold bg-primary text-tertiary border-2 border-primary hover:border-primary hover:bg-transparent hover:text-primary"
             startContent={<InlineIcon icon="lucide:music-2" />}
           >
             Devenir professeur
