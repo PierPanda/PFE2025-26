@@ -71,7 +71,7 @@ export function ErrorBoundary({ error }: { error: unknown }) {
 
   if (is404) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50">
+      <main className="min-h-screen flex items-center justify-center">
         <div className="max-w-md w-full text-center">
           <div className="mb-8">
             <h1 className="text-6xl font-bold text-gray-300 mb-4">404</h1>

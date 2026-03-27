@@ -1,9 +1,10 @@
 import { data, type ActionFunctionArgs, type LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user.server';
-import { createBookingSchema, updateBookingSchema } from '~/lib/validation';
+import { createBookingRequestSchema, updateBookingSchema } from '~/lib/validation';
 import { getLearnerByUserId } from '~/services/learners/get-learner';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher';
 import { createBooking } from '~/services/bookings/create-booking';
+import { createLearner } from '~/services/learners/create-learner';
 
 import {
   getBooking,
@@ -123,7 +124,7 @@ export async function action({ request }: ActionFunctionArgs) {
   switch (method) {
     case 'POST': {
       const body = await request.json();
-      const parsed = createBookingSchema.safeParse(body);
+      const parsed = createBookingRequestSchema.safeParse(body);
 
       if (!parsed.success) {
         return data(
@@ -136,15 +137,81 @@ export async function action({ request }: ActionFunctionArgs) {
         );
       }
 
-      if (!currentLearnerId) {
-        return data({ success: false, error: 'Apprenant introuvable.' }, { status: 403 });
+      const [courseResult, availabilityResult, availabilityBookingsResult] = await Promise.all([
+        getCourseById(parsed.data.courseId),
+        getAvailability(parsed.data.availabilityId),
+        getBookingsByAvailabilityId(parsed.data.availabilityId),
+      ]);
+
+      if (!courseResult.success || !courseResult.course) {
+        return data({ success: false, error: 'Cours introuvable.' }, { status: 404 });
       }
 
-      if (currentLearnerId !== parsed.data.learnerId) {
-        return data({ success: false, error: 'Non autorisé.' }, { status: 403 });
+      if (!availabilityResult.success || !availabilityResult.availability) {
+        return data({ success: false, error: 'Disponibilité introuvable.' }, { status: 404 });
       }
 
-      const result = await createBooking(parsed.data);
+      if (!availabilityBookingsResult.success) {
+        return data({ success: false, error: availabilityBookingsResult.error }, { status: 500 });
+      }
+
+      if (currentTeacherId && courseResult.course.teacherId === currentTeacherId) {
+        return data({ success: false, error: 'Vous ne pouvez pas réserver votre propre cours.' }, { status: 403 });
+      }
+
+      let learnerId = currentLearnerId;
+
+      if (!learnerId) {
+        const learnerCreationResult = await createLearner({ userId: session.user.id });
+
+        if (!learnerCreationResult.success) {
+          return data({ success: false, error: learnerCreationResult.error }, { status: 500 });
+        }
+
+        learnerId = learnerCreationResult.learner.id;
+      }
+
+      const startTime = parsed.data.startTime;
+      const endTime = parsed.data.endTime;
+      const courseDurationMs = courseResult.course.duration * 60 * 1000;
+      const requestedDurationMs = endTime.getTime() - startTime.getTime();
+
+      if (courseResult.course.teacherId !== availabilityResult.availability.teacherId) {
+        return data({ success: false, error: 'Ce créneau ne correspond pas à ce cours.' }, { status: 400 });
+      }
+
+      if (
+        startTime < availabilityResult.availability.startTime ||
+        endTime > availabilityResult.availability.endTime ||
+        startTime >= endTime
+      ) {
+        return data({ success: false, error: 'Le créneau sélectionné est invalide.' }, { status: 400 });
+      }
+
+      if (requestedDurationMs !== courseDurationMs) {
+        return data(
+          { success: false, error: 'La durée du créneau ne correspond pas à celle du cours.' },
+          { status: 400 },
+        );
+      }
+
+      const hasConflict = availabilityBookingsResult.bookings.some(
+        (booking) =>
+          ['pending', 'confirmed'].includes(booking.status) &&
+          booking.endTime > startTime &&
+          booking.startTime < endTime,
+      );
+
+      if (hasConflict) {
+        return data({ success: false, error: 'Ce créneau vient déjà d’être réservé.' }, { status: 409 });
+      }
+
+      const result = await createBooking({
+        ...parsed.data,
+        learnerId,
+        priceAtBooking: String(courseResult.course.price),
+        status: 'pending',
+      });
       return data(result, { status: result.success ? 201 : 400 });
     }
 
