@@ -6,9 +6,9 @@ export default function CourseDescription({ description }: CourseDescriptionProp
   if (!description) return null;
 
   return (
-    <div>
-      <h2 className="mb-3 text-xl font-semibold text-gray-900">Description</h2>
-      <p className="leading-relaxed text-gray-600">{description}</p>
+    <div className="space-y-2">
+      <h2 className="mb-3 text-xl font-semibold">Description</h2>
+      <p className="leading-relaxed text-brand-dark/80">{description}</p>
     </div>
   );
 }

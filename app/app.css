@@ -7,6 +7,20 @@
   --font-sans:
     'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
-  --color-brand: #ffaa00;
-  --color-brand-secondary: #ff7031;
+  --color-brand: #FF7031;
+  --color-brand-secondary: #FFA500;
+  --color-brand-tertiary: #F7F0E5;
+  --color-brand-dark: #191918;
+}
+
+body {
+  @apply bg-brand-tertiary text-brand-dark font-sans;
+}
+
+h1 {
+  @apply text-4xl font-bold leading-tight lg:text-5xl;
+}
+
+h2 {
+  @apply mb-3 text-xl font-semibold;
 }

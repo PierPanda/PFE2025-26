@@ -19,7 +19,7 @@ import type { CalendarDate } from '@internationalized/date';
 import { InlineIcon } from '@iconify/react';
 import type { AvailabilityWithTeacher } from '~/services/types';
 import { TIME_SLOTS, type TimeSlot } from '~/lib/constant';
-import { formatTime } from '~/lib/utils';
+import { formatDateLabel, formatTime } from '~/lib/utils';
 
 type AvailabilitiesModalProps = {
   isOpen: boolean;
@@ -47,14 +47,6 @@ function getDuration(start: TimeSlot, end: TimeSlot): string {
   const m = diff % 60;
   if (h === 0) return `${m}min`;
   return m === 0 ? `${h}h` : `${h}h${m.toString().padStart(2, '0')}`;
-}
-
-function dayKey(date: Date | string): string {
-  return new Date(date).toLocaleDateString('fr-FR', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  });
 }
 
 export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities }: AvailabilitiesModalProps) {
@@ -143,7 +135,7 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
   const endTimeSlots = TIME_SLOTS.filter((s) => s > (startTime ?? ''));
 
   const formattedSelectedDate = selectedDate
-    ? new Date(selectedDate.year, selectedDate.month - 1, selectedDate.day).toLocaleDateString('fr-FR', {
+    ? formatDateLabel(new Date(selectedDate.year, selectedDate.month - 1, selectedDate.day), {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
@@ -151,14 +143,22 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
     : null;
 
   const groupedByDay = availabilities.reduce<Record<string, AvailabilityWithTeacher[]>>((acc, a) => {
-    const key = dayKey(a.startTime);
+    const key = formatDateLabel(a.startTime, {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
     if (!acc[key]) acc[key] = [];
     acc[key].push(a);
     return acc;
   }, {});
 
   const pendingGroupedByDay = pendingAdd.reduce<Record<string, PendingSlot[]>>((acc, s) => {
-    const key = dayKey(s.startTime);
+    const key = formatDateLabel(s.startTime, {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
     if (!acc[key]) acc[key] = [];
     acc[key].push(s);
     return acc;

@@ -6,6 +6,7 @@ import CourseHeader from '~/components/courses/course-header';
 import CourseDescription from '~/components/courses/course-description';
 import BookingCard from '~/components/courses/booking-card';
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots';
+import { InlineIcon } from '@iconify/react';
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { id } = params;
@@ -50,23 +51,25 @@ export default function CourseDetail() {
   const { course, teacher, availableSlots } = useLoaderData<typeof loader>();
 
   return (
-    <main>
-      <div className="mb-8 mx-auto max-w-7xl px-6">
-        <img
-          src={`/categories/${course.category}.jpg`}
-          alt={course.title}
-          className="h-64 w-full object-cover rounded-2xl"
-        />
-      </div>
-      <div className="mx-auto max-w-7xl px-6 pb-10">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[2fr_1fr]">
-          <div>
-            <CourseHeader course={course} />
-            <CourseDescription description={course.description ?? null} />
+    <main className="py-20 mx-auto max-w-7xl px-6">
+      <div className="space-y-8">
+        <a href="/#courses" className="flex items-center text-dark hover:underline">
+          <InlineIcon icon="mdi:arrow-left" className="mr-2" />
+          <span>Retour à la liste des cours</span>
+        </a>
+        <div className="flex items-start gap-8 flex-col lg:flex-row relative">
+          <div className="flex-1">
+            <img
+              src={`/categories/${course.category}.jpg`}
+              alt={course.title}
+              className="h-64 w-full object-cover rounded-2xl"
+            />
+            <div className="space-y-5">
+              <CourseHeader course={course} />
+              <CourseDescription description={course.description ?? null} />
+            </div>
           </div>
-          <div>
-            <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
-          </div>
+          <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
         </div>
       </div>
     </main>
