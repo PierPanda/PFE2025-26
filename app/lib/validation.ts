@@ -91,6 +91,13 @@ export const createBookingSchema = bookingFormSchema.extend({
   id: uuidSchema,
 });
 
+export const createBookingRequestSchema = createBookingSchema.omit({
+  learnerId: true,
+  paymentIntentId: true,
+  priceAtBooking: true,
+  status: true,
+});
+
 export const updateBookingSchema = bookingFormSchema.partial();
 
 export const createTeacherSchema = z.object({

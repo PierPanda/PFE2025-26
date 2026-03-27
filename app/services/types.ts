@@ -82,7 +82,7 @@ export type ServiceResponse<T> = ServiceSuccess<T> | ServiceError;
  * Specific response types for each service
  */
 export type GetCourseResponse = ServiceResponse<{
-  course: CourseWithTeacher | null;
+  course: CourseWithTeacherAndRatings | null;
 }>;
 export type GetCoursesResponse = ServiceResponse<{
   courses: CourseWithTeacher[];
