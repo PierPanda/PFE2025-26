@@ -93,7 +93,7 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
           variant="flat"
           radius="lg"
           startContent={<InlineIcon icon="lucide:list-filter-plus" />}
-          className="bg-brand font-medium"
+          className="bg-secondary text-tertiary border-2 border-secondary font-medium hover:bg-transparent hover:text-secondary"
         >
           Filtrer
         </Button>
@@ -106,7 +106,7 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
             defaultItems={categoryOptions}
             label="Filtrer par catégorie"
             name="category"
-            color="warning"
+            color="secondary"
             variant="bordered"
             selectedKey={selectedCategoryValue || null}
             inputValue={selectedCategory?.value || ''}
@@ -122,7 +122,7 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
             label="Filtrer par niveau"
             size="sm"
             name="level"
-            color="warning"
+            color="secondary"
             variant="bordered"
             selectedKeys={selectedLevelValue ? [selectedLevelValue] : []}
             onChange={handleLevelChange}
@@ -136,12 +136,12 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <p className="text-sm">Filtrer par prix</p>
-              <div className="flex items-center gap-2">
-                <Chip size="sm" variant="flat" color="warning">
+              <div className="flex items-center gap-2 text-tertiary">
+                <Chip size="sm" variant="flat" color="secondary" className="text-tertiary">
                   {formatPrice(priceRange[0])}
                 </Chip>
-                <span className="text-default-500">—</span>
-                <Chip size="sm" variant="flat" color="warning">
+                <span className="text-tertiary">—</span>
+                <Chip size="sm" variant="flat" color="secondary" className="text-tertiary">
                   {formatPrice(priceRange[1])}
                 </Chip>
               </div>
@@ -149,7 +149,7 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
 
             <Slider
               className="w-full"
-              color="warning"
+              color="secondary"
               name="price"
               value={priceRange}
               formatOptions={{ style: 'currency', currency: 'EUR' }}

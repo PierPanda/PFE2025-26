@@ -26,9 +26,9 @@ export default function AuthPage() {
   }, [isLogin]);
 
   return (
-    <div className="min-h-screen bg-brand/10 px-4 py-14">
+    <div className="min-h-screen bg-bg/10 px-4 py-14">
       <div className="mx-auto max-w-md">
-        <p className="text-lg text-center font-semibold tracking-[0.3em] text-brand uppercase mb-10">
+        <p className="text-lg text-center font-semibold tracking-[0.3em] text-bg uppercase mb-10">
           VOTRE MUSIQUE COMMENCE ICI
         </p>
         <div className="mb-10 text-center">
@@ -50,7 +50,7 @@ export default function AuthPage() {
             onClick={() => setIsLogin(true)}
             className={cn(
               'rounded-full px-6 py-2 text-sm font-semibold transition-all duration-300',
-              isLogin ? 'bg-brand text-black shadow-md' : 'text-gray-500 hover:text-gray-800',
+              isLogin ? 'bg-bg text-black shadow-md' : 'text-gray-500 hover:text-gray-800',
             )}
           >
             Connexion
@@ -59,7 +59,7 @@ export default function AuthPage() {
             onClick={() => setIsLogin(false)}
             className={cn(
               'rounded-full px-6 py-2 text-sm font-semibold transition-all duration-300',
-              !isLogin ? 'bg-brand text-black shadow-md' : 'text-gray-500 hover:text-gray-800',
+              !isLogin ? 'bg-bg text-black shadow-md' : 'text-gray-500 hover:text-gray-800',
             )}
           >
             Inscription
