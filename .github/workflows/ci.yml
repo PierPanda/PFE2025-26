@@ -115,5 +115,5 @@ jobs:
               --name maestroo-app \
               --restart unless-stopped \
               -p 3000:3000 \
-              --env-file ~/.env.maestroo \
+              -v ${{ secrets.SSH_ENV_FILE }}:/app/.env \
               ghcr.io/${{ github.repository }}:latest
