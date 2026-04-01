@@ -10,8 +10,8 @@
 
   /* Global */
 
-  --color-bg: #f7f0e5;
-  --color-primary: #fff9f1;
+  --color-primary: #ff7031;
   --color-secondary: #ffa500;
-  --color-tertiary: #191918;
+  --color-tertiary: #f7f0e5;
+  --color-dark: #191918;
 }

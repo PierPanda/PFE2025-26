@@ -14,17 +14,17 @@ export default function CoursesPagination({
   onPageChange,
 }: CoursesPaginationProps) {
   return (
-    <div className="flex items-center justify-center gap-4 px-8 pb-8 bg-primary">
+    <div className="flex items-center justify-center gap-4 px-8 pb-8 bg-tertiary">
       <Pagination
         page={currentPage}
         total={totalPages}
         showControls
         radius="md"
         classNames={{
-          item: 'bg-tertiary text-bg hover:!bg-secondary hover:!text-black data-[hovered=true]:!bg-secondary data-[hovered=true]:!text-black data-[pressed=true]:!bg-secondary data-[pressed=true]:!text-black',
-          cursor: 'bg-secondary text-tertiary font-semibold',
-          prev: 'bg-tertiary text-bg hover:!bg-secondary hover:!text-black data-[hovered=true]:!bg-secondary data-[hovered=true]:!text-black data-[pressed=true]:!bg-secondary data-[pressed=true]:!text-black',
-          next: 'bg-tertiary text-bg hover:!bg-secondary hover:!text-black data-[hovered=true]:!bg-secondary data-[hovered=true]:!text-black data-[pressed=true]:!bg-secondary data-[pressed=true]:!text-black',
+          item: 'bg-secondary text-bg hover:!bg-primary hover:!text-dark data-[hovered=true]:!bg-primary data-[hovered=true]:!text-dark data-[pressed=true]:!bg-primary data-[pressed=true]:!text-dark',
+          cursor: 'bg-primary text-tertiary font-semibold',
+          prev: 'bg-dark text-tertiary hover:!bg-dark/60 hover:!text-dark data-[hovered=true]:!bg-dark/60 data-[hovered=true]:!text-dark data-[pressed=true]:!bg-dark/60 data-[pressed=true]:!text-dark',
+          next: 'bg-dark text-tertiary hover:!bg-dark/60 hover:!text-dark data-[hovered=true]:!bg-dark/60 data-[hovered=true]:!text-dark data-[pressed=true]:!bg-dark/60data-[pressed=true]:!text-dark',
         }}
         isDisabled={isLoading}
         onChange={onPageChange}

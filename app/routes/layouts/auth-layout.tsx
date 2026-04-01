@@ -21,8 +21,8 @@ export default function AuthLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-bg">
-      <header className="sticky top-0 z-50 bg-primary p-2">
+    <div className="min-h-screen bg-tertiary">
+      <header className="sticky top-0 z-50 bg-tertiary p-2">
         <div className="flex h-16 w-full items-center justify-between px-12">
           <Link to="/" className="shrink-0">
             <img src={logo} alt="Maestroo" className="h-9 w-auto" />
@@ -41,17 +41,17 @@ export default function AuthLayout() {
           <div className="w-full flex flex-col md:flex-row gap-8">
             <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
               <img src={logo} alt="Maestroo" className="mb-4 h-auto w-auto self-start md:h-10 brightness-0 invert" />
-              <h5 className="text-center text-l font-semibold text-primary md:text-left">
+              <h5 className="text-center text-l font-semibold text-tertiary md:text-left">
                 Maestroo - Connectez-vous avec les meilleurs professeurs de musique pour des cours en ligne
                 personnalisés.
               </h5>
             </div>
             <div className="w-full md:w-1/3  flex  flex-col items-center justify-center">
-              <h4 className="mb-2 text-2xl font-bold text-primary">Plan du site</h4>
-              <ul className="space-y-2 pl-0 text-center text-lg text-primary md:pl-6 md:text-left">
+              <h4 className="mb-2 text-2xl font-bold text-tertiary">Plan du site</h4>
+              <ul className="space-y-2 pl-0 text-center text-lg text-tertiary md:pl-6 md:text-left">
                 {footerPages.map((page) => (
                   <li key={page.to}>
-                    <Link to={page.to} className="text-primary/90 transition-colors hover:text-primary">
+                    <Link to={page.to} className="text-tertiary/90 transition-colors hover:text-tertiary">
                       {page.label}
                     </Link>
                   </li>
@@ -61,43 +61,43 @@ export default function AuthLayout() {
             <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
               <Button
                 variant="solid"
-                color="primary"
-                className="w-auto border-2 border-primary bg-primary text-xl font-bold text-black items-center self-center hover:bg-transparent hover:text-primary hover:border-primary md:self-end"
+                color="default"
+                className="w-auto border-2 border-tertiary bg-tertiary text-xl font-bold text-black items-center self-center hover:bg-transparent hover:text-tertiary hover:border-tertiary md:self-end"
               >
                 Contactez-nous
               </Button>
               <div className="flex gap-4 self-center md:self-end max-w-auto">
                 <InlineIcon
                   icon="mdi:instagram"
-                  className="mt-4 cursor-pointer text-4xl text-primary transition-colors duration-300 hover:text-primary/70"
+                  className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
                 />
                 <InlineIcon
                   icon="mdi:facebook"
-                  className="mt-4 cursor-pointer text-4xl text-primary transition-colors duration-300 hover:text-primary/70"
+                  className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
                 />
                 <InlineIcon
                   icon="mdi:linkedin"
-                  className="mt-4 cursor-pointer text-4xl text-primary transition-colors duration-300 hover:text-primary/70"
+                  className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
                 />
               </div>
             </div>
           </div>
           <div className="flex flex-col md:flex-row items-center justify-center mt-8">
-            <a href="/legal/terms" className="text-sm text-primary/80 transition-colors hover:text-primary">
+            <a href="/legal/terms" className="text-sm text-tertiary/80 transition-colors hover:text-tertiary">
               Conditions d'utilisation
             </a>
-            <a href="/legal/privacy" className="ml-4 text-sm text-primary/80 transition-colors hover:text-primary">
+            <a href="/legal/privacy" className="ml-4 text-sm text-tertiary/80 transition-colors hover:text-tertiary">
               Politique de confidentialité
             </a>
-            <a href="/legal/cookies" className="ml-4 text-sm text-primary/80 transition-colors hover:text-primary">
+            <a href="/legal/cookies" className="ml-4 text-sm text-tertiary/80 transition-colors hover:text-tertiary">
               Politique des cookies
             </a>
-            <a href="/legal/cgv" className="ml-4 text-sm text-primary/80 transition-colors hover:text-primary">
+            <a href="/legal/cgv" className="ml-4 text-sm text-tertiary/80 transition-colors hover:text-tertiary">
               Conditions générales de vente
             </a>
           </div>
           <div className="flex items-center justify-center">
-            <p className="text-sm text-primary/80">© {currentYear} Maestroo. Tous droits réservés.</p>
+            <p className="text-sm text-tertiary/80">© {currentYear} Maestroo. Tous droits réservés.</p>
           </div>
         </footer>
       </div>
