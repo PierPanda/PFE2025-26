@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { user } from '~/server/lib/db/schema';
-import { uploadFile } from '~/server/lib/s3';
+import { uploadFile } from '~/server/lib/s3-client';
 
 type ServiceResponse<T> = { success: true; data: T; message: string } | { success: false; error: string };
 
