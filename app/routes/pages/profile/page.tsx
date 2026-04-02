@@ -1,7 +1,7 @@
 import { useLoaderData, Link } from 'react-router';
 import type { Route } from './+types/page';
 import { useState } from 'react';
-import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { authentifyUser } from '~/server/utils/authentify-user';
 import { getCoursesByTeacher } from '~/services/courses/get-courses';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher';
 import { deleteCourse } from '~/services/courses/delete-course';

@@ -1,5 +1,5 @@
 import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-router';
-import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { authentifyUser } from '~/server/utils/authentify-user';
 import { createAvailabilitySchema, batchAvailabilitySchema } from '~/lib/validation';
 import { getAvailability, getAvailabilityByTeacherId } from '~/services/availabilities/get-availability';
 import { createAvailability } from '~/services/availabilities/create-availability';
