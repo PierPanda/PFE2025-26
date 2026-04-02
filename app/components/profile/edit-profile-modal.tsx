@@ -118,6 +118,10 @@ export default function EditProfileModal({ isOpen, onClose, user, teacher }: Edi
             )}
           </ModalBody>
 
+          {fetcher.data && !fetcher.data.success && (
+            <p className="px-6 pb-2 text-sm text-red-500">{fetcher.data.error}</p>
+          )}
+
           <ModalFooter>
             <Button variant="light" onPress={onClose} isDisabled={isSubmitting}>
               Annuler

@@ -15,8 +15,10 @@ const s3Client = new S3Client({
 
 type UploadResult = { success: true; url: string } | { success: false; error: string };
 
-export async function uploadFile(file: File, key: string): Promise<UploadResult> {
-  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+export async function uploadFile(file: File, key: string, contentType?: string): Promise<UploadResult> {
+  const mimeType = contentType ?? file.type;
+
+  if (!ALLOWED_MIME_TYPES.includes(mimeType)) {
     return { success: false, error: 'Type de fichier non autorisé (jpeg, png, webp uniquement)' };
   }
 
@@ -32,7 +34,7 @@ export async function uploadFile(file: File, key: string): Promise<UploadResult>
         Bucket: env.R2_BUCKET,
         Key: key,
         Body: Buffer.from(buffer),
-        ContentType: file.type,
+        ContentType: mimeType,
       }),
     );
   } catch (error) {

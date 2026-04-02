@@ -9,6 +9,13 @@ const MIME_TO_EXT: Record<string, string> = {
   'image/webp': 'webp',
 };
 
+const EXT_TO_MIME: Record<string, string> = {
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  webp: 'image/webp',
+};
+
 function getAvatarExtension(file: File): string | null {
   const name = file.name ?? '';
   const lastDotIndex = name.lastIndexOf('.');
@@ -30,8 +37,13 @@ export async function uploadAvatar(file: File, userId: string): Promise<ServiceR
     return { success: false, error: 'Format de fichier non pris en charge.' };
   }
 
+  const contentType = EXT_TO_MIME[ext];
+  if (!contentType) {
+    return { success: false, error: 'Format de fichier non pris en charge.' };
+  }
+
   const key = `avatars/${userId}.${ext}`;
-  const result = await uploadFile(file, key);
+  const result = await uploadFile(file, key, contentType);
   if (!result.success) {
     return { success: false, error: result.error };
   }
