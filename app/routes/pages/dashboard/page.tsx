@@ -170,7 +170,11 @@ export default function Home() {
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {coursesPage.items.map((course) => (
-                  <CourseCard key={course.id} course={course as CourseWithTeacherAndRatings} />
+                  <CourseCard
+                    key={course.id}
+                    course={course as CourseWithTeacherAndRatings}
+                    currentUserId={user?.id ?? null}
+                  />
                 ))}
               </ul>
             )}
