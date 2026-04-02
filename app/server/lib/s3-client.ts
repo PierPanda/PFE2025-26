@@ -26,14 +26,20 @@ export async function uploadFile(file: File, key: string): Promise<UploadResult>
 
   const buffer = await file.arrayBuffer();
 
-  await s3Client.send(
-    new PutObjectCommand({
-      Bucket: env.R2_BUCKET,
-      Key: key,
-      Body: Buffer.from(buffer),
-      ContentType: file.type,
-    }),
-  );
+  try {
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: env.R2_BUCKET,
+        Key: key,
+        Body: Buffer.from(buffer),
+        ContentType: file.type,
+      }),
+    );
+  } catch (error) {
+    console.error('R2 upload error:', error);
+    return { success: false, error: "Échec de l'upload vers le stockage." };
+  }
 
-  return { success: true, url: `${env.R2_PUBLIC_URL}/${key}` };
+  const baseUrl = env.R2_PUBLIC_URL.replace(/\/$/, '');
+  return { success: true, url: `${baseUrl}/${key}` };
 }

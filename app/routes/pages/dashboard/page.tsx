@@ -1,7 +1,7 @@
 import { getCoursesPaginated, getCoursesPriceBounds } from '~/services/courses/get-courses-paginated';
 import { getAppStats } from '~/services/stats/get-app-stats';
 import { cursorPaginationSchema, validateSearchParams } from '~/lib/validation';
-import type { LoaderFunctionArgs } from 'react-router';
+import type { Route } from './+types/page';
 import { Card, CardBody } from '@heroui/react';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { useFetcher, useLoaderData, useSearchParams } from 'react-router';
@@ -14,7 +14,7 @@ import CoursesPagination from '~/components/dashboard/courses-pagination';
 import type { CourseCategory, CourseLevel } from '~/types/course';
 import { SearchBar } from '~/components/dashboard/search-bar';
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
 
   const url = new URL(request.url);

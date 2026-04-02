@@ -140,6 +140,8 @@ export type CreateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type UpdateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type DeleteTeacherResponse = ServiceResponse<object>;
 
+export type UpdateUserResponse = ServiceResponse<{ user: DbUser }>;
+
 export type CreateAvailabilityResponse = ServiceResponse<{
   availability: DbAvailability;
 }>;

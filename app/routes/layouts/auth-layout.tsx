@@ -82,12 +82,12 @@ export default function AuthLayout() {
           </div>
           <div className="flex flex-col md:flex-row items-center justify-center mt-8">
             <a href="/legal/terms" className="text-sm text-gray-500 hover:text-amber-600">
-              Conditions d'utilisation"
+              Conditions d'utilisation
             </a>
             <a href="/legal/privacy" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
               Politique de confidentialité
             </a>
-            <a href="/legal/coookies" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
+            <a href="/legal/cookies" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
               Politique des cookies
             </a>
             <a href="/legal/cgv" className="text-sm text-gray-500 hover:text-amber-600 ml-4">

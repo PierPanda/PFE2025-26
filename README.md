@@ -4,20 +4,20 @@ Plateforme de mise en relation entre enseignants et apprenants pour des cours de
 
 ## Stack technique
 
-| Catégorie | Technologie |
-|-----------|-------------|
-| Framework | React Router v7 (SSR) |
-| UI | HeroUI + Tailwind CSS v4 |
-| Base de données | PostgreSQL + Drizzle ORM |
-| Authentification | Better Auth |
-| Validation | Zod v4 |
-| State management | TanStack Query |
-| Langage | TypeScript (strict) |
-| Bundler | Vite |
-| Package manager | pnpm |
-| Linter / Formatter | oxlint + oxfmt |
-| Tests | Vitest |
-| Git hooks | Husky + lint-staged |
+| Catégorie          | Technologie              |
+| ------------------ | ------------------------ |
+| Framework          | React Router v7 (SSR)    |
+| UI                 | HeroUI + Tailwind CSS v4 |
+| Base de données    | PostgreSQL + Drizzle ORM |
+| Authentification   | Better Auth              |
+| Validation         | Zod v4                   |
+| State management   | TanStack Query           |
+| Langage            | TypeScript (strict)      |
+| Bundler            | Vite                     |
+| Package manager    | pnpm                     |
+| Linter / Formatter | oxlint + oxfmt           |
+| Tests              | Vitest                   |
+| Git hooks          | Husky + lint-staged      |
 
 ## Prérequis
 
@@ -55,11 +55,11 @@ pnpm "db seed"
 
 Créez un fichier `.env` à la racine du projet (basé sur `.env.example`) :
 
-| Variable | Description | Exemple |
-|----------|-------------|---------|
-| `DATABASE_URL` | URL de connexion PostgreSQL | `postgresql://user:password@localhost:5432/maestroo` |
-| `BETTER_AUTH_SECRET` | Clé secrète pour Better Auth (min. 32 caractères) | `votre-cle-secrete-aleatoire` |
-| `BETTER_AUTH_URL` | URL de base de l'application | `http://localhost:5173` |
+| Variable             | Description                                       | Exemple                                              |
+| -------------------- | ------------------------------------------------- | ---------------------------------------------------- |
+| `DATABASE_URL`       | URL de connexion PostgreSQL                       | `postgresql://user:password@localhost:5432/maestroo` |
+| `BETTER_AUTH_SECRET` | Clé secrète pour Better Auth (min. 32 caractères) | `votre-cle-secrete-aleatoire`                        |
+| `BETTER_AUTH_URL`    | URL de base de l'application                      | `http://localhost:5173`                              |
 
 ## Développement
 
@@ -72,24 +72,24 @@ L'application sera disponible sur `http://localhost:5173`.
 
 ## Scripts disponibles
 
-| Script | Description |
-|--------|-------------|
-| `pnpm dev` | Serveur de développement |
-| `pnpm build` | Build de production |
-| `pnpm start` | Serveur de production |
-| `pnpm typecheck` | Génère les types routes puis vérifie TypeScript |
-| `pnpm lint` | Linter (oxlint) avec auto-fix |
-| `pnpm "lint check"` | Linter sans auto-fix (CI) |
-| `pnpm format` | Formatter (oxfmt) |
-| `pnpm test` | Tests interactifs (vitest) |
-| `pnpm "test run"` | Tests en une passe (CI) |
-| `pnpm "test coverage"` | Tests avec couverture |
-| `pnpm "db generate"` | Générer les migrations Drizzle |
-| `pnpm "db migrate"` | Appliquer les migrations |
-| `pnpm "db push"` | Push le schéma directement (dev) |
-| `pnpm "db studio"` | Interface Drizzle Studio |
-| `pnpm "db seed"` | Seed la base de données |
-| `pnpm "db reset"` | Reset et re-seed la base |
+| Script                 | Description                                     |
+| ---------------------- | ----------------------------------------------- |
+| `pnpm dev`             | Serveur de développement                        |
+| `pnpm build`           | Build de production                             |
+| `pnpm start`           | Serveur de production                           |
+| `pnpm typecheck`       | Génère les types routes puis vérifie TypeScript |
+| `pnpm lint`            | Linter (oxlint) avec auto-fix                   |
+| `pnpm "lint check"`    | Linter sans auto-fix (CI)                       |
+| `pnpm format`          | Formatter (oxfmt)                               |
+| `pnpm test`            | Tests interactifs (vitest)                      |
+| `pnpm "test run"`      | Tests en une passe (CI)                         |
+| `pnpm "test coverage"` | Tests avec couverture                           |
+| `pnpm "db generate"`   | Générer les migrations Drizzle                  |
+| `pnpm "db migrate"`    | Appliquer les migrations                        |
+| `pnpm "db push"`       | Push le schéma directement (dev)                |
+| `pnpm "db studio"`     | Interface Drizzle Studio                        |
+| `pnpm "db seed"`       | Seed la base de données                         |
+| `pnpm "db reset"`      | Reset et re-seed la base                        |
 
 ## Architecture
 
@@ -273,12 +273,14 @@ Format : `type(scope): message`
 **Types** : `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`
 
 **Exemples** :
+
 - `feat(courses): add course filtering by category`
 - `fix(auth): redirect to login on expired session`
 - `refactor(services): extract validation helpers`
 - `chore(deps): upgrade drizzle-orm to v0.45.1`
 
 **Règles** :
+
 - Message < 50 caractères
 - Mode impératif ("add" pas "added")
 - Pas de majuscule au début
@@ -301,17 +303,18 @@ Les tests sont colocalisés avec le code dans le dossier `tests/`.
 
 ## Qualité de code
 
-| Outil | Usage |
-|-------|-------|
-| **oxlint** | Linting rapide (pre-commit) |
-| **oxfmt** | Formatage du code |
-| **TypeScript** | Mode strict activé |
-| **Husky** | Git hooks |
+| Outil           | Usage                                 |
+| --------------- | ------------------------------------- |
+| **oxlint**      | Linting rapide (pre-commit)           |
+| **oxfmt**       | Formatage du code                     |
+| **TypeScript**  | Mode strict activé                    |
+| **Husky**       | Git hooks                             |
 | **lint-staged** | Lint uniquement les fichiers modifiés |
 
 ### Pre-commit hooks
 
 À chaque commit, les fichiers `.ts` et `.tsx` modifiés sont automatiquement :
+
 1. Lintés avec oxlint (avec auto-fix)
 2. Formatés avec oxfmt
 
