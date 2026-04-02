@@ -1,7 +1,7 @@
 import CourseForm from './course-form';
 import { useState } from 'react';
 import CourseValidation from './course-validation';
-import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { authentifyUser } from '~/server/utils/authentify-user';
 import { useLoaderData, useFetcher } from 'react-router';
 import type { LoaderFunctionArgs, ActionFunctionArgs } from 'react-router';
 import { uuidv7 } from 'uuidv7';

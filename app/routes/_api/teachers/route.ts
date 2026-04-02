@@ -1,5 +1,5 @@
 import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-router';
-import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { authentifyUser } from '~/server/utils/authentify-user';
 import { createTeacherSchema, updateTeacherSchema } from '~/lib/validation';
 import { createTeacher } from '~/services/teachers/create-teacher';
 import { getTeacher, getTeacherByUserId } from '~/services/teachers/get-teacher';
