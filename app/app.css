@@ -6,6 +6,9 @@
 @theme {
   --font-sans:
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b1b0777 (feat(course-card): enhance CourseCard and CardCourses components for improved layout and functionality)
     'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', 'Noto Color Emoji';
   --color-primary: #ff7031;
@@ -14,10 +17,13 @@
   --color-light: #ffe6db;
   --color-dark-light: #662d14;
   --color-dark: #191918;
+<<<<<<< HEAD
 =======
     'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
   --color-brand: #ffaa00;
   --color-brand-secondary: #ff7031;
 >>>>>>> 1ef1c43 (style: unify quote style in various files)
+=======
+>>>>>>> b1b0777 (feat(course-card): enhance CourseCard and CardCourses components for improved layout and functionality)
 }
