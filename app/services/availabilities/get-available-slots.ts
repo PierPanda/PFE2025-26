@@ -17,6 +17,7 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return bookingsResult;
     }
 
+    // Séparer règles (disponibilités normales) et exceptions (blocages)
     const rules = availabilitiesResult.availabilities.filter((a) => !a.isException);
     const exceptions = availabilitiesResult.availabilities.filter((a) => a.isException);
 
