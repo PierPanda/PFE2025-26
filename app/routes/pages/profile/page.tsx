@@ -14,7 +14,7 @@ import UserProfile from '~/components/profile/user-profile';
 import EditProfileModal from '~/components/profile/edit-profile-modal';
 import { AvailabilitiesModal } from '~/components/availabilities/availabilities-modal';
 import { Button } from '@heroui/react';
-import { InlineIcon } from '@iconify/react';
+import { Icon, InlineIcon } from '@iconify/react';
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
@@ -98,20 +98,21 @@ export default function Page() {
       <div className="flex justify-between items-center bg-amber-50 rounded-2xl p-6 w-full gap-4">
         <UserProfile user={user} teacher={teacher} />
         <div className="flex gap-2 items-end shrink-0">
-          <Button isIconOnly size="sm" color="warning" variant="flat" onPress={() => setEditProfileOpen(true)}>
-            <InlineIcon icon="mdi:pencil" width="16" />
-          </Button>
           {teacher && (
             <Button
               size="lg"
               color="warning"
               variant="flat"
-              startContent={<InlineIcon icon="mdi:calendar-clock" width="16" />}
+              className="p-4"
+              startContent={<Icon icon="mdi:calendar-clock" width="16" />}
               onPress={() => setAvailabilitiesOpen(true)}
             >
               Mes disponibilités
             </Button>
           )}
+          <Button isIconOnly size="lg" color="warning" variant="flat" onPress={() => setEditProfileOpen(true)}>
+            <Icon icon="mdi:pencil" width="16" />
+          </Button>
         </div>
       </div>
 
