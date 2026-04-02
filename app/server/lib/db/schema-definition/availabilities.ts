@@ -9,6 +9,7 @@ export const availabilities = pgTable('availabilities', {
   startTime: timestamp('startTime').notNull(),
   endTime: timestamp('endTime').notNull(),
   isException: boolean('isException').notNull().default(false),
+  exceptionReason: text('exceptionReason'),
   createdAt: timestamp('createdAt').notNull().defaultNow(),
   updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });

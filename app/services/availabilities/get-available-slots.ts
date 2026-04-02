@@ -156,14 +156,14 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return fragmentedSlots;
     });
 
-    const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
-    const filteredSlots = minDurationMs
-      ? slots.filter((slot) => slot.endTime.getTime() - slot.startTime.getTime() >= minDurationMs)
+    const courseDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
+    const formattedSlots = courseDurationMs
+      ? slots.flatMap((slot) => splitIntervalIntoCourseSlots(slot, courseDurationMs))
       : slots;
 
     return {
       success: true,
-      slots: filteredSlots,
+      slots: formattedSlots,
     };
   } catch (error) {
     console.error('Error computing available slots for teacher:', error);
