@@ -8,6 +8,7 @@ import {
   Calendar,
   Select,
   SelectItem,
+  Switch,
   cn,
 } from '@heroui/react';
 import { uuidv7 } from 'uuidv7';
@@ -32,6 +33,7 @@ type PendingSlot = {
   id: string;
   startTime: string;
   endTime: string;
+  isException: boolean;
 };
 
 function timeSlotToISO(date: CalendarDate, time: TimeSlot): string {
@@ -67,6 +69,7 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
 
   const [pendingAdd, setPendingAdd] = useState<PendingSlot[]>([]);
   const [pendingDeleteIds, setPendingDeleteIds] = useState<string[]>([]);
+  const [isException, setIsException] = useState(false);
 
   const hasChanges = pendingAdd.length > 0 || pendingDeleteIds.length > 0;
 
@@ -84,6 +87,7 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
       setStartTime(null);
       setEndTime(null);
       setSelectedDate(null);
+      setIsException(false);
     } else {
       addToast({
         title: 'Erreur',
@@ -101,10 +105,12 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
         id: uuidv7(),
         startTime: timeSlotToISO(selectedDate, startTime),
         endTime: timeSlotToISO(selectedDate, endTime),
+        isException,
       },
     ]);
     setStartTime(null);
     setEndTime(null);
+    setIsException(false);
   };
 
   const handleToggleDelete = (id: string) => {
@@ -121,6 +127,7 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
     setStartTime(null);
     setEndTime(null);
     setSelectedDate(null);
+    setIsException(false);
     onClose();
   };
 
@@ -248,6 +255,10 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
                       </Select>
                     </div>
 
+                    <Switch isSelected={isException} onValueChange={setIsException} size="sm">
+                      Bloquer ce créneau
+                    </Switch>
+
                     <div className="flex items-center justify-between">
                       {duration ? (
                         <div className="flex items-center gap-1.5 text-sm text-gray-500">
@@ -295,20 +306,29 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
                           <div className="flex flex-wrap gap-2">
                             {existing.map((a) => {
                               const isMarked = pendingDeleteIds.includes(a.id);
+                              const isExceptionSlot = a.isException;
+                              const slotBgClass = (() => {
+                                if (isMarked) return 'bg-danger-50 text-danger-600 line-through opacity-60';
+                                if (isExceptionSlot) return 'bg-danger-50 text-danger-600';
+                                return 'bg-amber-50 text-gray-700';
+                              })();
+                              const iconColorClass = (() => {
+                                if (isMarked) return 'text-danger';
+                                if (isExceptionSlot) return 'text-danger';
+                                return 'text-warning';
+                              })();
                               return (
                                 <span
                                   key={a.id}
                                   className={cn(
                                     'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors',
-                                    isMarked
-                                      ? 'bg-danger-50 text-danger-600 line-through opacity-60'
-                                      : 'bg-amber-50 text-gray-700',
+                                    slotBgClass,
                                   )}
                                 >
                                   <InlineIcon
-                                    icon="mdi:clock-outline"
+                                    icon={isExceptionSlot ? 'mdi:lock' : 'mdi:clock-outline'}
                                     width="14"
-                                    className={isMarked ? 'text-danger' : 'text-warning'}
+                                    className={iconColorClass}
                                   />
                                   {formatTime(new Date(a.startTime))} – {formatTime(new Date(a.endTime))}
                                   <button
@@ -330,14 +350,24 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
                             {pending.map((s) => (
                               <span
                                 key={s.id}
-                                className="inline-flex items-center gap-1.5 rounded-lg bg-success-50 px-3 py-1.5 text-sm text-success-700"
+                                className={cn(
+                                  'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm',
+                                  s.isException ? 'bg-danger-50 text-danger-600' : 'bg-success-50 text-success-700',
+                                )}
                               >
-                                <InlineIcon icon="mdi:plus" width="14" className="text-success" />
+                                <InlineIcon
+                                  icon={s.isException ? 'mdi:lock' : 'mdi:plus'}
+                                  width="14"
+                                  className={s.isException ? 'text-danger' : 'text-success'}
+                                />
                                 {formatTime(new Date(s.startTime))} – {formatTime(new Date(s.endTime))}
                                 <button
                                   type="button"
                                   onClick={() => handleRemovePending(s.id)}
-                                  className="ml-0.5 text-success-400 hover:text-danger transition-colors"
+                                  className={cn(
+                                    'ml-0.5 transition-colors hover:text-danger',
+                                    s.isException ? 'text-danger-400' : 'text-success-400',
+                                  )}
                                   aria-label="Retirer ce créneau"
                                 >
                                   <InlineIcon icon="mdi:close" width="13" />

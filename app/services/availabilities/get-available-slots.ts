@@ -17,7 +17,11 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return bookingsResult;
     }
 
-    const slots = availabilitiesResult.availabilities.flatMap((availability) => {
+    // Séparer règles (disponibilités normales) et exceptions (blocages)
+    const rules = availabilitiesResult.availabilities.filter((a) => !a.isException);
+    const exceptions = availabilitiesResult.availabilities.filter((a) => a.isException);
+
+    const rawSlots = rules.flatMap((availability) => {
       const availabilityStart = availability.startTime;
       const availabilityEnd = availability.endTime;
 
@@ -69,6 +73,10 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 
       return remainingSlots;
     });
+
+    const slots = rawSlots.filter(
+      (slot) => !exceptions.some((ex) => ex.startTime < slot.endTime && ex.endTime > slot.startTime),
+    );
 
     const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
     const filteredSlots = minDurationMs
