@@ -5,7 +5,7 @@ import { courses } from '~/server/lib/db/schema';
 import type { CursorPagination } from '~/lib/validation';
 import type { CourseCategory, CourseLevel } from '~/types/course';
 import type { PaginatedResponse } from '~/types/pagination';
-import type { CourseWithTeacher } from '../types';
+import type { CourseWithTeacherAndRatings } from '../types';
 
 type CourseFilters = {
   category?: CourseCategory | null;
@@ -84,7 +84,7 @@ export async function getCoursesPriceBounds(): Promise<PriceBounds> {
 export async function getCoursesPaginated(
   filters: CourseFilters,
   pagination: CursorPagination,
-): Promise<PaginatedResponse<CourseWithTeacher>> {
+): Promise<PaginatedResponse<CourseWithTeacherAndRatings>> {
   const { cursor, limit, direction } = pagination;
   const filterConditions = buildFilterConditions(filters);
 
@@ -116,6 +116,7 @@ export async function getCoursesPaginated(
           user: true,
         },
       },
+      ratings: true,
     },
     orderBy:
       direction === 'next' ? [desc(courses.createdAt), desc(courses.id)] : [asc(courses.createdAt), asc(courses.id)],

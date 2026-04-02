@@ -12,7 +12,6 @@ import Banner from '~/components/dashboard/banner';
 import CoursesPagination from '~/components/dashboard/courses-pagination';
 
 import type { CourseCategory, CourseLevel } from '~/types/course';
-import type { CourseWithTeacherAndRatings } from '~/services/types';
 import { SearchBar } from '~/components/dashboard/search-bar';
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -170,11 +169,7 @@ export default function Home() {
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {coursesPage.items.map((course) => (
-                  <CourseCard
-                    key={course.id}
-                    course={course as CourseWithTeacherAndRatings}
-                    currentUserId={user?.id ?? null}
-                  />
+                  <CourseCard key={course.id} course={course} currentUserId={user?.id ?? null} />
                 ))}
               </ul>
             )}
