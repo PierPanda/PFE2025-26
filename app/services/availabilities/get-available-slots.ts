@@ -41,6 +41,10 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return bookingsResult;
     }
 
+    // Séparer règles (disponibilités normales) et exceptions (blocages)
+    const rules = availabilitiesResult.availabilities.filter((a) => !a.isException);
+    const exceptions = availabilitiesResult.availabilities.filter((a) => a.isException);
+
     const bookingsByAvailabilityId = new Map<string, (typeof bookingsResult.bookings)[number][]>();
 
     for (const booking of bookingsResult.bookings) {
@@ -57,7 +61,7 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       availabilityBookings.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
     }
 
-    const slots = availabilitiesResult.availabilities.flatMap((availability) => {
+    const rawSlots = rules.flatMap((availability) => {
       const availabilityStart = availability.startTime;
       const availabilityEnd = availability.endTime;
 
@@ -108,6 +112,11 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
 
       return remainingSlots;
     });
+
+    // Filtrer les créneaux qui chevauchent une exception (blocage)
+    const slots = rawSlots.filter(
+      (slot) => !exceptions.some((ex) => ex.startTime < slot.endTime && ex.endTime > slot.startTime),
+    );
 
     const courseDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
     const formattedSlots = courseDurationMs
