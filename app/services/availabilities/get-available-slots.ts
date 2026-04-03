@@ -17,7 +17,11 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return bookingsResult;
     }
 
-    const slots = availabilitiesResult.availabilities.flatMap((availability) => {
+    // Séparer règles (disponibilités normales) et exceptions (blocages)
+    const rules = availabilitiesResult.availabilities.filter((a) => !a.isException);
+    const exceptions = availabilitiesResult.availabilities.filter((a) => a.isException);
+
+    const rawSlots = rules.flatMap((availability) => {
       const availabilityStart = availability.startTime;
       const availabilityEnd = availability.endTime;
 
@@ -68,6 +72,49 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       }
 
       return remainingSlots;
+    });
+
+    // Découper les slots en fonction des exceptions (blocages)
+    const slots = rawSlots.flatMap((slot) => {
+      const overlappingExceptions = exceptions
+        .filter((ex) => ex.startTime < slot.endTime && ex.endTime > slot.startTime)
+        .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+
+      if (overlappingExceptions.length === 0) {
+        return [slot];
+      }
+
+      const fragmentedSlots: AvailableSlot[] = [];
+      let cursor = slot.startTime;
+
+      for (const exception of overlappingExceptions) {
+        const exStart = exception.startTime > slot.startTime ? exception.startTime : slot.startTime;
+        const exEnd = exception.endTime < slot.endTime ? exception.endTime : slot.endTime;
+
+        if (exStart > cursor) {
+          fragmentedSlots.push({
+            availabilityId: slot.availabilityId,
+            teacherId: slot.teacherId,
+            startTime: cursor,
+            endTime: exStart,
+          });
+        }
+
+        if (exEnd > cursor) {
+          cursor = exEnd;
+        }
+      }
+
+      if (cursor < slot.endTime) {
+        fragmentedSlots.push({
+          availabilityId: slot.availabilityId,
+          teacherId: slot.teacherId,
+          startTime: cursor,
+          endTime: slot.endTime,
+        });
+      }
+
+      return fragmentedSlots;
     });
 
     const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
