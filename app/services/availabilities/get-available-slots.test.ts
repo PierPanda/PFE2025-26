@@ -107,7 +107,7 @@ describe('getAvailableSlots', () => {
     }
   });
 
-  it('should remove slot when exception partially overlaps', async () => {
+  it('should fragment slot when exception partially overlaps', async () => {
     const ruleStart = new Date('2026-04-10T09:00:00Z');
     const ruleEnd = new Date('2026-04-10T12:00:00Z');
     const exStart = new Date('2026-04-10T11:00:00Z');
