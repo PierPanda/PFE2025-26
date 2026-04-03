@@ -74,27 +74,25 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return remainingSlots;
     });
 
+    // Découper les slots en fonction des exceptions (blocages)
     const slots = rawSlots.flatMap((slot) => {
-      // Trouver les exceptions qui chevauchent ce créneau
       const overlappingExceptions = exceptions
-        .filter((ex) => ex.endTime > slot.startTime && ex.startTime < slot.endTime)
+        .filter((ex) => ex.startTime < slot.endTime && ex.endTime > slot.startTime)
         .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
-      // S'il n'y a pas d'exception qui chevauche ce créneau, on le garde tel quel
       if (overlappingExceptions.length === 0) {
         return [slot];
       }
 
-      const remaining: AvailableSlot[] = [];
+      const fragmentedSlots: AvailableSlot[] = [];
       let cursor = slot.startTime;
 
-      for (const ex of overlappingExceptions) {
-        const exStart = ex.startTime > slot.startTime ? ex.startTime : slot.startTime;
-        const exEnd = ex.endTime < slot.endTime ? ex.endTime : slot.endTime;
+      for (const exception of overlappingExceptions) {
+        const exStart = exception.startTime > slot.startTime ? exception.startTime : slot.startTime;
+        const exEnd = exception.endTime < slot.endTime ? exception.endTime : slot.endTime;
 
-        // Si l'exception laisse un trou avant elle, on ajoute ce créneau disponible
         if (exStart > cursor) {
-          remaining.push({
+          fragmentedSlots.push({
             availabilityId: slot.availabilityId,
             teacherId: slot.teacherId,
             startTime: cursor,
@@ -102,15 +100,13 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
           });
         }
 
-        // Avancer le curseur à la fin effective de l'exception dans le créneau
         if (exEnd > cursor) {
           cursor = exEnd;
         }
       }
 
-      // Si après la dernière exception il reste du temps disponible, on l'ajoute
       if (cursor < slot.endTime) {
-        remaining.push({
+        fragmentedSlots.push({
           availabilityId: slot.availabilityId,
           teacherId: slot.teacherId,
           startTime: cursor,
@@ -118,8 +114,9 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
         });
       }
 
-      return remaining;
+      return fragmentedSlots;
     });
+
     const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
     const filteredSlots = minDurationMs
       ? slots.filter((slot) => slot.endTime.getTime() - slot.startTime.getTime() >= minDurationMs)
