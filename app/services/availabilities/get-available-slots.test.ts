@@ -107,7 +107,7 @@ describe('getAvailableSlots', () => {
     }
   });
 
-  it('should remove slot when exception partially overlaps', async () => {
+  it('should fragment slot when exception partially overlaps', async () => {
     const ruleStart = new Date('2026-04-10T09:00:00Z');
     const ruleEnd = new Date('2026-04-10T12:00:00Z');
     const exStart = new Date('2026-04-10T11:00:00Z');
@@ -125,7 +125,35 @@ describe('getAvailableSlots', () => {
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.slots).toHaveLength(0);
+      expect(result.slots).toHaveLength(1);
+      expect(result.slots[0].startTime).toEqual(ruleStart);
+      expect(result.slots[0].endTime).toEqual(exStart);
+    }
+  });
+
+  it('should split slot into two parts when exception is in the middle', async () => {
+    const ruleStart = new Date('2026-04-10T09:00:00Z');
+    const ruleEnd = new Date('2026-04-10T12:00:00Z');
+    const exStart = new Date('2026-04-10T10:00:00Z');
+    const exEnd = new Date('2026-04-10T11:00:00Z');
+
+    mockGetAvailabilityByTeacherId.mockResolvedValue({
+      success: true,
+      availabilities: [
+        createAvailability('av-1', ruleStart, ruleEnd, false),
+        createAvailability('ex-1', exStart, exEnd, true),
+      ],
+    });
+
+    const result = await getAvailableSlots(teacherId);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.slots).toHaveLength(2);
+      expect(result.slots[0].startTime).toEqual(ruleStart);
+      expect(result.slots[0].endTime).toEqual(exStart);
+      expect(result.slots[1].startTime).toEqual(exEnd);
+      expect(result.slots[1].endTime).toEqual(ruleEnd);
     }
   });
 
@@ -179,8 +207,16 @@ describe('getAvailableSlots', () => {
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.slots).toHaveLength(1);
-      expect(result.slots[0].availabilityId).toBe('av-3');
+      // Rule1 8h-10h avec ex1 9h-11h → slot 8h-9h
+      // Rule2 14h-16h avec ex2 15h-17h → slot 14h-15h
+      // Rule3 18h-20h → intact
+      expect(result.slots).toHaveLength(3);
+      expect(result.slots[0].startTime).toEqual(rule1Start);
+      expect(result.slots[0].endTime).toEqual(ex1Start);
+      expect(result.slots[1].startTime).toEqual(rule2Start);
+      expect(result.slots[1].endTime).toEqual(ex2Start);
+      expect(result.slots[2].startTime).toEqual(rule3Start);
+      expect(result.slots[2].endTime).toEqual(rule3End);
     }
   });
 });
