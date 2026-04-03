@@ -57,7 +57,7 @@ export const courseQuerySchema = paginationQuerySchema.extend({
 export const availabilityFormSchema = z.object({
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
-  isException: z.boolean().default(false),
+  isException: z.coerce.boolean().default(false),
   exceptionReason: z.string().optional(),
 });
 
