@@ -1,33 +1,26 @@
-import {
-  data,
-  type LoaderFunctionArgs,
-  type ActionFunctionArgs,
-} from "react-router";
-import { authentifyUser } from "~/server/utils/authentify-user.server";
-import { createCourseSchema, updateCourseSchema } from "~/lib/validation";
-import { createCourse } from "~/services/courses/create-course";
-import { getCourseById } from "~/services/courses/get-course";
-import { getCoursesByTeacher } from "~/services/courses/get-courses";
-import { updateCourse } from "~/services/courses/update-course";
-import { deleteCourse } from "~/services/courses/delete-course";
-import { cursorPaginationSchema, validateSearchParams } from "~/lib/validation";
-import {
-  getCoursesPaginated,
-  getCoursesPriceBounds,
-} from "~/services/courses/get-courses-paginated";
-import type { CourseCategory, CourseLevel } from "~/types/course";
+import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-router';
+import { authentifyUser } from '~/server/utils/authentify-user';
+import { createCourseSchema, updateCourseSchema } from '~/lib/validation';
+import { createCourse } from '~/services/courses/create-course';
+import { getCourseById } from '~/services/courses/get-course';
+import { getCoursesByTeacher } from '~/services/courses/get-courses';
+import { updateCourse } from '~/services/courses/update-course';
+import { deleteCourse } from '~/services/courses/delete-course';
+import { cursorPaginationSchema, validateSearchParams } from '~/lib/validation';
+import { getCoursesPaginated, getCoursesPriceBounds } from '~/services/courses/get-courses-paginated';
+import type { CourseCategory, CourseLevel } from '~/types/course';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
 
-  const courseId = url.searchParams.get("id");
-  const teacherId = url.searchParams.get("teacherId");
+  const courseId = url.searchParams.get('id');
+  const teacherId = url.searchParams.get('teacherId');
 
-  const category = url.searchParams.get("category") as CourseCategory | null;
-  const level = url.searchParams.get("level") as CourseLevel | null;
-  const minPrice = url.searchParams.get("minPrice") as string | null;
-  const maxPrice = url.searchParams.get("maxPrice") as string | null;
-  const search = url.searchParams.get("search") as string | null;
+  const category = url.searchParams.get('category') as CourseCategory | null;
+  const level = url.searchParams.get('level') as CourseLevel | null;
+  const minPrice = url.searchParams.get('minPrice') as string | null;
+  const maxPrice = url.searchParams.get('maxPrice') as string | null;
+  const search = url.searchParams.get('search') as string | null;
 
   if (courseId) {
     const result = await getCourseById(courseId);
@@ -77,7 +70,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const method = request.method.toUpperCase();
 
   switch (method) {
-    case "POST": {
+    case 'POST': {
       const body = await request.json();
       const parsed = createCourseSchema.safeParse(body);
 
@@ -85,7 +78,7 @@ export async function action({ request }: ActionFunctionArgs) {
         return data(
           {
             success: false,
-            error: parsed.error.issues.map((e) => e.message).join(", "),
+            error: parsed.error.issues.map((e) => e.message).join(', '),
           },
           { status: 400 },
         );
@@ -95,15 +88,12 @@ export async function action({ request }: ActionFunctionArgs) {
       return data(result, { status: result.success ? 201 : 400 });
     }
 
-    case "PUT": {
+    case 'PUT': {
       const url = new URL(request.url);
-      const courseId = url.searchParams.get("id");
+      const courseId = url.searchParams.get('id');
 
       if (!courseId) {
-        return data(
-          { success: false, error: "Course ID required" },
-          { status: 400 },
-        );
+        return data({ success: false, error: 'Course ID required' }, { status: 400 });
       }
 
       const body = await request.json();
@@ -113,7 +103,7 @@ export async function action({ request }: ActionFunctionArgs) {
         return data(
           {
             success: false,
-            error: parsed.error.issues.map((e) => e.message).join(", "),
+            error: parsed.error.issues.map((e) => e.message).join(', '),
           },
           { status: 400 },
         );
@@ -123,15 +113,12 @@ export async function action({ request }: ActionFunctionArgs) {
       return result;
     }
 
-    case "DELETE": {
+    case 'DELETE': {
       const url = new URL(request.url);
-      const courseId = url.searchParams.get("id");
+      const courseId = url.searchParams.get('id');
 
       if (!courseId) {
-        return data(
-          { success: false, error: "Course ID required" },
-          { status: 400 },
-        );
+        return data({ success: false, error: 'Course ID required' }, { status: 400 });
       }
 
       const result = await deleteCourse(courseId);
@@ -139,6 +126,6 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     default:
-      return data({ error: "Method not allowed" }, { status: 405 });
+      return data({ error: 'Method not allowed' }, { status: 405 });
   }
 }
