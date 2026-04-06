@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   data,
   type LoaderFunctionArgs,
@@ -16,6 +17,16 @@ import { createAvailability } from "~/services/availabilities/create-availabilit
 import { deleteAvailability } from "~/services/availabilities/delete-availability.server";
 import { batchUpdateAvailabilities } from "~/services/availabilities/batch-availabilities.server";
 import { getTeacherByUserId } from "~/services/teachers/get-teacher.server";
+=======
+import { data, type LoaderFunctionArgs, type ActionFunctionArgs } from 'react-router';
+import { authentifyUser } from '~/server/utils/authentify-user';
+import { createAvailabilitySchema, batchAvailabilitySchema } from '~/lib/validation';
+import { getAvailability, getAvailabilityByTeacherId } from '~/services/availabilities/get-availability';
+import { createAvailability } from '~/services/availabilities/create-availability';
+import { deleteAvailability } from '~/services/availabilities/delete-availability';
+import { batchUpdateAvailabilities } from '~/services/availabilities/batch-availabilities';
+import { getTeacherByUserId } from '~/services/teachers/get-teacher';
+>>>>>>> 3a7f551 (feat(storage): addR2/S3 storage for user avatar and docs PFE-83 (#47))
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request);

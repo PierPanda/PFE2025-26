@@ -73,6 +73,9 @@ L'application sera disponible sur `http://localhost:5173`.
 ## Scripts disponibles
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3a7f551 (feat(storage): addR2/S3 storage for user avatar and docs PFE-83 (#47))
 | Script                 | Description                                     |
 | ---------------------- | ----------------------------------------------- |
 | `pnpm dev`             | Serveur de développement                        |

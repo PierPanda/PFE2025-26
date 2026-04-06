@@ -1,5 +1,5 @@
 import { redirect } from 'react-router';
-import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { authentifyUser } from '~/server/utils/authentify-user';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher';
 
 /**
