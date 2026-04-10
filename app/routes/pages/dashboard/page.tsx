@@ -144,7 +144,7 @@ export default function Home() {
 
       <section id="courses" className="mt-48">
         <Card radius="lg" shadow="none" className="p-8">
-          <CardBody className="p-6 md:p-8">
+          <CardBody className="p-6 md:p-8  bg-transparent">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-foreground">Cours disponibles</h2>

@@ -5,8 +5,12 @@
 
 @theme {
   --font-sans:
-    'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
-  --color-brand: #ffaa00;
-  --color-brand-secondary: #ff7031;
+    'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+  --color-primary: #ff7031;
+  --color-secondary: #ffa500;
+  --color-tertiary: #f7f0e5;
+  --color-chip-dark: #662d14;
+  --color-chip-light: #ffe6db;
+  --color-dark: #191918;
 }
