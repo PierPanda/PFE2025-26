@@ -12,10 +12,6 @@ import { cancelExpiredBookings } from '~/services/cron/cancel-expired-bookings';
  * GitHub Actions, Upstash, etc.) at a regular interval.
  */
 export async function action({ request }: ActionFunctionArgs) {
-  if (request.method.toUpperCase() !== 'POST') {
-    return data({ error: 'Method not allowed' }, { status: 405 });
-  }
-
   if (!env.CRON_SECRET) {
     return data({ error: 'Cron non configuré.' }, { status: 503 });
   }
@@ -27,18 +23,13 @@ export async function action({ request }: ActionFunctionArgs) {
     return data({ error: 'Non autorisé.' }, { status: 401 });
   }
 
-  const results = await Promise.allSettled([cancelExpiredBookings()]);
-
-  const [cancelExpiredResult] = results;
+  const cancelExpiredResult = await cancelExpiredBookings();
 
   return data(
     {
       success: true,
       tasks: {
-        cancelExpiredBookings:
-          cancelExpiredResult.status === 'fulfilled'
-            ? cancelExpiredResult.value
-            : { success: false, error: String(cancelExpiredResult.reason) },
+        cancelExpiredBookings: cancelExpiredResult,
       },
     },
     { status: 200 },
