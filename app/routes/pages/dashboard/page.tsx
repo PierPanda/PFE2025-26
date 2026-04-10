@@ -169,7 +169,7 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-full px-14 py-10">
       <section
-        className="relative h-180 rounded-2xl bg-cover bg-center"
+        className="relative h-[180px] rounded-2xl bg-cover bg-center"
         style={{ backgroundImage: `url(${heroBannerImage})` }}
       >
         <div className="absolute inset-0 rounded-2xl bg-black/45" />
