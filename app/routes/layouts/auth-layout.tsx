@@ -21,8 +21,8 @@ export default function AuthLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-brand/10">
-      <header className="sticky top-0 z-50 bg-white p-2">
+    <div className="min-h-screen bg-tertiary">
+      <header className="sticky top-0 z-50 bg-tertiary p-2">
         <div className="flex h-16 w-full items-center justify-between px-12">
           <Link to="/" className="shrink-0">
             <img src={logo} alt="Maestroo" className="h-9 w-auto" />
@@ -36,8 +36,8 @@ export default function AuthLayout() {
 
       <Outlet />
 
-      <div className="p-4">
-        <footer className="bg-white p-8 mt-12 flex flex-col md:flex gap-4 rounded-2xl">
+      <div className="px-14 py-14">
+        <footer className="mt-12 flex flex-col gap-4 rounded-2xl bg-black p-8">
           <div className="w-full flex flex-col md:flex-row gap-8">
             <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
               <img src={logo} alt="Maestroo" className="h-auto md:h-10 w-auto mb-4 self-start" />
@@ -47,11 +47,13 @@ export default function AuthLayout() {
               </h5>
             </div>
             <div className="w-full md:w-1/3  flex  flex-col items-center justify-center">
-              <h4 className="text-2xl font-bold mb-2">Plan du site</h4>
-              <ul className="space-y-2 text-lg text-gray-700 text-center md:text-left pl-0 md:pl-6">
+              <h4 className="mb-2 text-2xl font-bold text-tertiary">Plan du site</h4>
+              <ul className="space-y-2 pl-0 text-center text-lg text-tertiary md:pl-6 md:text-left">
                 {footerPages.map((page) => (
                   <li key={page.to}>
-                    <Link to={page.to}>{page.label}</Link>
+                    <Link to={page.to} className="text-tertiary/90 transition-colors hover:text-tertiary">
+                      {page.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -59,23 +61,23 @@ export default function AuthLayout() {
             <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
               <Button
                 variant="solid"
-                color="primary"
-                className="w-auto bg-amber-600 text-xl font-bold border-3 border-amber-600 text-white hover:bg-transparent hover:text-amber-600 hover:border-amber-600 items-center self-center md:self-end"
+                color="default"
+                className="w-auto border-2 border-tertiary bg-tertiary text-xl font-bold text-black items-center self-center hover:bg-transparent hover:text-tertiary hover:border-tertiary md:self-end"
               >
                 Contactez-nous
               </Button>
               <div className="flex gap-4 self-center md:self-end max-w-auto">
                 <InlineIcon
                   icon="mdi:instagram"
-                  className="text-4xl mt-4 text-amber-600 hover:text-yellow-400 cursor-pointer transition-colors duration-300"
+                  className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
                 />
                 <InlineIcon
                   icon="mdi:facebook"
-                  className="text-4xl mt-4 text-amber-600 hover:text-yellow-400 cursor-pointer transition-colors duration-300"
+                  className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
                 />
                 <InlineIcon
                   icon="mdi:linkedin"
-                  className="text-4xl mt-4 text-amber-600 hover:text-yellow-400 cursor-pointer transition-colors duration-300"
+                  className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
                 />
               </div>
             </div>

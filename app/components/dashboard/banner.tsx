@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import { Button } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
 import StatCard from './stat-card';
+import heroBannerImage from '~/assets/images/silhouette-of-a-woman-with-raised-hands-on-a-conce-2026-01-09-08-42-41-utc.jpg';
 
 type BannerProps = {
   userName?: string;
@@ -34,12 +35,16 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
     },
   ];
   return (
-    <section className="space-y-12 my-24">
-      <div className="space-y-5">
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground text-center">
+    <section
+      className="relative h-180 rounded-2xl bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center"
+      style={{ backgroundImage: `url(${heroBannerImage})` }}
+    >
+      <div className="absolute inset-0 rounded-2xl bg-black/45" />
+      <div className="space-y-5 z-10">
+        <h1 className="text-4xl md:text-5xl text-tertiary font-extrabold tracking-tight text-center px-50">
           Maîtrisez la musique avec des cours conçus pour vous.
         </h1>
-        <p className="text-base md:text-lg max-w-3xl text-default-600 leading-relaxed text-center mx-auto">
+        <p className="text-base md:text-lg max-w-3xl text-tertiary leading-relaxed text-center mx-auto">
           {userName ? `${userName}, ` : ''}
           découvrez des cours adaptés à votre niveau, échangez avec des professeurs passionnés et progressez à votre
           rythme, en ligne.
@@ -50,8 +55,8 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
             onPress={onFindCourses}
             size="lg"
             radius="lg"
-            color="warning"
-            className="font-semibold"
+            color="secondary"
+            className="font-semibold bg-secondary text-tertiary border-2 border-secondary hover:border-secondary hover:bg-transparent hover:text-secondary"
             startContent={<InlineIcon icon="lucide:search" />}
           >
             Trouver un cours
@@ -63,7 +68,7 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
             size="lg"
             radius="lg"
             variant="flat"
-            className="font-semibold"
+            className="font-semibold bg-tertiary text-dark border-2 border-tertiary hover:border-tertiary hover:bg-transparent hover:text-tertiary"
             startContent={<InlineIcon icon="lucide:music-2" />}
           >
             Devenir professeur
