@@ -1,5 +1,5 @@
 import { data, type ActionFunctionArgs } from 'react-router';
-import { completeExpiredBookings } from '~/services/bookings/complete-booking';
+import { completeExpiredBookings } from '~/services/bookings/complete-expired-bookings';
 
 function isCronAuthorized(request: Request): boolean {
   const expectedSecret = process.env.BOOKINGS_COMPLETE_CRON_SECRET;
