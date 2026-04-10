@@ -37,8 +37,8 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: env.GOOGLE_CLIENT_ID || 'placeholder',
+      clientSecret: env.GOOGLE_CLIENT_SECRET || 'placeholder',
     },
   },
   plugins: [admin()],
