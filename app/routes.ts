@@ -12,6 +12,7 @@ export default [
   route('/api/availabilities', 'routes/_api/availabilities/route.ts'),
   route('/api/bookings', 'routes/_api/bookings/route.ts'),
   route('/api/available-slots', 'routes/_api/available-slots/route.ts'),
+  route('/api/cron', 'routes/_api/cron/route.ts'),
 
   // Public Pages
   layout('routes/layouts/public-layout.tsx', [route('/auth', 'routes/pages/auth/page.tsx')]),
