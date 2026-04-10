@@ -77,9 +77,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     topRatedCourses,
     newestCourses,
     filters: priceBounds,
-    stats: statsResult.success
-      ? statsResult.stats
-      : { coursesCount: 0, teachersCount: 0, learnersCount: 0 },
+    stats: statsResult.success ? statsResult.stats : { coursesCount: 0, teachersCount: 0, learnersCount: 0 },
   };
 }
 
@@ -274,11 +272,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex gap-2">
-                <SearchBar
-                  ref={searchBarRef}
-                  searchParams={searchParams}
-                  setSearchParams={setSearchParams}
-                />
+                <SearchBar ref={searchBarRef} searchParams={searchParams} setSearchParams={setSearchParams} />
                 <Filters
                   searchParams={searchParams}
                   setSearchParams={setSearchParams}
@@ -289,9 +283,7 @@ export default function Home() {
             </div>
 
             {coursesPage.items.length === 0 ? (
-              <p className="py-10 text-center text-default-500">
-                Aucun cours disponible pour le moment.
-              </p>
+              <p className="py-10 text-center text-default-500">Aucun cours disponible pour le moment.</p>
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {coursesPage.items.map((course) => (

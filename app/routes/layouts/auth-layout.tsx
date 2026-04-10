@@ -40,8 +40,8 @@ export default function AuthLayout() {
         <footer className="mt-12 flex flex-col gap-4 rounded-2xl bg-black p-8">
           <div className="w-full flex flex-col md:flex-row gap-8">
             <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
-              <img src={logo} alt="Maestroo" className="mb-4 h-auto w-auto self-start md:h-10 brightness-0 invert" />
-              <h5 className="text-center text-l font-semibold text-tertiary md:text-left">
+              <img src={logo} alt="Maestroo" className="h-auto md:h-10 w-auto mb-4 self-start" />
+              <h5 className="text-center md:text-left text-l text-gray-600 font-semibold">
                 Maestroo - Connectez-vous avec les meilleurs professeurs de musique pour des cours en ligne
                 personnalisés.
               </h5>
@@ -83,21 +83,21 @@ export default function AuthLayout() {
             </div>
           </div>
           <div className="flex flex-col md:flex-row items-center justify-center mt-8">
-            <a href="/legal/terms" className="text-sm text-tertiary/80 transition-colors hover:text-tertiary">
+            <a href="/legal/terms" className="text-sm text-gray-500 hover:text-amber-600">
               Conditions d'utilisation
             </a>
-            <a href="/legal/privacy" className="ml-4 text-sm text-tertiary/80 transition-colors hover:text-tertiary">
+            <a href="/legal/privacy" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
               Politique de confidentialité
             </a>
-            <a href="/legal/cookies" className="ml-4 text-sm text-tertiary/80 transition-colors hover:text-tertiary">
+            <a href="/legal/cookies" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
               Politique des cookies
             </a>
-            <a href="/legal/cgv" className="ml-4 text-sm text-tertiary/80 transition-colors hover:text-tertiary">
+            <a href="/legal/cgv" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
               Conditions générales de vente
             </a>
           </div>
           <div className="flex items-center justify-center">
-            <p className="text-sm text-tertiary/80">© {currentYear} Maestroo. Tous droits réservés.</p>
+            <p className="text-sm text-gray-500">© {currentYear} Maestroo. Tous droits réservés.</p>
           </div>
         </footer>
       </div>
