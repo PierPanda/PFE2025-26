@@ -27,7 +27,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: node ./node_modules/@react-router/serve/dist/cli.js ./build/server/index.j
+    command: node ./node_modules/@react-router/serve/dist/cli.js ./build/server/index.js
 
 volumes:
     postgres_data:
