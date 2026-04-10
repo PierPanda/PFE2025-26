@@ -141,7 +141,6 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-7xl px-6 py-10">
       <Banner userName={user?.name} stats={stats} onFindCourses={handleFindCourses} />
-
       <section id="courses" className="mt-48">
         <Card radius="lg" shadow="none" className="p-8">
           <CardBody className="p-6 md:p-8  bg-transparent">
@@ -169,7 +168,7 @@ export default function Home() {
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {coursesPage.items.map((course) => (
-                  <CourseCard key={course.id} course={course} />
+                  <CourseCard key={course.id} course={course} currentUserId={user?.id ?? null} />
                 ))}
               </ul>
             )}

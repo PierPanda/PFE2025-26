@@ -157,3 +157,7 @@ export type DeleteLearnerResponse = ServiceResponse<object>;
 export type CreateBookingResponse = ServiceResponse<{ booking: DbBooking }>;
 export type UpdateBookingResponse = ServiceResponse<{ booking: DbBooking }>;
 export type DeleteBookingResponse = ServiceResponse<object>;
+
+export type CourseWithRatings = DbCourse & {
+  ratings: DbRating[];
+};
