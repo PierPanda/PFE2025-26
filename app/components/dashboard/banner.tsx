@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import { Button } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
 import StatCard from './stat-card';
+import heroBannerImage from '~/assets/images/silhouette-of-a-woman-with-raised-hands-on-a-conce-2026-01-09-08-42-41-utc.jpg';
 
 type BannerProps = {
   userName?: string;
@@ -34,15 +35,19 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
     },
   ];
   return (
-    <section className="space-y-12 my-24">
-      <div className="space-y-5">
+    <section
+      className="relative h-180 rounded-2xl bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center"
+      style={{ backgroundImage: `url(${heroBannerImage})` }}
+    >
+      <div className="absolute inset-0 rounded-2xl bg-black/45" />
+      <div className="space-y-5 z-10">
         <h1 className="text-4xl md:text-5xl text-tertiary font-extrabold tracking-tight text-center px-50">
           Maîtrisez la musique avec des cours conçus pour vous.
         </h1>
         <p className="text-base md:text-lg max-w-3xl text-tertiary leading-relaxed text-center mx-auto">
           {userName ? `${userName}, ` : ''}
-          découvrez des cours adaptés à votre niveau, échangez avec des professeurs passionnés et
-          progressez à votre rythme, en ligne.
+          découvrez des cours adaptés à votre niveau, échangez avec des professeurs passionnés et progressez à votre
+          rythme, en ligne.
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center">

@@ -15,7 +15,6 @@ import CourseCard from '~/components/ui/course-card';
 import Filters from '~/components/dashboard/filters';
 import Banner from '~/components/dashboard/banner';
 import CoursesPagination from '~/components/dashboard/courses-pagination';
-import heroBannerImage from '~/assets/images/silhouette-of-a-woman-with-raised-hands-on-a-conce-2026-01-09-08-42-41-utc.jpg';
 
 import type { CourseCategory, CourseLevel } from '~/types/course';
 import { SearchBar } from '~/components/dashboard/search-bar';
@@ -34,37 +33,42 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const maxPrice = url.searchParams.get('maxPrice');
   const search = url.searchParams.get('search');
 
-  const [popularCoursesPage, coursesPage, priceBounds, topRatedCourses, newestCourses, statsResult] = await Promise.all(
-    [
-      getCoursesPaginated(
-        {
-          category: null,
-          level: null,
-          minPrice: null,
-          maxPrice: null,
-          search: null,
-        },
-        {
-          direction: 'next',
-          limit: HIGHLIGHT_COURSES_PER_SECTION,
-        },
-      ),
-      getCoursesPaginated(
-        {
-          category,
-          level,
-          minPrice,
-          maxPrice,
-          search,
-        },
-        pagination,
-      ),
-      getCoursesPriceBounds(),
-      getTopRatedCourses(HIGHLIGHT_COURSES_PER_SECTION),
-      getNewestCourses(HIGHLIGHT_COURSES_PER_SECTION),
-      getAppStats(),
-    ],
-  );
+  const [
+    popularCoursesPage,
+    coursesPage,
+    priceBounds,
+    topRatedCourses,
+    newestCourses,
+    statsResult,
+  ] = await Promise.all([
+    getCoursesPaginated(
+      {
+        category: null,
+        level: null,
+        minPrice: null,
+        maxPrice: null,
+        search: null,
+      },
+      {
+        direction: 'next',
+        limit: HIGHLIGHT_COURSES_PER_SECTION,
+      },
+    ),
+    getCoursesPaginated(
+      {
+        category,
+        level,
+        minPrice,
+        maxPrice,
+        search,
+      },
+      pagination,
+    ),
+    getCoursesPriceBounds(),
+    getTopRatedCourses(HIGHLIGHT_COURSES_PER_SECTION),
+    getNewestCourses(HIGHLIGHT_COURSES_PER_SECTION),
+    getAppStats(),
+  ]);
 
   return {
     user: session.user,
@@ -73,12 +77,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
     topRatedCourses,
     newestCourses,
     filters: priceBounds,
-    stats: statsResult.success ? statsResult.stats : { coursesCount: 0, teachersCount: 0, learnersCount: 0 },
+    stats: statsResult.success
+      ? statsResult.stats
+      : { coursesCount: 0, teachersCount: 0, learnersCount: 0 },
   };
 }
 
 export function meta() {
-  return [{ title: 'Maestroo - Accueil' }, { name: 'description', content: 'Votre musique commence ici.' }];
+  return [
+    { title: 'Maestroo - Accueil' },
+    { name: 'description', content: 'Votre musique commence ici.' },
+  ];
 }
 
 const HEADER_HEIGHT = 100;
@@ -167,16 +176,8 @@ export default function Home() {
   };
 
   return (
-    <main className="mx-auto max-w-full px-14 py-10">
-      <section
-        className="relative h-[180px] rounded-2xl bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroBannerImage})` }}
-      >
-        <div className="absolute inset-0 rounded-2xl bg-black/45" />
-        <div className="relative z-10 flex h-full items-center justify-center">
-          <Banner userName={user?.name} stats={stats} onFindCourses={handleFindCourses} />
-        </div>
-      </section>
+    <main className="mx-auto max-w-full px-14 py-2">
+      <Banner userName={user?.name} stats={stats} onFindCourses={handleFindCourses} />
 
       {/* Section: Cours populaires */}
       <section id="popular-courses" className="mt-48">
@@ -184,7 +185,10 @@ export default function Home() {
           <CardBody className="bg-tertiary p-6 md:p-8">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-dark">
-                <InlineIcon icon="tabler:flame-filled" className="mr-2 inline-block align-middle text-orange-500" />
+                <InlineIcon
+                  icon="tabler:flame-filled"
+                  className="mr-2 inline-block align-middle text-orange-500"
+                />
                 Cours populaires
               </h2>
               <p className="text-sm text-tertiary">
@@ -194,7 +198,9 @@ export default function Home() {
             </div>
 
             {popularCourses.length === 0 ? (
-              <p className="py-10 text-center text-default-500">Aucun cours populaire disponible pour le moment.</p>
+              <p className="py-10 text-center text-default-500">
+                Aucun cours populaire disponible pour le moment.
+              </p>
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {popularCourses.map((course) => (
@@ -263,10 +269,16 @@ export default function Home() {
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-dark">Listes des cours</h2>
-                <p className="text-lg text-dark/60">{String(coursesPage.total).padStart(2, '0')} résultats</p>
+                <p className="text-lg text-dark/60">
+                  {String(coursesPage.total).padStart(2, '0')} résultats
+                </p>
               </div>
               <div className="flex gap-2">
-                <SearchBar ref={searchBarRef} searchParams={searchParams} setSearchParams={setSearchParams} />
+                <SearchBar
+                  ref={searchBarRef}
+                  searchParams={searchParams}
+                  setSearchParams={setSearchParams}
+                />
                 <Filters
                   searchParams={searchParams}
                   setSearchParams={setSearchParams}
@@ -277,7 +289,9 @@ export default function Home() {
             </div>
 
             {coursesPage.items.length === 0 ? (
-              <p className="py-10 text-center text-default-500">Aucun cours disponible pour le moment.</p>
+              <p className="py-10 text-center text-default-500">
+                Aucun cours disponible pour le moment.
+              </p>
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {coursesPage.items.map((course) => (
