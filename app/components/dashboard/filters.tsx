@@ -135,13 +135,13 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
 
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <p className="text-sm">Filtrer par prix</p>
-              <div className="flex items-center gap-2 text-tertiary">
-                <Chip size="sm" variant="flat" color="secondary" className="text-tertiary">
+              <p className="text-sm mr-2">Filtrer par prix</p>
+              <div className="flex items-center text-tertiary">
+                <Chip size="sm" variant="flat" color="secondary" className="text-dark">
                   {formatPrice(priceRange[0])}
                 </Chip>
                 <span className="text-tertiary">—</span>
-                <Chip size="sm" variant="flat" color="secondary" className="text-tertiary">
+                <Chip size="sm" variant="flat" color="secondary" className="text-dark">
                   {formatPrice(priceRange[1])}
                 </Chip>
               </div>
