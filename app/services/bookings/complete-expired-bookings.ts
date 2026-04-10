@@ -8,12 +8,10 @@ import type { CompleteExpiredBookingsResponse } from '../types';
  */
 export async function completeExpiredBookings(): Promise<CompleteExpiredBookingsResponse> {
   try {
-    const now = new Date();
-
     const updatedBookings = await db
       .update(bookings)
       .set({ status: 'completed', updatedAt: sql`NOW()` })
-      .where(and(eq(bookings.status, 'confirmed'), lt(bookings.endTime, now)))
+      .where(and(eq(bookings.status, 'confirmed'), lt(bookings.endTime, sql`NOW()`)))
       .returning({ id: bookings.id });
 
     return {
