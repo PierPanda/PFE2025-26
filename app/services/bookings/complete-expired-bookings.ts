@@ -1,12 +1,12 @@
 import { and, eq, lt, sql } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { bookings } from '~/server/lib/db/schema';
-import type { CompleteBookingResponse } from '../types';
+import type { CompleteExpiredBookingsResponse } from '../types';
 
 /**
  * Complete all confirmed bookings with an end time in the past
  */
-export async function completeExpiredBookings(): Promise<CompleteBookingResponse> {
+export async function completeExpiredBookings(): Promise<CompleteExpiredBookingsResponse> {
   try {
     const now = new Date();
 
