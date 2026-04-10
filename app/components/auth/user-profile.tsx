@@ -21,7 +21,7 @@ export function UserProfile() {
       <DropdownTrigger>
         <button className="flex items-center gap-2 rounded-lg p-2 py-1 transition-colors hover:bg-tertiary/20">
           {user.image ? (
-            <img src={user.image} alt={user.name} className="h-6 w-6 rounded-full object-cover ring-2 ring-bg" />
+            <img src={user.image} alt={user.name} className="h-6 w-6 rounded-full object-cover ring-2 ring-tertiary" />
           ) : (
             <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-tertiary text-xs font-bold text-black">
               {user.name.charAt(0).toUpperCase()}

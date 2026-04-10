@@ -28,7 +28,7 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-tertiary/10 px-4 py-14">
       <div className="mx-auto max-w-md">
-        <p className="text-lg text-center font-semibold tracking-[0.3em] text-bg uppercase mb-10">
+        <p className="text-lg text-center font-semibold tracking-[0.3em] text-tertiary uppercase mb-10">
           VOTRE MUSIQUE COMMENCE ICI
         </p>
         <div className="mb-10 text-center">

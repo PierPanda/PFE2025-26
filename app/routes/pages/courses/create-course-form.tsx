@@ -77,7 +77,9 @@ export default function CreateCourse() {
     <div className="min-h-screen bg-tertiary/10 px-4 py-14">
       <div className="mx-auto max-w-lg">
         <div className="mb-10 text-center">
-          <p className="mb-1 text-xs font-semibold tracking-[0.3em] text-bg uppercase">VOTRE MUSIQUE COMMENCE ICI</p>
+          <p className="mb-1 text-xs font-semibold tracking-[0.3em] text-tertiary uppercase">
+            VOTRE MUSIQUE COMMENCE ICI
+          </p>
           <h1 className="text-4xl font-bold text-gray-900">{formValidated ? 'Vérification' : 'Nouveau cours'}</h1>
         </div>
 
@@ -91,7 +93,7 @@ export default function CreateCourse() {
             >
               {formValidated ? '✓' : '1'}
             </div>
-            <span className={cn('text-xs font-medium', !formValidated ? 'text-bg' : 'text-gray-400')}>
+            <span className={cn('text-xs font-medium', !formValidated ? 'text-tertiary' : 'text-gray-400')}>
               Informations
             </span>
           </div>
@@ -107,12 +109,14 @@ export default function CreateCourse() {
             <div
               className={cn(
                 'flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-all duration-300',
-                formValidated ? 'bg-tertiary/10 text-bg' : 'bg-tertiary/10 text-gray-400',
+                formValidated ? 'bg-tertiary/10 text-tertiary' : 'bg-tertiary/10 text-gray-400',
               )}
             >
               2
             </div>
-            <span className={cn('text-xs font-medium', formValidated ? 'text-bg' : 'text-gray-400')}>Validation</span>
+            <span className={cn('text-xs font-medium', formValidated ? 'text-tertiary' : 'text-gray-400')}>
+              Validation
+            </span>
           </div>
         </div>
 
