@@ -11,6 +11,7 @@ export default [
   route('/api/stats', 'routes/_api/stats/route.ts'),
   route('/api/availabilities', 'routes/_api/availabilities/route.ts'),
   route('/api/bookings', 'routes/_api/bookings/route.ts'),
+  route('/api/bookings/complete', 'routes/_api/bookings/complete/route.ts'),
   route('/api/available-slots', 'routes/_api/available-slots/route.ts'),
 
   // Public Pages
