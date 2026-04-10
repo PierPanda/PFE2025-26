@@ -60,6 +60,24 @@ Créez un fichier `.env` à la racine du projet (basé sur `.env.example`) :
 | `DATABASE_URL`       | URL de connexion PostgreSQL                       | `postgresql://user:password@localhost:5432/maestroo` |
 | `BETTER_AUTH_SECRET` | Clé secrète pour Better Auth (min. 32 caractères) | `votre-cle-secrete-aleatoire`                        |
 | `BETTER_AUTH_URL`    | URL de base de l'application                      | `http://localhost:5173`                              |
+| `BOOKINGS_COMPLETE_ENDPOINT` | URL interne ou publique appelée par le cron de complétion | `http://app:3000/api/bookings/complete` |
+| `BOOKINGS_COMPLETE_CRON_SECRET` | Secret utilisé par le cron Docker pour appeler l'endpoint de complétion | `votre-secret-cron` |
+
+### Cron Docker (en attente de stack prod complète)
+
+La feature de complétion automatique des bookings est déjà implémentée côté application (statut `completed`, service, endpoint protégé par secret).
+
+Il reste uniquement la mise en place finale du cron dans la stack Docker de production.
+
+Le projet inclut une configuration dédiée dans [docker-compose.booking-complete.yml](docker-compose.booking-complete.yml) pour préparer cette intégration.
+
+Pour tester uniquement le cron en local :
+
+```bash
+docker compose -f docker-compose.booking-complete.yml up -d --build
+```
+
+Le cron utilise `BOOKINGS_COMPLETE_ENDPOINT` et `BOOKINGS_COMPLETE_CRON_SECRET` depuis `.env`.
 
 ## Développement
 

@@ -3,7 +3,7 @@ import { learners } from './learners';
 import { availabilities } from './availabilities';
 import { courses } from './courses';
 
-export const bookingStatus = pgEnum('booking_status', ['pending', 'confirmed', 'cancelled']);
+export const bookingStatus = pgEnum('booking_status', ['pending', 'confirmed', 'cancelled', 'completed']);
 
 export const bookings = pgTable('bookings', {
   id: text('id').primaryKey(),
