@@ -183,9 +183,9 @@ export default function CourseCard({ course, currentUserId = null, currentUserRo
                     </p>
                   </div>
 
-                  <p className="text-l font-medium text-dark/80">{courseState.teacher.user.name}</p>
+                  <p className="text-lg font-medium text-dark/80">{courseState.teacher.user.name}</p>
                   <h3 className="mb-2 text-xl font-semibold leading-6 text-dark">{courseState.title}</h3>
-                  <p className="text-l font-light text-dark">{courseState.description}</p>
+                  <p className="text-lg font-light text-dark">{courseState.description}</p>
                 </div>
 
                 <div className="mt-4 flex w-full items-center justify-between">
