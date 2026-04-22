@@ -155,27 +155,26 @@ export async function getCoursesPaginated(
   }));
   const orderedRows = direction === 'prev' ? [...rows].reverse() : rows;
 
-  const rawItems = await db.query.courses.findMany({
-    where: whereCondition,
-    with: {
-      teacher: {
+  const courseIds = orderedRows.map((row) => row.id);
+
+  const fullCourses = courseIds.length
+    ? await db.query.courses.findMany({
+        where: inArray(courses.id, courseIds),
         with: {
-          user: true,
+          teacher: {
+            with: {
+              user: true,
+            },
+          },
+          ratings: true,
         },
-      },
-      ratings: true,
-    },
-    orderBy:
-      direction === 'next' ? [desc(courses.createdAt), desc(courses.id)] : [asc(courses.createdAt), asc(courses.id)],
-    limit,
-  });
       })
     : [];
 
   const coursesById = new Map(fullCourses.map((course) => [course.id, course]));
   const items = orderedRows
     .map((row) => coursesById.get(row.id))
-    .filter((course): course is CourseWithTeacher => Boolean(course));
+    .filter((course): course is CourseWithTeacherAndRatings => Boolean(course));
 
   const firstItem = orderedRows[0];
   const lastItem = orderedRows[orderedRows.length - 1];
@@ -219,7 +218,7 @@ export async function getCoursesPaginated(
   };
 }
 
-export async function getTopRatedCourses(limit = 4): Promise<CourseWithTeacher[]> {
+export async function getTopRatedCourses(limit = 4): Promise<CourseWithTeacherAndRatings[]> {
   const rows = await db
     .select({
       id: courses.id,
@@ -248,16 +247,19 @@ export async function getTopRatedCourses(limit = 4): Promise<CourseWithTeacher[]
               user: true,
             },
           },
+          ratings: true,
         },
       })
     : [];
 
   const coursesById = new Map(fullCourses.map((course) => [course.id, course]));
 
-  return courseIds.map((id) => coursesById.get(id)).filter((course): course is CourseWithTeacher => Boolean(course));
+  return courseIds
+    .map((id) => coursesById.get(id))
+    .filter((course): course is CourseWithTeacherAndRatings => Boolean(course));
 }
 
-export async function getNewestCourses(limit = 4): Promise<CourseWithTeacher[]> {
+export async function getNewestCourses(limit = 4): Promise<CourseWithTeacherAndRatings[]> {
   return db.query.courses.findMany({
     with: {
       teacher: {
@@ -265,6 +267,7 @@ export async function getNewestCourses(limit = 4): Promise<CourseWithTeacher[]> 
           user: true,
         },
       },
+      ratings: true,
     },
     orderBy: [desc(courses.createdAt), desc(courses.id)],
     limit,
