@@ -88,20 +88,20 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       let cursor = slot.startTime;
 
       for (const exception of overlappingExceptions) {
-        const exStart = exception.startTime > slot.startTime ? exception.startTime : slot.startTime;
-        const exEnd = exception.endTime < slot.endTime ? exception.endTime : slot.endTime;
+        const clippedStart = exception.startTime > slot.startTime ? exception.startTime : slot.startTime;
+        const clippedEnd = exception.endTime < slot.endTime ? exception.endTime : slot.endTime;
 
-        if (exStart > cursor) {
+        if (clippedStart > cursor) {
           fragmentedSlots.push({
             availabilityId: slot.availabilityId,
             teacherId: slot.teacherId,
             startTime: cursor,
-            endTime: exStart,
+            endTime: clippedStart,
           });
         }
 
-        if (exEnd > cursor) {
-          cursor = exEnd;
+        if (clippedEnd > cursor) {
+          cursor = clippedEnd;
         }
       }
 
