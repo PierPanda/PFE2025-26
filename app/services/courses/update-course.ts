@@ -9,18 +9,14 @@ import type { UpdateCourseResponse } from '../types';
  */
 export async function updateCourse(courseId: string, data: UpdateCourseInput): Promise<UpdateCourseResponse> {
   try {
+    const { id: _ignoredId, ...courseData } = data;
+
     const [updatedCourse] = await db
       .update(courses)
-      .set({ ...data, updatedAt: sql`NOW()` })
+      .set({ ...courseData, updatedAt: sql`NOW()` })
       .where(eq(courses.id, courseId))
       .returning();
 
-    if (!updatedCourse) {
-      return {
-        success: false,
-        error: 'Cours introuvable.',
-      };
-    }
     if (!updatedCourse) {
       return {
         success: false,

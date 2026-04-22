@@ -5,7 +5,7 @@ import { bookings, courses, ratings } from '~/server/lib/db/schema';
 import type { CursorPagination } from '~/lib/validation';
 import type { CourseCategory, CourseLevel } from '~/types/course';
 import type { PaginatedResponse } from '~/types/pagination';
-import type { CourseWithTeacher } from '../types';
+import type { CourseWithTeacherAndRatings } from '../types';
 
 type CourseFilters = {
   category?: CourseCategory | null;
@@ -123,7 +123,7 @@ export async function getCoursesPriceBounds(): Promise<PriceBounds> {
 export async function getCoursesPaginated(
   filters: CourseFilters,
   pagination: CursorPagination,
-): Promise<PaginatedResponse<CourseWithTeacher>> {
+): Promise<PaginatedResponse<CourseWithTeacherAndRatings>> {
   const { cursor, limit, direction } = pagination;
   const filterConditions = buildFilterConditions(filters);
   const baseWhere = filterConditions.length > 0 ? and(...filterConditions) : undefined;
@@ -166,6 +166,7 @@ export async function getCoursesPaginated(
               user: true,
             },
           },
+          ratings: true,
         },
       })
     : [];
@@ -173,7 +174,7 @@ export async function getCoursesPaginated(
   const coursesById = new Map(fullCourses.map((course) => [course.id, course]));
   const items = orderedRows
     .map((row) => coursesById.get(row.id))
-    .filter((course): course is CourseWithTeacher => Boolean(course));
+    .filter((course): course is CourseWithTeacherAndRatings => Boolean(course));
 
   const firstItem = orderedRows[0];
   const lastItem = orderedRows[orderedRows.length - 1];
@@ -217,7 +218,7 @@ export async function getCoursesPaginated(
   };
 }
 
-export async function getTopRatedCourses(limit = 4): Promise<CourseWithTeacher[]> {
+export async function getTopRatedCourses(limit = 4): Promise<CourseWithTeacherAndRatings[]> {
   const rows = await db
     .select({
       id: courses.id,
@@ -246,16 +247,19 @@ export async function getTopRatedCourses(limit = 4): Promise<CourseWithTeacher[]
               user: true,
             },
           },
+          ratings: true,
         },
       })
     : [];
 
   const coursesById = new Map(fullCourses.map((course) => [course.id, course]));
 
-  return courseIds.map((id) => coursesById.get(id)).filter((course): course is CourseWithTeacher => Boolean(course));
+  return courseIds
+    .map((id) => coursesById.get(id))
+    .filter((course): course is CourseWithTeacherAndRatings => Boolean(course));
 }
 
-export async function getNewestCourses(limit = 4): Promise<CourseWithTeacher[]> {
+export async function getNewestCourses(limit = 4): Promise<CourseWithTeacherAndRatings[]> {
   return db.query.courses.findMany({
     with: {
       teacher: {
@@ -263,6 +267,7 @@ export async function getNewestCourses(limit = 4): Promise<CourseWithTeacher[]> 
           user: true,
         },
       },
+      ratings: true,
     },
     orderBy: [desc(courses.createdAt), desc(courses.id)],
     limit,

@@ -31,6 +31,7 @@ export async function getCourses(
             user: true,
           },
         },
+        ratings: true,
       },
     });
 

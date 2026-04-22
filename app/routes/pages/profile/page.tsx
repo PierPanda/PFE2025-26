@@ -4,12 +4,15 @@ import { useState } from 'react';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { auth } from '~/auth.server';
 import { getCoursesByTeacher } from '~/services/courses/get-courses';
+import { getCourseById } from '~/services/courses/get-course';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher';
 import { deleteCourse } from '~/services/courses/delete-course';
+import { updateCourse } from '~/services/courses/update-course';
 import { updateTeacher } from '~/services/teachers/update-teacher';
 import { uploadAvatar } from '~/server/services/upload/upload-avatar';
 import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability';
-import CardCourse from '~/components/ui/card-course';
+import { courseFormSchema } from '~/lib/validation';
+import CourseCard from '~/components/ui/course-card';
 import UserProfile from '~/components/profile/user-profile';
 import EditProfileModal from '~/components/profile/edit-profile-modal';
 import { AvailabilitiesModal } from '~/components/availabilities/availabilities-modal';
@@ -38,6 +41,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export async function action({ request }: Route.ActionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
+  const isAdmin = session.user.role === 'admin';
   const formData = await request.formData();
   const actionType = formData.get('_action') as string;
 
@@ -83,9 +87,72 @@ export async function action({ request }: Route.ActionArgs) {
     return data({ success: true, message: 'Profil mis à jour.' }, { headers: responseHeaders });
   }
 
-  const courseId = formData.get('courseId') as string;
-  if (!courseId) return { success: false, error: 'ID manquant.' };
-  return deleteCourse(courseId);
+  if (actionType === 'updateCourse') {
+    const courseId = (formData.get('courseId') as string | null)?.trim();
+
+    if (!courseId) {
+      return { success: false, error: 'ID du cours manquant.' };
+    }
+
+    const courseResult = await getCourseById(courseId);
+
+    if (!courseResult.success || !courseResult.course) {
+      return { success: false, error: 'Cours introuvable.' };
+    }
+
+    if (!isAdmin) {
+      const teacherResult = await getTeacherByUserId(session.user.id);
+
+      if (!teacherResult.success || !teacherResult.teacher) {
+        return { success: false, error: 'Profil enseignant introuvable.' };
+      }
+
+      if (courseResult.course.teacherId !== teacherResult.teacher.id) {
+        return { success: false, error: 'Vous ne pouvez modifier que vos propres cours.' };
+      }
+    }
+
+    const parsed = courseFormSchema.safeParse(Object.fromEntries(formData));
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        error: parsed.error.issues.map((issue) => issue.message).join(', '),
+      };
+    }
+
+    return updateCourse(courseId, { id: courseId, ...parsed.data });
+  }
+
+  if (actionType === 'deleteCourse') {
+    const courseId = (formData.get('courseId') as string | null)?.trim();
+
+    if (!courseId) {
+      return { success: false, error: 'ID du cours manquant.' };
+    }
+
+    const courseResult = await getCourseById(courseId);
+
+    if (!courseResult.success || !courseResult.course) {
+      return { success: false, error: 'Cours introuvable.' };
+    }
+
+    if (!isAdmin) {
+      const teacherResult = await getTeacherByUserId(session.user.id);
+
+      if (!teacherResult.success || !teacherResult.teacher) {
+        return { success: false, error: 'Profil enseignant introuvable.' };
+      }
+
+      if (courseResult.course.teacherId !== teacherResult.teacher.id) {
+        return { success: false, error: 'Vous ne pouvez supprimer que vos propres cours.' };
+      }
+    }
+
+    return deleteCourse(courseId);
+  }
+
+  return { success: false, error: 'Action inconnue.' };
 }
 
 export default function Page() {
@@ -141,7 +208,7 @@ export default function Page() {
           <div className="w-full overflow-x-auto">
             <ul className="flex gap-4 pb-2">
               {courses.map((course) => (
-                <CardCourse key={course.id} course={course} showActions />
+                <CourseCard key={course.id} course={course} currentUserId={user.id} currentUserRole={user.role} />
               ))}
             </ul>
           </div>
