@@ -24,6 +24,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1022.0",
     "@heroui/react": "^2.8.8",
+    "@iconify/react": "^6.0.2",
     "@internationalized/date": "^3.10.1",
     "@neondatabase/serverless": "^1.0.2",
     "@react-router/node": "^7.13.2",
@@ -37,6 +38,7 @@
     "drizzle-orm": "^0.45.1",
     "framer-motion": "^12.38.0",
     "isbot": "^5.1.36",
+    "node-cron": "^4.2.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router": "^7.13.2",
@@ -44,7 +46,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@iconify/react": "^6.0.2",
     "@react-router/dev": "^7.13.2",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^22.19.15",
