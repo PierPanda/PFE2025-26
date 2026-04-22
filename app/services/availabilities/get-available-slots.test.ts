@@ -49,7 +49,6 @@ function createAvailability(id: string, start: Date, end: Date, isException = fa
     startTime: start,
     endTime: end,
     isException,
-    exceptionReason: isException ? 'Blocked' : null,
     createdAt: new Date(),
     updatedAt: new Date(),
     teacher: baseTeacher,
@@ -217,6 +216,108 @@ describe('getAvailableSlots', () => {
       expect(result.slots[1].endTime).toEqual(ex2Start);
       expect(result.slots[2].startTime).toEqual(rule3Start);
       expect(result.slots[2].endTime).toEqual(rule3End);
+    }
+  });
+
+  it('should produce no left fragment when exception starts exactly at slot start', async () => {
+    const ruleStart = new Date('2026-04-10T09:00:00Z');
+    const ruleEnd = new Date('2026-04-10T12:00:00Z');
+    const exEnd = new Date('2026-04-10T10:00:00Z');
+
+    mockGetAvailabilityByTeacherId.mockResolvedValue({
+      success: true,
+      availabilities: [
+        createAvailability('av-1', ruleStart, ruleEnd, false),
+        createAvailability('ex-1', ruleStart, exEnd, true),
+      ],
+    });
+
+    const result = await getAvailableSlots(teacherId);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.slots).toHaveLength(1);
+      expect(result.slots[0].startTime).toEqual(exEnd);
+      expect(result.slots[0].endTime).toEqual(ruleEnd);
+    }
+  });
+
+  it('should produce no right fragment when exception ends exactly at slot end', async () => {
+    const ruleStart = new Date('2026-04-10T09:00:00Z');
+    const ruleEnd = new Date('2026-04-10T12:00:00Z');
+    const exStart = new Date('2026-04-10T11:00:00Z');
+
+    mockGetAvailabilityByTeacherId.mockResolvedValue({
+      success: true,
+      availabilities: [
+        createAvailability('av-1', ruleStart, ruleEnd, false),
+        createAvailability('ex-1', exStart, ruleEnd, true),
+      ],
+    });
+
+    const result = await getAvailableSlots(teacherId);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.slots).toHaveLength(1);
+      expect(result.slots[0].startTime).toEqual(ruleStart);
+      expect(result.slots[0].endTime).toEqual(exStart);
+    }
+  });
+
+  it('should handle two adjacent exceptions on the same slot', async () => {
+    const ruleStart = new Date('2026-04-10T09:00:00Z');
+    const ruleEnd = new Date('2026-04-10T15:00:00Z');
+    const ex1Start = new Date('2026-04-10T10:00:00Z');
+    const ex1End = new Date('2026-04-10T12:00:00Z');
+    const ex2Start = new Date('2026-04-10T12:00:00Z');
+    const ex2End = new Date('2026-04-10T14:00:00Z');
+
+    mockGetAvailabilityByTeacherId.mockResolvedValue({
+      success: true,
+      availabilities: [
+        createAvailability('av-1', ruleStart, ruleEnd, false),
+        createAvailability('ex-1', ex1Start, ex1End, true),
+        createAvailability('ex-2', ex2Start, ex2End, true),
+      ],
+    });
+
+    const result = await getAvailableSlots(teacherId);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      // 9h-10h, then 14h-15h
+      expect(result.slots).toHaveLength(2);
+      expect(result.slots[0].startTime).toEqual(ruleStart);
+      expect(result.slots[0].endTime).toEqual(ex1Start);
+      expect(result.slots[1].startTime).toEqual(ex2End);
+      expect(result.slots[1].endTime).toEqual(ruleEnd);
+    }
+  });
+
+  it('should filter out fragments shorter than minDurationMinutes after exception split', async () => {
+    const ruleStart = new Date('2026-04-10T09:00:00Z');
+    const ruleEnd = new Date('2026-04-10T12:00:00Z');
+    // Exception leaves a 10-min fragment on the left and a 60-min fragment on the right
+    const exStart = new Date('2026-04-10T09:10:00Z');
+    const exEnd = new Date('2026-04-10T11:00:00Z');
+
+    mockGetAvailabilityByTeacherId.mockResolvedValue({
+      success: true,
+      availabilities: [
+        createAvailability('av-1', ruleStart, ruleEnd, false),
+        createAvailability('ex-1', exStart, exEnd, true),
+      ],
+    });
+
+    const result = await getAvailableSlots(teacherId, 30);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      // 10-min left fragment filtered out, 60-min right fragment kept
+      expect(result.slots).toHaveLength(1);
+      expect(result.slots[0].startTime).toEqual(exEnd);
+      expect(result.slots[0].endTime).toEqual(ruleEnd);
     }
   });
 });
