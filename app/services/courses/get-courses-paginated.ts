@@ -155,20 +155,16 @@ export async function getCoursesPaginated(
   }));
   const orderedRows = direction === 'prev' ? [...rows].reverse() : rows;
 
-  const courseIds = orderedRows.map((row) => row.id);
-
-  const fullCourses = courseIds.length
-    ? await db.query.courses.findMany({
-        where: inArray(courses.id, courseIds),
+  const rawItems = await db.query.courses.findMany({
+    where: whereCondition,
+    with: {
+      teacher: {
         with: {
-          teacher: {
-            with: {
-              user: true,
-            },
-          },
+          user: true,
         },
       },
       ratings: true,
+    },
     orderBy:
       direction === 'next' ? [desc(courses.createdAt), desc(courses.id)] : [asc(courses.createdAt), asc(courses.id)],
     limit,
