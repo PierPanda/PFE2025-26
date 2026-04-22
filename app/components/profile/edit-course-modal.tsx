@@ -13,7 +13,7 @@ import {
   SelectItem,
   Textarea,
 } from '@heroui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFetcher, useRevalidator } from 'react-router';
 import { categoryOptions, levelOptions } from '~/lib/constant';
 import { courseFormSchema } from '~/lib/validation';
@@ -48,13 +48,18 @@ export default function EditCourseModal({
   const [selectedCategory, setSelectedCategory] = useState<string>(course.category);
   const isSubmitting = fetcher.state !== 'idle';
 
+  const onCloseRef = useRef(onClose);
+  const onSavedRef = useRef(onSaved);
+  onCloseRef.current = onClose;
+  onSavedRef.current = onSaved;
+
   useEffect(() => {
     if (fetcher.state === 'idle' && fetcher.data?.success) {
-      onSaved?.({ ...course, ...fetcher.data.course });
-      onClose();
+      onSavedRef.current?.({ ...course, ...fetcher.data.course });
+      onCloseRef.current();
       revalidator.revalidate();
     }
-  }, [course, fetcher.state, fetcher.data, onClose, onSaved, revalidator]);
+  }, [course, fetcher.state, fetcher.data, revalidator]);
 
   useEffect(() => {
     if (isOpen) {

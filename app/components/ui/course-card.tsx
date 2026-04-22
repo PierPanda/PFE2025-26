@@ -27,9 +27,15 @@ type CourseCardProps = {
   course: CourseWithTeacherAndRatings;
   currentUserId?: string | null;
   currentUserRole?: string | null;
+  deleteAction?: string;
 };
 
-export default function CourseCard({ course, currentUserId = null, currentUserRole = null }: CourseCardProps) {
+export default function CourseCard({
+  course,
+  currentUserId = null,
+  currentUserRole = null,
+  deleteAction = '/profile',
+}: CourseCardProps) {
   const [courseState, setCourseState] = useState(course);
   const revalidator = useRevalidator();
   const deleteFetcher = useFetcher<{ success?: boolean }>();
@@ -57,7 +63,10 @@ export default function CourseCard({ course, currentUserId = null, currentUserRo
   const urlImage = `/categories/${courseState.category}.jpg`;
 
   const handleDelete = () => {
-    deleteFetcher.submit({ _action: 'deleteCourse', courseId: courseState.id }, { method: 'post', action: '/profile' });
+    deleteFetcher.submit(
+      { _action: 'deleteCourse', courseId: courseState.id },
+      { method: 'post', action: deleteAction },
+    );
   };
 
   const handleShare = async () => {
@@ -81,8 +90,8 @@ export default function CourseCard({ course, currentUserId = null, currentUserRo
       if (clipboard?.writeText) {
         await clipboard.writeText(shareUrl);
         addToast({
-          title: 'Lien copie',
-          description: 'Le lien du cours a bien ete copie dans le presse-papiers.',
+          title: 'Lien copié',
+          description: 'Le lien du cours a bien été copié dans le presse-papiers.',
           color: 'success',
         });
         return;
@@ -96,7 +105,7 @@ export default function CourseCard({ course, currentUserId = null, currentUserRo
 
       addToast({
         title: 'Partage impossible',
-        description: "Le lien du cours n'a pas pu etre partage.",
+        description: "Le lien du cours n'a pas pu être partagé.",
         color: 'danger',
       });
     }
