@@ -49,7 +49,6 @@ function createAvailability(id: string, start: Date, end: Date, isException = fa
     startTime: start,
     endTime: end,
     isException,
-    exceptionReason: isException ? 'Blocked' : null,
     createdAt: new Date(),
     updatedAt: new Date(),
     teacher: baseTeacher,

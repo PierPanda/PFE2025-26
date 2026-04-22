@@ -142,12 +142,6 @@
           "notNull": true,
           "default": false
         },
-        "exceptionReason": {
-          "name": "exceptionReason",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
