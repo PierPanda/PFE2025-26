@@ -47,7 +47,7 @@ export async function getBooking(bookingId: string): Promise<GetBookingResponse>
     console.error('Error fetching booking:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la recuperation de la réservation.",
+      error: "Une erreur s'est produite lors de la récupération de la réservation.",
     };
   }
 }
