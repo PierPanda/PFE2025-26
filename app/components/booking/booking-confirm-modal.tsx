@@ -36,7 +36,7 @@ export function BookingConfirmModal({ slot, course, isOpen, onClose }: BookingCo
 
     fetcher.submit(
       {
-        id: crypto.randomUUID(),
+        _action: 'createBooking',
         courseId: course.id,
         availabilityId: slot.availabilityId,
         startTime: slot.startTime.toISOString(),

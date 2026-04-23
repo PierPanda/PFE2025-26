@@ -29,7 +29,7 @@ export default function CourseHeader({ course }: CourseHeaderProps) {
 
       <div className="space-y-3">
         <div>
-          <h1>{course.title}</h1>
+          <h1 className="text-4xl font-bold leading-tight lg:text-5xl">{course.title}</h1>
           <p className="text-xl font-medium lg:text-2xl">avec {teacherName}</p>
         </div>
 

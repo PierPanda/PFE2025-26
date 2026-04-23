@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { InlineIcon } from '@iconify/react';
 import {
   addToast,
@@ -106,6 +106,9 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
   const selectedDay = dayOptions.find((day) => day.key === selectedDayKey) ?? null;
   const selectedSlot = selectedDay?.slots.find((slot) => slot.key === selectedSlotKey) ?? null;
   const totalLabel = Number(course.price) > 0 ? formatPrice(course.price) : 'Gratuit';
+  const handleCloseConfirmModal = useCallback(() => {
+    setIsConfirmModalOpen(false);
+  }, []);
 
   useEffect(() => {
     if (deleteFetcher.state !== 'idle' || !deleteFetcher.data) return;
@@ -147,7 +150,7 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
   };
 
   const handleDelete = () => {
-    deleteFetcher.submit({ courseId: course.id }, { method: 'post', action: '/profile' });
+    deleteFetcher.submit({ _action: 'deleteCourse', courseId: course.id }, { method: 'post', action: '/profile' });
     setIsDeleteModalOpen(false);
   };
 
@@ -338,7 +341,7 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
           slot={selectedSlot}
           course={course}
           isOpen={isConfirmModalOpen}
-          onClose={() => setIsConfirmModalOpen(false)}
+          onClose={handleCloseConfirmModal}
         />
       ) : null}
 
