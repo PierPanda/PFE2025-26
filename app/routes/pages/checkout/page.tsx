@@ -38,39 +38,39 @@ export default function CheckoutPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
-      <div className="rounded-3xl border border-brand/15 bg-white p-8 shadow-lg shadow-brand/5">
+      <div className="rounded-3xl border border-primary/15 bg-white p-8 shadow-lg shadow-primary/5">
         <div className="space-y-2">
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand">Checkout</p>
-          <h1 className="text-3xl font-bold text-brand-dark">Réservation enregistrée</h1>
-          <p className="text-brand-dark/70">
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Checkout</p>
+          <h1 className="text-3xl font-bold text-dark">Réservation enregistrée</h1>
+          <p className="text-dark/70">
             Votre réservation a été créée avec le statut <span className="font-semibold">pending</span>. L’étape de
             paiement peut maintenant prendre le relais.
           </p>
         </div>
 
-        <div className="mt-8 rounded-2xl border border-brand/15 bg-brand-tertiary/40 p-5">
+        <div className="mt-8 rounded-2xl border border-primary/15 bg-tertiary/40 p-5">
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-brand-dark/60">Cours</p>
-              <p className="font-semibold text-brand-dark">{booking.course.title}</p>
+              <p className="text-sm text-dark/60">Cours</p>
+              <p className="font-semibold text-dark">{booking.course.title}</p>
             </div>
             <div>
-              <p className="text-sm text-brand-dark/60">Date et heure</p>
-              <p className="font-semibold text-brand-dark">{formatDateTime(booking.startTime)}</p>
+              <p className="text-sm text-dark/60">Date et heure</p>
+              <p className="font-semibold text-dark">{formatDateTime(booking.startTime)}</p>
             </div>
             <div>
-              <p className="text-sm text-brand-dark/60">Prix</p>
-              <p className="text-xl font-bold text-brand-dark">{formatPrice(booking.priceAtBooking)}</p>
+              <p className="text-sm text-dark/60">Prix</p>
+              <p className="text-xl font-bold text-dark">{formatPrice(booking.priceAtBooking)}</p>
             </div>
             <div>
-              <p className="text-sm text-brand-dark/60">Référence</p>
-              <p className="font-mono text-sm text-brand-dark/70">{booking.id}</p>
+              <p className="text-sm text-dark/60">Référence</p>
+              <p className="font-mono text-sm text-dark/70">{booking.id}</p>
             </div>
           </div>
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button as={Link} to="/" className="bg-brand-secondary font-semibold text-brand-dark">
+          <Button as={Link} to="/" className="bg-secondary font-semibold text-dark">
             Retour à l'accueil
           </Button>
           <Button as={Link} to="/profile" variant="light">

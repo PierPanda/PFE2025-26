@@ -92,6 +92,7 @@ export const createBookingSchema = bookingFormSchema.extend({
 });
 
 export const createBookingRequestSchema = createBookingSchema.omit({
+  id: true,
   learnerId: true,
   paymentIntentId: true,
   priceAtBooking: true,

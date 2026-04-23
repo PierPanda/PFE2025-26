@@ -156,12 +156,12 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
 
   return (
     <aside className={cardColumnClasses}>
-      <Card className="border border-brand/15 bg-white/95 shadow-lg shadow-brand/5 backdrop-blur-sm">
+      <Card className="border border-primary/15 bg-white/95 shadow-lg shadow-primary/5 backdrop-blur-sm">
         <CardBody className="flex flex-col gap-6 p-6 lg:overflow-y-auto">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
-              <h2 className="mb-0 text-2xl font-bold text-brand-dark">Réservez le cours</h2>
-              <p className="text-sm text-brand-dark/80">Sélectionnez une date et un créneau</p>
+              <h2 className="mb-0 text-2xl font-bold text-dark">Réservez le cours</h2>
+              <p className="text-sm text-dark/80">Sélectionnez une date et un créneau</p>
             </div>
 
             {isCourseTeacher ? (
@@ -173,7 +173,7 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
                     variant="light"
                     radius="full"
                     aria-label="Options du cours"
-                    className="shrink-0 border border-brand/15 bg-white/80 text-brand-dark"
+                    className="shrink-0 border border-primary/15 bg-white/80 text-dark"
                   >
                     <InlineIcon icon="mdi:dots-vertical" width="20" />
                   </Button>
@@ -204,21 +204,21 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
           </div>
 
           {isCourseTeacher ? (
-            <div className="rounded-2xl border border-dashed border-brand/25 bg-brand-tertiary/60 px-4 py-4 text-sm text-brand-dark/65">
+            <div className="rounded-2xl border border-dashed border-primary/25 bg-tertiary/60 px-4 py-4 text-sm text-dark/65">
               Vous êtes l’enseignant de ce cours. Vous ne pouvez pas réserver votre propre créneau.
             </div>
           ) : (
             <>
               <div className="space-y-6">
                 <section className="space-y-3">
-                  <div className="flex items-center gap-2 text-md font-medium text-brand-dark">
-                    <InlineIcon icon="mdi:calendar-clock-outline" className="text-lg text-brand-dark" />
+                  <div className="flex items-center gap-2 text-md font-medium text-dark">
+                    <InlineIcon icon="mdi:calendar-clock-outline" className="text-lg text-dark" />
                     <span>Choisissez une date</span>
                   </div>
 
                   <div className="flex flex-col gap-2">
                     {dayOptions.length === 0 ? (
-                      <div className="rounded-2xl border border-dashed border-brand/25 bg-brand-tertiary/60 px-4 py-4 text-sm text-brand-dark/65">
+                      <div className="rounded-2xl border border-dashed border-primary/25 bg-tertiary/60 px-4 py-4 text-sm text-dark/65">
                         Aucun créneau disponible pour le moment.
                       </div>
                     ) : (
@@ -238,12 +238,12 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
                             className={cn(
                               'justify-between px-4 py-4 text-left transition',
                               isSelected
-                                ? 'border-brand bg-brand/10 text-brand-dark shadow-sm shadow-brand/10'
-                                : 'border-brand/20 bg-white text-brand-dark hover:border-brand/60 hover:bg-brand/5',
+                                ? 'border-primary bg-primary/10 text-dark shadow-sm shadow-primary/10'
+                                : 'border-primary/20 bg-white text-dark hover:border-primary/60 hover:bg-primary/5',
                             )}
                           >
                             <span className="text-sm font-medium">{day.label}</span>
-                            <span className={cn('text-sm', isSelected ? 'text-brand' : 'text-brand-dark/50')}>
+                            <span className={cn('text-sm', isSelected ? 'text-primary' : 'text-dark/50')}>
                               {formatSlotsCount(day.slots.length)}
                             </span>
                           </Button>
@@ -255,8 +255,8 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
 
                 {selectedDay ? (
                   <section className="space-y-3">
-                    <div className="flex items-center gap-2 text-md font-medium text-brand-dark">
-                      <InlineIcon icon="mdi:clock-time-four-outline" className="text-lg text-brand-dark" />
+                    <div className="flex items-center gap-2 text-md font-medium text-dark">
+                      <InlineIcon icon="mdi:clock-time-four-outline" className="text-lg text-dark" />
                       <span>Choisissez une heure</span>
                     </div>
 
@@ -274,8 +274,8 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
                             className={cn(
                               'px-4 py-4 text-center text-sm font-medium transition',
                               isSelected
-                                ? 'border-brand bg-brand/10 text-brand-dark shadow-sm shadow-brand/10'
-                                : 'border-brand/20 bg-white text-brand-dark hover:border-brand/60 hover:bg-brand/5',
+                                ? 'border-primary bg-primary/10 text-dark shadow-sm shadow-primary/10'
+                                : 'border-primary/20 bg-white text-dark hover:border-primary/60 hover:bg-primary/5',
                             )}
                           >
                             {formatHourLabel(slot.startDate)}
@@ -287,22 +287,18 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
                 ) : null}
 
                 {selectedSlot ? (
-                  <section className="overflow-hidden rounded-lg border border-brand-dark/10 bg-brand-dark/2">
+                  <section className="overflow-hidden rounded-lg border border-dark/10 bg-dark/2">
                     <div className="px-4 py-4">
-                      <p className="text-sm text-brand-dark/50">Votre réservation</p>
+                      <p className="text-sm text-dark/50">Votre réservation</p>
                       <div className="mt-1">
-                        <p className="text-lg font-semibold leading-tight text-brand-dark">
-                          {selectedDay?.summaryLabel}
-                        </p>
-                        <p className="text-lg font-semibold text-brand-dark">
-                          à {formatHourLabel(selectedSlot.startDate)}
-                        </p>
+                        <p className="text-lg font-semibold leading-tight text-dark">{selectedDay?.summaryLabel}</p>
+                        <p className="text-lg font-semibold text-dark">à {formatHourLabel(selectedSlot.startDate)}</p>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-brand-dark/10 px-4 py-4">
-                      <span className="text-lg text-brand-dark/65">Total</span>
-                      <span className="text-xl font-bold text-brand-dark">{totalLabel}</span>
+                    <div className="flex items-center justify-between border-t border-dark/10 px-4 py-4">
+                      <span className="text-lg text-dark/65">Total</span>
+                      <span className="text-xl font-bold text-dark">{totalLabel}</span>
                     </div>
                   </section>
                 ) : null}
@@ -318,8 +314,8 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
                 className={cn(
                   'font-semibold shadow-none transition',
                   selectedSlot
-                    ? 'border-brand-secondary bg-brand-secondary text-brand-dark'
-                    : 'border-brand/10 bg-brand-tertiary text-brand-dark/40',
+                    ? 'border-secondary bg-secondary text-dark'
+                    : 'border-primary/10 bg-tertiary text-dark/40',
                 )}
               >
                 Confirmez et payez
@@ -329,7 +325,7 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
 
           {teacher ? (
             <>
-              <div className="h-px bg-brand/10" />
+              <div className="h-px bg-primary/10" />
               <TeacherCard teacher={teacher} />
             </>
           ) : null}

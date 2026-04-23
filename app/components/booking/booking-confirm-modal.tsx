@@ -36,7 +36,6 @@ export function BookingConfirmModal({ slot, course, isOpen, onClose }: BookingCo
 
     fetcher.submit(
       {
-        _action: 'createBooking',
         courseId: course.id,
         availabilityId: slot.availabilityId,
         startTime: slot.startTime.toISOString(),
@@ -53,25 +52,25 @@ export function BookingConfirmModal({ slot, course, isOpen, onClose }: BookingCo
   return (
     <Modal isOpen={isOpen} onClose={onClose} placement="center">
       <ModalContent>
-        <ModalHeader className="text-xl font-bold text-brand-dark">Confirmer la réservation</ModalHeader>
+        <ModalHeader className="text-xl font-bold text-dark">Confirmer la réservation</ModalHeader>
         <ModalBody>
           {slot ? (
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-brand-dark/60">Cours</p>
-                <p className="font-medium text-brand-dark">{course.title}</p>
+                <p className="text-sm text-dark/60">Cours</p>
+                <p className="font-medium text-dark">{course.title}</p>
               </div>
               <div>
-                <p className="text-sm text-brand-dark/60">Date et heure</p>
-                <p className="font-medium text-brand-dark">{formatDateTime(slot.startTime)}</p>
+                <p className="text-sm text-dark/60">Date et heure</p>
+                <p className="font-medium text-dark">{formatDateTime(slot.startTime)}</p>
               </div>
               <div>
-                <p className="text-sm text-brand-dark/60">Durée</p>
-                <p className="font-medium text-brand-dark">{course.duration} minutes</p>
+                <p className="text-sm text-dark/60">Durée</p>
+                <p className="font-medium text-dark">{course.duration} minutes</p>
               </div>
               <div>
-                <p className="text-sm text-brand-dark/60">Prix</p>
-                <p className="text-xl font-bold text-brand">{formatPrice(course.price)}</p>
+                <p className="text-sm text-dark/60">Prix</p>
+                <p className="text-xl font-bold text-primary">{formatPrice(course.price)}</p>
               </div>
             </div>
           ) : null}
@@ -87,7 +86,7 @@ export function BookingConfirmModal({ slot, course, isOpen, onClose }: BookingCo
             Annuler
           </Button>
           <Button
-            className="bg-brand-secondary font-semibold text-brand-dark"
+            className="bg-secondary font-semibold text-dark"
             onPress={handleConfirm}
             isLoading={isSubmitting}
             isDisabled={!slot}

@@ -23,8 +23,8 @@ export default function CourseHeader({ course }: CourseHeaderProps) {
   return (
     <div className="space-y-5 py-4">
       <div className="flex flex-wrap gap-2">
-        <Chip className="rounded-md bg-brand/10 text-brand">{categoryLabel}</Chip>
-        <Chip className="rounded-md bg-brand-dark/5">{levelLabel}</Chip>
+        <Chip className="rounded-md bg-primary/10 text-primary">{categoryLabel}</Chip>
+        <Chip className="rounded-md bg-dark/5">{levelLabel}</Chip>
       </div>
 
       <div className="space-y-3">
@@ -37,14 +37,14 @@ export default function CourseHeader({ course }: CourseHeaderProps) {
           {formattedRating ? (
             <>
               <div className="flex items-center gap-1.5">
-                <InlineIcon icon="mdi:star" className="text-brand-secondary" width="20" />
+                <InlineIcon icon="mdi:star" className="text-secondary" width="20" />
                 <span className="font-semibold">{formattedRating}</span>
-                <span className="text-brand-dark/80">({reviewsCount} avis)</span>
+                <span className="text-dark/80">({reviewsCount} avis)</span>
               </div>
-              <span className="text-brand-dark/80">|</span>
+              <span className="text-dark/80">|</span>
             </>
           ) : null}
-          <span className="text-brand-dark/80">En ligne depuis {teacherOnlineSince}</span>
+          <span className="text-dark/80">En ligne depuis {teacherOnlineSince}</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-x-8 gap-y-3">

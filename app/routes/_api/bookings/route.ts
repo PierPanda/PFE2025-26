@@ -207,6 +207,7 @@ export async function action({ request }: ActionFunctionArgs) {
       }
 
       const result = await createBooking({
+        id: crypto.randomUUID(),
         ...parsed.data,
         learnerId,
         priceAtBooking: String(courseResult.course.price),
