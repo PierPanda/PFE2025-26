@@ -5,13 +5,13 @@ export default [
   // route('/.well-known/*', 'routes/_api/well-known/route.tsx'),
 
   // API Routes
-  route('/api/auth/*', 'routes/_api/auth/route.tsx'),
-  route('/api/courses', 'routes/_api/courses/route.tsx'),
-  route('/api/teachers', 'routes/_api/teachers/route.tsx'),
-  route('/api/stats', 'routes/_api/stats/route.tsx'),
-  route('/api/availabilities', 'routes/_api/availabilities/route.tsx'),
-  route('/api/bookings', 'routes/_api/bookings/route.tsx'),
-  route('/api/available-slots', 'routes/_api/available-slots/route.tsx'),
+  route('/api/auth/*', 'routes/_api/auth/route.ts'),
+  route('/api/courses', 'routes/_api/courses/route.ts'),
+  route('/api/teachers', 'routes/_api/teachers/route.ts'),
+  route('/api/stats', 'routes/_api/stats/route.ts'),
+  route('/api/availabilities', 'routes/_api/availabilities/route.ts'),
+  route('/api/bookings', 'routes/_api/bookings/route.ts'),
+  route('/api/available-slots', 'routes/_api/available-slots/route.ts'),
 
   // Public Pages
   layout('routes/layouts/public-layout.tsx', [route('/auth', 'routes/pages/auth/page.tsx')]),

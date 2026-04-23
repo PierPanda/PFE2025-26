@@ -21,7 +21,7 @@ export default function AuthLayout() {
   ];
 
   return (
-    <div className="min-h-scree">
+    <div className="min-h-screen">
       <header className="sticky top-0 z-50 bg-white p-2">
         <div className="flex h-16 w-full items-center justify-between px-12">
           <Link to="/" className="shrink-0">
