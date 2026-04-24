@@ -58,8 +58,7 @@ export default function CourseCard({
   const levelLabel =
     levelOptions.find((levelOption) => levelOption.key === courseState.level)?.value ?? courseState.level;
   const isCourseOwner = courseState.teacher.user.id === currentUserId;
-  const isAdmin = currentUserRole === 'admin';
-  const canManageCourse = isCourseOwner || isAdmin;
+  const canManageCourse = isCourseOwner;
   const urlImage = `/categories/${courseState.category}.jpg`;
 
   const handleDelete = () => {
