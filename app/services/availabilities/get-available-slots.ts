@@ -2,30 +2,6 @@ import type { AvailableSlot, GetAvailableSlotsResponse } from '../types';
 import { getAvailabilityByTeacherId } from './get-availability';
 import { getBookingsByTeacherId } from '../bookings/get-bookings';
 
-function splitIntervalIntoCourseSlots(slot: AvailableSlot, courseDurationMs: number): AvailableSlot[] {
-  if (courseDurationMs <= 0) {
-    return [slot];
-  }
-
-  const courseSlots: AvailableSlot[] = [];
-  let cursor = new Date(slot.startTime);
-
-  while (cursor.getTime() + courseDurationMs <= slot.endTime.getTime()) {
-    const nextEnd = new Date(cursor.getTime() + courseDurationMs);
-
-    courseSlots.push({
-      availabilityId: slot.availabilityId,
-      teacherId: slot.teacherId,
-      startTime: new Date(cursor),
-      endTime: nextEnd,
-    });
-
-    cursor = nextEnd;
-  }
-
-  return courseSlots;
-}
-
 /**
  * Get all available slot for a teacher
  */
@@ -41,7 +17,6 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return bookingsResult;
     }
 
-    // Séparer règles (disponibilités normales) et exceptions (blocages)
     const rules = availabilitiesResult.availabilities.filter((a) => !a.isException);
     const exceptions = availabilitiesResult.availabilities.filter((a) => a.isException);
 
@@ -156,14 +131,15 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return fragmentedSlots;
     });
 
-    const courseDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
-    const formattedSlots = courseDurationMs
-      ? slots.flatMap((slot) => splitIntervalIntoCourseSlots(slot, courseDurationMs))
-      : slots;
+    const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
+    const filteredSlots =
+      minDurationMs > 0
+        ? slots.filter((slot) => slot.endTime.getTime() - slot.startTime.getTime() >= minDurationMs)
+        : slots;
 
     return {
       success: true,
-      slots: formattedSlots,
+      slots: filteredSlots,
     };
   } catch (error) {
     console.error('Error computing available slots for teacher:', error);
