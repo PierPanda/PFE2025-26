@@ -91,11 +91,15 @@ export const createBookingSchema = bookingFormSchema.extend({
   id: uuidSchema,
 });
 
-export const updateBookingSchema = bookingFormSchema.partial();
-
-export const deleteBookingSchema = z.object({
-  id: uuidSchema,
+export const createBookingRequestSchema = createBookingSchema.omit({
+  id: true,
+  learnerId: true,
+  paymentIntentId: true,
+  priceAtBooking: true,
+  status: true,
 });
+
+export const updateBookingSchema = bookingFormSchema.partial();
 
 export const createTeacherSchema = z.object({
   id: uuidSchema,

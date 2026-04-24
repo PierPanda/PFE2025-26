@@ -6,6 +6,14 @@ export function cn(...inputs: (string | undefined | null | false)[]): string {
 }
 
 /**
+ * Capitalize the first character of a string
+ */
+export function capitalize(value: string): string {
+  if (!value) return value;
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+/**
  * Format price for display
  */
 export function formatPrice(price: string | number, currency = 'EUR'): string {
@@ -62,6 +70,49 @@ export function formatTime(time: Date | string): string {
     minute: '2-digit',
     hour12: false,
   });
+}
+
+/**
+ * Build a stable YYYY-MM-DD key from a date
+ */
+export function getDateKey(date: Date | string): string {
+  const parsedDate = typeof date === 'string' ? new Date(date) : date;
+  const year = parsedDate.getFullYear();
+  const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+  const day = String(parsedDate.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * Format a date using fr-FR locale and capitalize the result
+ */
+export function formatDateLabel(date: Date | string, options: Intl.DateTimeFormatOptions): string {
+  const parsedDate = typeof date === 'string' ? new Date(date) : date;
+  return capitalize(new Intl.DateTimeFormat('fr-FR', options).format(parsedDate));
+}
+
+/**
+ * Format a date and time in fr-FR locale, e.g. Mardi 18 mars 2026 à 10h00
+ */
+export function formatDateTime(date: Date | string): string {
+  const parsedDate = typeof date === 'string' ? new Date(date) : date;
+  const dateLabel = formatDateLabel(parsedDate, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  return `${dateLabel} à ${formatHourLabel(parsedDate)}`;
+}
+
+/**
+ * Format time to Hhmm, e.g. 9h00
+ */
+export function formatHourLabel(time: Date | string): string {
+  const [hours, minutes] = formatTime(time).split(':');
+  return `${Number(hours)}h${minutes}`;
 }
 
 /**
