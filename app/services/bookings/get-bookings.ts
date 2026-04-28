@@ -1,4 +1,4 @@
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, inArray } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { bookings, courses } from '~/server/lib/db/schema';
 import type { DbBooking, GetBookingResponse, GetBookingsResponse } from '../types';
@@ -58,11 +58,14 @@ export async function getBooking(bookingId: string): Promise<GetBookingResponse>
 export async function getBookingsByLearnerId(
   learnerId: string,
   status?: DbBooking['status'],
+  limit?: number,
 ): Promise<GetBookingsResponse> {
   try {
     const bookingsList = await db.query.bookings.findMany({
       where: and(eq(bookings.learnerId, learnerId), status ? eq(bookings.status, status) : undefined),
       with: bookingRelations,
+      limit,
+      orderBy: (booking) => [desc(booking.startTime)],
     });
 
     return {
@@ -84,6 +87,7 @@ export async function getBookingsByLearnerId(
 export async function getBookingsByTeacherId(
   teacherId: string,
   status?: DbBooking['status'] | DbBooking['status'][],
+  limit?: number,
 ): Promise<GetBookingsResponse> {
   try {
     const teacherCourses = await db.query.courses.findMany({
@@ -109,6 +113,8 @@ export async function getBookingsByTeacherId(
     const bookingsList = await db.query.bookings.findMany({
       where: and(inArray(bookings.courseId, courseIds), statusFilter),
       with: bookingRelations,
+      limit,
+      orderBy: (booking) => [desc(booking.startTime)],
     });
 
     return {
@@ -132,6 +138,7 @@ export async function getBookingsByCourseId(courseId: string): Promise<GetBookin
     const bookingsList = await db.query.bookings.findMany({
       where: eq(bookings.courseId, courseId),
       with: bookingRelations,
+      orderBy: (booking) => [desc(booking.startTime)],
     });
 
     return {

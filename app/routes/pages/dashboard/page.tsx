@@ -189,7 +189,7 @@ export default function Home() {
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {popularCourses.map((course) => (
-                  <CourseCard key={course.id} course={course} currentUserId={user.id} currentUserRole={user.role} />
+                  <CourseCard key={course.id} course={course} currentUserId={user.id} />
                 ))}
               </ul>
             )}
@@ -214,7 +214,7 @@ export default function Home() {
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {topRatedCourses.map((course) => (
-                  <CourseCard key={course.id} course={course} currentUserId={user.id} currentUserRole={user.role} />
+                  <CourseCard key={course.id} course={course} currentUserId={user.id} />
                 ))}
               </ul>
             )}
@@ -239,7 +239,7 @@ export default function Home() {
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {newestCourses.map((course) => (
-                  <CourseCard key={course.id} course={course} currentUserId={user.id} currentUserRole={user.role} />
+                  <CourseCard key={course.id} course={course} currentUserId={user.id} />
                 ))}
               </ul>
             )}
@@ -272,7 +272,7 @@ export default function Home() {
             ) : (
               <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {coursesPage.items.map((course) => (
-                  <CourseCard key={course.id} course={course} currentUserId={user.id} currentUserRole={user.role} />
+                  <CourseCard key={course.id} course={course} currentUserId={user.id} />
                 ))}
               </ul>
             )}
