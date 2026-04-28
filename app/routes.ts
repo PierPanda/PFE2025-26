@@ -21,6 +21,7 @@ export default [
     index('routes/pages/dashboard/page.tsx'),
     route('/profile', 'routes/pages/profile/page.tsx'),
     route('/courses/:id', 'routes/pages/courses/course/page.tsx'),
+    route('/checkout/:id', 'routes/pages/checkout/page.tsx'),
 
     // Teacher-only Pages (nested: hérite du header auth-layout)
     layout('routes/layouts/teacher-layout.tsx', [

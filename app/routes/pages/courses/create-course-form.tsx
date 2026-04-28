@@ -1,7 +1,7 @@
 import CourseForm from './course-form';
 import { useState } from 'react';
 import CourseValidation from './course-validation';
-import { authentifyUser } from '~/server/utils/authentify-user.server';
+import { authentifyUser } from '~/server/utils/authentify-user';
 import { useLoaderData, useFetcher } from 'react-router';
 import type { LoaderFunctionArgs, ActionFunctionArgs } from 'react-router';
 import { uuidv7 } from 'uuidv7';
@@ -74,10 +74,12 @@ export default function CreateCourse() {
   };
 
   return (
-    <div className="min-h-screen bg-brand/10 px-4 py-14">
+    <div className="min-h-screen bg-tertiary/10 px-4 py-14">
       <div className="mx-auto max-w-lg">
         <div className="mb-10 text-center">
-          <p className="mb-1 text-xs font-semibold tracking-[0.3em] text-brand uppercase">VOTRE MUSIQUE COMMENCE ICI</p>
+          <p className="mb-1 text-xs font-semibold tracking-[0.3em] text-tertiary uppercase">
+            VOTRE MUSIQUE COMMENCE ICI
+          </p>
           <h1 className="text-4xl font-bold text-gray-900">{formValidated ? 'Vérification' : 'Nouveau cours'}</h1>
         </div>
 
@@ -86,12 +88,12 @@ export default function CreateCourse() {
             <div
               className={cn(
                 'flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-all duration-300',
-                !formValidated ? 'bg-brand text-black' : 'bg-gray-200 text-gray-500',
+                !formValidated ? 'bg-tertiary text-black' : 'bg-gray-200 text-gray-500',
               )}
             >
               {formValidated ? '✓' : '1'}
             </div>
-            <span className={cn('text-xs font-medium', !formValidated ? 'text-brand' : 'text-gray-400')}>
+            <span className={cn('text-xs font-medium', !formValidated ? 'text-tertiary' : 'text-gray-400')}>
               Informations
             </span>
           </div>
@@ -99,7 +101,7 @@ export default function CreateCourse() {
           <div
             className={cn(
               'mx-3 mt-4 h-0.5 w-16 rounded-full transition-colors duration-300',
-              formValidated ? 'bg-brand' : 'bg-gray-200',
+              formValidated ? 'bg-tertiary' : 'bg-gray-200',
             )}
           />
 
@@ -107,12 +109,12 @@ export default function CreateCourse() {
             <div
               className={cn(
                 'flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-all duration-300',
-                formValidated ? 'bg-brand/10 text-brand' : 'bg-brand/10 text-gray-400',
+                formValidated ? 'bg-tertiary/10 text-tertiary' : 'bg-tertiary/10 text-gray-400',
               )}
             >
               2
             </div>
-            <span className={cn('text-xs font-medium', formValidated ? 'text-brand' : 'text-gray-400')}>
+            <span className={cn('text-xs font-medium', formValidated ? 'text-tertiary' : 'text-gray-400')}>
               Validation
             </span>
           </div>

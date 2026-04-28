@@ -29,7 +29,7 @@ export default function CourseValidation({ values, createCourse, onBack }: Cours
       <motion.div variants={fadeUp} className="overflow-hidden rounded-xl border border-gray-100">
         <div className="p-5">
           <div className="mb-3 flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold capitalize text-brand">
+            <span className="inline-flex items-center gap-1 rounded-full bg-tertiary/10 px-3 py-1 text-xs font-semibold capitalize text-tertiary">
               <Icon icon="solar:tag-bold" width={11} />
               {values.category}
             </span>
@@ -43,19 +43,19 @@ export default function CourseValidation({ values, createCourse, onBack }: Cours
         </div>
       </motion.div>
 
-      <motion.div variants={fadeUp} className="flex gap-3 rounded-xl bg-gray-50 p-4 overflow-hidden">
-        <Icon icon="solar:document-text-bold" width={15} className="mt-0.5 shrink-0 text-brand" />
-        <div className="min-w-0">
+      <motion.div variants={fadeUp} className="flex gap-3 rounded-xl bg-gray-50 p-4">
+        <Icon icon="solar:document-text-bold" width={15} className="mt-0.5 shrink-0 text-tertiary" />
+        <div>
           <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">Description</p>
           <p className="text-sm leading-relaxed text-gray-600 wrap-break-words">{values.description}</p>
         </div>
       </motion.div>
 
       <motion.div variants={fadeUp} className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-brand/20 bg-brand/5 p-4">
+        <div className="rounded-xl border border-tertiary/20 bg-tertiary/5 p-4">
           <div className="mb-1.5 flex items-center gap-1.5">
-            <Icon icon="solar:wallet-bold" width={13} className="text-brand" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-brand/70">Prix</span>
+            <Icon icon="solar:wallet-bold" width={13} className="text-tertiary" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-tertiary/70">Prix</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{formatPrice(values.price)}</p>
         </div>
@@ -85,7 +85,7 @@ export default function CourseValidation({ values, createCourse, onBack }: Cours
         <Button
           type="button"
           variant="bordered"
-          className="h-12 w-full rounded-xl border-brand-secondary font-semibold text-brand-secondary hover:bg-brand-secondary/5"
+          className="h-12 w-full rounded-xl border-primary font-semibold text-primary hover:bg-primary/5"
           startContent={<Icon icon="solar:diskette-bold" width={17} />}
           onPress={() => createCourse(false)}
         >

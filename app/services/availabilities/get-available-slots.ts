@@ -17,18 +17,32 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return bookingsResult;
     }
 
-    // Séparer règles (disponibilités normales) et exceptions (blocages)
     const rules = availabilitiesResult.availabilities.filter((a) => !a.isException);
     const exceptions = availabilitiesResult.availabilities.filter((a) => a.isException);
+
+    const bookingsByAvailabilityId = new Map<string, (typeof bookingsResult.bookings)[number][]>();
+
+    for (const booking of bookingsResult.bookings) {
+      const availabilityBookings = bookingsByAvailabilityId.get(booking.availabilityId);
+
+      if (availabilityBookings) {
+        availabilityBookings.push(booking);
+      } else {
+        bookingsByAvailabilityId.set(booking.availabilityId, [booking]);
+      }
+    }
+
+    for (const availabilityBookings of bookingsByAvailabilityId.values()) {
+      availabilityBookings.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+    }
 
     const rawSlots = rules.flatMap((availability) => {
       const availabilityStart = availability.startTime;
       const availabilityEnd = availability.endTime;
 
-      const overlappingBookings = bookingsResult.bookings
-        .filter((booking) => booking.availabilityId === availability.id)
-        .filter((booking) => booking.endTime > availabilityStart && booking.startTime < availabilityEnd)
-        .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+      const overlappingBookings = (bookingsByAvailabilityId.get(availability.id) ?? []).filter(
+        (booking) => booking.endTime > availabilityStart && booking.startTime < availabilityEnd,
+      );
 
       if (overlappingBookings.length === 0) {
         return [
@@ -118,9 +132,10 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
     });
 
     const minDurationMs = Math.max(0, minDurationMinutes) * 60 * 1000;
-    const filteredSlots = minDurationMs
-      ? slots.filter((slot) => slot.endTime.getTime() - slot.startTime.getTime() >= minDurationMs)
-      : slots;
+    const filteredSlots =
+      minDurationMs > 0
+        ? slots.filter((slot) => slot.endTime.getTime() - slot.startTime.getTime() >= minDurationMs)
+        : slots;
 
     return {
       success: true,

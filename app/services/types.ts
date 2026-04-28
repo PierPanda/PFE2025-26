@@ -82,7 +82,7 @@ export type ServiceResponse<T> = ServiceSuccess<T> | ServiceError;
  * Specific response types for each service
  */
 export type GetCourseResponse = ServiceResponse<{
-  course: CourseWithTeacher | null;
+  course: CourseWithTeacherAndRatings | null;
 }>;
 export type GetCoursesResponse = ServiceResponse<{
   courses: CourseWithTeacher[];
@@ -139,6 +139,8 @@ export type DeleteCourseResponse = ServiceResponse<object>;
 export type CreateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type UpdateTeacherResponse = ServiceResponse<{ teacher: DbTeacher }>;
 export type DeleteTeacherResponse = ServiceResponse<object>;
+
+export type UpdateUserResponse = ServiceResponse<{ user: DbUser }>;
 
 export type CreateAvailabilityResponse = ServiceResponse<{
   availability: DbAvailability;

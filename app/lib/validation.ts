@@ -92,6 +92,14 @@ export const createBookingSchema = bookingFormSchema.extend({
   id: uuidSchema,
 });
 
+export const createBookingRequestSchema = createBookingSchema.omit({
+  id: true,
+  learnerId: true,
+  paymentIntentId: true,
+  priceAtBooking: true,
+  status: true,
+});
+
 export const updateBookingSchema = bookingFormSchema.partial();
 
 export const createTeacherSchema = z.object({
@@ -104,6 +112,12 @@ export const createTeacherSchema = z.object({
 
 export const updateTeacherSchema = createTeacherSchema.partial().extend({
   id: uuidSchema,
+});
+
+export const updateProfileSchema = z.object({
+  name: z.string().min(1, 'Le nom est requis.'),
+  description: z.string().optional(),
+  skills: z.string().optional(),
 });
 
 export const createLearnerSchema = z.object({
