@@ -26,16 +26,10 @@ import type { CourseWithTeacherAndRatings } from '~/services/types';
 type CourseCardProps = {
   course: CourseWithTeacherAndRatings;
   currentUserId?: string | null;
-  currentUserRole?: string | null;
   deleteAction?: string;
 };
 
-export default function CourseCard({
-  course,
-  currentUserId = null,
-  currentUserRole = null,
-  deleteAction = '/profile',
-}: CourseCardProps) {
+export default function CourseCard({ course, currentUserId = null, deleteAction = '/profile' }: CourseCardProps) {
   const [courseState, setCourseState] = useState(course);
   const revalidator = useRevalidator();
   const deleteFetcher = useFetcher<{ success?: boolean }>();
@@ -114,7 +108,7 @@ export default function CourseCard({
     <>
       <li className="shrink-0">
         <Card
-          className="h-full max-w-80 border-none bg-transparent p-2 transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
+          className="h-full max-w-80 border-none bg-white p-2 transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
           radius="lg"
           shadow="sm"
         >
