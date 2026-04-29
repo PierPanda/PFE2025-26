@@ -1,4 +1,4 @@
-import { data, useLoaderData } from 'react-router';
+import { data, useLoaderData, useSearchParams } from 'react-router';
 import type { Route } from './+types/page';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { auth } from '~/auth.server';
@@ -12,34 +12,66 @@ import { uploadAvatar } from '~/server/services/upload/upload-avatar';
 import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability';
 import { courseFormSchema } from '~/lib/validation';
 import UserProfile from '~/components/profile/user-profile';
-import { getBooking, getBookingsByLearnerId, getBookingsByTeacherId } from '~/services/bookings/get-bookings';
+import {
+  getBooking,
+  getBookingsByLearnerId,
+  getBookingsByTeacherId,
+  type BookingFilter,
+} from '~/services/bookings/get-bookings';
 import { updateBooking } from '~/services/bookings/update-booking';
 import CalendarSection from './calendar-section';
 import CoursesSection from './courses-section';
+import BookingsTable from './bookings-table';
+import { Tabs, Tab } from '@heroui/react';
+import { getLearnerByUserId } from '~/services/learners/get-learner';
+
+const PAGE_SIZE = 10;
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
 
-  const teacherResult = await getTeacherByUserId(session.user.id);
+  const url = new URL(request.url);
+  const page = Math.max(1, parseInt(url.searchParams.get('page') ?? '1', 10));
+  const filter = (url.searchParams.get('filter') ?? 'all') as BookingFilter;
+  const offset = (page - 1) * PAGE_SIZE;
+
+  const [teacherResult, learnerResult] = await Promise.all([
+    getTeacherByUserId(session.user.id),
+    getLearnerByUserId(session.user.id),
+  ]);
   const teacher = teacherResult.success ? teacherResult.teacher : null;
+  const learner = learnerResult.success ? learnerResult.learner : null;
 
-  const coursesResult = teacher ? await getCoursesByTeacher(teacher.id) : null;
+  const [coursesResult, availabilityResult] = await Promise.all([
+    teacher ? getCoursesByTeacher(teacher.id) : null,
+    teacher ? getAvailabilityByTeacherId(teacher.id) : null,
+  ]);
   const courses = coursesResult?.success ? (coursesResult.courses ?? []) : [];
-
-  const availabilityResult = teacher ? await getAvailabilityByTeacherId(teacher.id) : null;
   const availabilities = availabilityResult?.success ? availabilityResult.availabilities : [];
 
-  const bookingsResult = teacher
-    ? await getBookingsByTeacherId(teacher.id, undefined, 3)
-    : await getBookingsByLearnerId(session.user.id, undefined, 3);
-  const bookings = bookingsResult?.success ? (bookingsResult.bookings ?? []) : [];
+  const [teacherBookingsResult, learnerBookingsResult, upcomingTeacherBookingsResult, upcomingLearnerBookingsResult] =
+    await Promise.all([
+      teacher ? getBookingsByTeacherId(teacher.id, { filter, limit: PAGE_SIZE, offset }) : null,
+      learner ? getBookingsByLearnerId(learner.id, { filter, limit: PAGE_SIZE, offset }) : null,
+      teacher ? getBookingsByTeacherId(teacher.id, { filter: 'upcoming', limit: 3, orderDirection: 'asc' }) : null,
+      learner ? getBookingsByLearnerId(learner.id, { filter: 'upcoming', limit: 3, orderDirection: 'asc' }) : null,
+    ]);
 
   return {
     user: session.user,
     teacher,
+    learner,
     courses,
     availabilities,
-    bookings,
+    teacherBookings: teacherBookingsResult?.success ? teacherBookingsResult.bookings : [],
+    totalTeacherBookings: teacherBookingsResult?.success ? (teacherBookingsResult.total ?? 0) : 0,
+    learnerBookings: learnerBookingsResult?.success ? learnerBookingsResult.bookings : [],
+    totalLearnerBookings: learnerBookingsResult?.success ? (learnerBookingsResult.total ?? 0) : 0,
+    upcomingTeacherBookings: upcomingTeacherBookingsResult?.success ? upcomingTeacherBookingsResult.bookings : [],
+    upcomingLearnerBookings: upcomingLearnerBookingsResult?.success ? upcomingLearnerBookingsResult.bookings : [],
+    currentPage: page,
+    currentFilter: filter,
+    pageSize: PAGE_SIZE,
   };
 }
 
@@ -180,16 +212,77 @@ export async function action({ request }: Route.ActionArgs) {
   return { success: false, error: 'Action inconnue.' };
 }
 
+type View = 'teacher' | 'learner';
+
 export default function Page() {
-  const { user, teacher, courses, availabilities, bookings } = useLoaderData<typeof loader>();
+  const {
+    user,
+    teacher,
+    learner,
+    courses,
+    availabilities,
+    teacherBookings,
+    totalTeacherBookings,
+    learnerBookings,
+    totalLearnerBookings,
+    upcomingTeacherBookings,
+    upcomingLearnerBookings,
+    currentPage,
+    currentFilter,
+    pageSize,
+  } = useLoaderData<typeof loader>();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const view = (searchParams.get('view') ?? (teacher ? 'teacher' : 'learner')) as View;
+
+  const handleViewChange = (newView: View) => {
+    setSearchParams({ view: newView }, { preventScrollReset: true });
+  };
+
+  const isTeacherView = view === 'teacher';
 
   return (
-    <main className="px-10 py-8 flex flex-col gap-20">
+    <main className="px-10 py-8 flex flex-col gap-12">
       <UserProfile user={user} teacher={teacher} />
+      <div className="flex flex-col gap-20">
+        {teacher && learner && (
+          <Tabs
+            selectedKey={view}
+            onSelectionChange={(key) => handleViewChange(key as View)}
+            variant="underlined"
+            className="mx-auto"
+            classNames={{
+              tab: 'text-lg font-medium text-default-500',
+              cursor: 'bg-secondary',
+            }}
+          >
+            <Tab key="teacher" title="Enseignant" />
+            <Tab key="learner" title="Apprenant" />
+          </Tabs>
+        )}
 
-      {teacher && <CalendarSection bookings={bookings} teacher={teacher} availabilities={availabilities} />}
+        {teacher && isTeacherView && (
+          <CalendarSection
+            teacherBookings={upcomingTeacherBookings}
+            teacher={teacher}
+            availabilities={availabilities}
+            isTeacher
+          />
+        )}
 
-      {teacher && <CoursesSection courses={courses} user={user} />}
+        {teacher && isTeacherView && <CoursesSection courses={courses} user={user} />}
+
+        {learner && !isTeacherView && <CalendarSection learnerBookings={upcomingLearnerBookings} />}
+
+        <BookingsTable
+          bookings={isTeacherView ? teacherBookings : learnerBookings}
+          total={isTeacherView ? totalTeacherBookings : totalLearnerBookings}
+          currentPage={currentPage}
+          currentFilter={currentFilter}
+          pageSize={pageSize}
+          isTeacher={isTeacherView}
+        />
+      </div>
     </main>
   );
 }
