@@ -31,7 +31,8 @@ export async function loader({ request }: Route.LoaderArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
 
   const url = new URL(request.url);
-  const page = Math.max(1, parseInt(url.searchParams.get('page') ?? '1', 10));
+  const rawPage = parseInt(url.searchParams.get('page') ?? '1', 10);
+  const page = isNaN(rawPage) ? 1 : Math.max(1, rawPage);
   const filter = (url.searchParams.get('filter') ?? 'all') as BookingFilter;
   const offset = (page - 1) * PAGE_SIZE;
 
