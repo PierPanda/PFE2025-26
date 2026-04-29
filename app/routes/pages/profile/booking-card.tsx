@@ -7,10 +7,11 @@ import { useEffect } from 'react';
 
 type BookingCardProps = {
   booking: BookingWithRelations;
+  isTeacher: boolean;
   action?: string;
 };
 
-export default function BookingCard({ booking, action = '/profile' }: BookingCardProps) {
+export default function BookingCard({ booking, isTeacher, action = '/profile' }: BookingCardProps) {
   const start = new Date(booking.startTime);
   const end = new Date(booking.endTime);
   const durationMinutes = Math.round((end.getTime() - start.getTime()) / 60000);
@@ -64,7 +65,8 @@ export default function BookingCard({ booking, action = '/profile' }: BookingCar
                 <h3 className="text-lg font-semibold mb-0">{booking.course.title}</h3>
                 <div className="mt-2 text-sm flex flex-col gap-1">
                   <span className="flex items-center gap-2">
-                    <InlineIcon icon="mdi:graduation-cap" width="16" /> {booking.course.teacher.user.name}
+                    <InlineIcon icon={`mdi:${isTeacher ? 'graduation-cap' : 'account'}`} width="16" />
+                    {isTeacher ? booking.learner.user.name : booking.course.teacher.user.name}
                   </span>
                   <span className="flex items-center gap-2">
                     <InlineIcon icon="mdi:tag" width="16" /> {capitalize(booking.course.category)}
@@ -102,7 +104,7 @@ export default function BookingCard({ booking, action = '/profile' }: BookingCar
                     </Button>
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Actions de la réservation">
-                    {booking.status === 'pending' ? (
+                    {isTeacher && booking.status === 'pending' ? (
                       <DropdownItem
                         key="confirm"
                         startContent={<InlineIcon icon="mdi:check-circle-outline" width="16" />}

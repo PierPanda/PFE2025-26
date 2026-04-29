@@ -1,7 +1,29 @@
-import { and, desc, eq, inArray } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gt, inArray, lte, ne } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { bookings, courses } from '~/server/lib/db/schema';
 import type { DbBooking, GetBookingResponse, GetBookingsResponse } from '../types';
+
+export type BookingFilter = 'all' | 'upcoming' | 'past' | 'cancelled';
+
+type GetBookingsOptions = {
+  status?: DbBooking['status'];
+  filter?: BookingFilter;
+  limit?: number;
+  offset?: number;
+  orderDirection?: 'asc' | 'desc';
+};
+
+type GetTeacherBookingsOptions = Omit<GetBookingsOptions, 'status'> & {
+  status?: DbBooking['status'] | DbBooking['status'][];
+};
+
+function buildFilterCondition(filter?: BookingFilter) {
+  const now = new Date();
+  if (filter === 'upcoming') return and(gt(bookings.startTime, now), ne(bookings.status, 'cancelled'));
+  if (filter === 'past') return and(lte(bookings.startTime, now), ne(bookings.status, 'cancelled'));
+  if (filter === 'cancelled') return eq(bookings.status, 'cancelled');
+  return undefined;
+}
 
 const bookingRelations = {
   course: {
@@ -57,20 +79,31 @@ export async function getBooking(bookingId: string): Promise<GetBookingResponse>
  */
 export async function getBookingsByLearnerId(
   learnerId: string,
-  status?: DbBooking['status'],
-  limit?: number,
+  options?: GetBookingsOptions,
 ): Promise<GetBookingsResponse> {
   try {
-    const bookingsList = await db.query.bookings.findMany({
-      where: and(eq(bookings.learnerId, learnerId), status ? eq(bookings.status, status) : undefined),
-      with: bookingRelations,
-      limit,
-      orderBy: (booking) => [desc(booking.startTime)],
-    });
+    const { status, filter, limit, offset, orderDirection = 'desc' } = options ?? {};
+    const whereCondition = and(
+      eq(bookings.learnerId, learnerId),
+      status ? eq(bookings.status, status) : undefined,
+      buildFilterCondition(filter),
+    );
+
+    const [bookingsList, totalResult] = await Promise.all([
+      db.query.bookings.findMany({
+        where: whereCondition,
+        with: bookingRelations,
+        orderBy: (b) => [orderDirection === 'asc' ? asc(b.startTime) : desc(b.startTime)],
+        limit,
+        offset,
+      }),
+      limit !== undefined ? db.select({ total: count() }).from(bookings).where(whereCondition) : Promise.resolve(null),
+    ]);
 
     return {
       success: true,
       bookings: bookingsList,
+      total: totalResult?.[0]?.total,
     };
   } catch (error) {
     console.error('Error fetching bookings by learner ID:', error);
@@ -86,10 +119,11 @@ export async function getBookingsByLearnerId(
  */
 export async function getBookingsByTeacherId(
   teacherId: string,
-  status?: DbBooking['status'] | DbBooking['status'][],
-  limit?: number,
+  options?: GetTeacherBookingsOptions,
 ): Promise<GetBookingsResponse> {
   try {
+    const { status, filter, limit, offset, orderDirection = 'desc' } = options ?? {};
+
     const teacherCourses = await db.query.courses.findMany({
       where: eq(courses.teacherId, teacherId),
       columns: { id: true },
@@ -97,10 +131,7 @@ export async function getBookingsByTeacherId(
 
     const courseIds = teacherCourses.map((course) => course.id);
     if (courseIds.length === 0) {
-      return {
-        success: true,
-        bookings: [],
-      };
+      return { success: true, bookings: [], total: 0 };
     }
 
     let statusFilter: ReturnType<typeof eq> | ReturnType<typeof inArray> | undefined;
@@ -110,16 +141,23 @@ export async function getBookingsByTeacherId(
       statusFilter = eq(bookings.status, status);
     }
 
-    const bookingsList = await db.query.bookings.findMany({
-      where: and(inArray(bookings.courseId, courseIds), statusFilter),
-      with: bookingRelations,
-      limit,
-      orderBy: (booking) => [desc(booking.startTime)],
-    });
+    const whereCondition = and(inArray(bookings.courseId, courseIds), statusFilter, buildFilterCondition(filter));
+
+    const [bookingsList, totalResult] = await Promise.all([
+      db.query.bookings.findMany({
+        where: whereCondition,
+        with: bookingRelations,
+        orderBy: (b) => [orderDirection === 'asc' ? asc(b.startTime) : desc(b.startTime)],
+        limit,
+        offset,
+      }),
+      limit !== undefined ? db.select({ total: count() }).from(bookings).where(whereCondition) : Promise.resolve(null),
+    ]);
 
     return {
       success: true,
       bookings: bookingsList,
+      total: totalResult?.[0]?.total,
     };
   } catch (error) {
     console.error('Error fetching bookings by teacher ID:', error);

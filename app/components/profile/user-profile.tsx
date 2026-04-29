@@ -26,9 +26,11 @@ export default function UserProfile({ user, teacher, rating, reviewCount }: User
         .filter(Boolean)
     : [];
 
+  const graduations = Array.isArray(teacher?.graduations) ? (teacher.graduations as string[]) : [];
+
   return (
     <>
-      <div className="flex justify-between items-center w-full gap-4">
+      <div className="flex justify-between items-center w-full gap-4 border-b border-dark/10 pb-6">
         <div className="flex items-center gap-6">
           {user.image ? (
             <img src={user.image} alt={user.name} className="w-24 h-24 rounded-full object-cover shrink-0" />
@@ -66,10 +68,21 @@ export default function UserProfile({ user, teacher, rating, reviewCount }: User
                 ))}
               </div>
             )}
+
+            {graduations.length > 0 && (
+              <ul className="flex flex-wrap gap-x-4 gap-y-1">
+                {graduations.map((grad, i) => (
+                  <li key={i} className="text-xs text-dark flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
+                    {grad}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
         <Button
-          size="lg"
+          size="md"
           variant="flat"
           className="p-4 bg-secondary"
           onPress={() => setEditProfileOpen(true)}
