@@ -33,7 +33,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const rawPage = parseInt(url.searchParams.get('page') ?? '1', 10);
   const page = isNaN(rawPage) ? 1 : Math.max(1, rawPage);
-  const filter = (url.searchParams.get('filter') ?? 'all') as BookingFilter;
+  const VALID_FILTERS: BookingFilter[] = ['all', 'upcoming', 'past', 'cancelled'];
+  const rawFilter = url.searchParams.get('filter') ?? 'all';
+  const filter: BookingFilter = VALID_FILTERS.includes(rawFilter as BookingFilter) ? (rawFilter as BookingFilter) : 'all';
   const offset = (page - 1) * PAGE_SIZE;
 
   const [teacherResult, learnerResult] = await Promise.all([
@@ -242,10 +244,11 @@ export default function Page() {
   } = useLoaderData<typeof loader>();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const view = (searchParams.get('view') ?? (teacher ? 'teacher' : 'learner')) as View;
+  const rawView = searchParams.get('view') ?? '';
+  const view: View = rawView === 'teacher' || rawView === 'learner' ? rawView : teacher ? 'teacher' : 'learner';
 
   const handleViewChange = (newView: View) => {
-    setSearchParams({ view: newView }, { preventScrollReset: true });
+    setSearchParams((prev) => { prev.set('view', newView); return prev; }, { preventScrollReset: true });
   };
 
   const isTeacherView = view === 'teacher';
