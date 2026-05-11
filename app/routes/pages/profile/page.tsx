@@ -206,7 +206,15 @@ export async function action({ request }: Route.ActionArgs) {
     }
 
     const status = formData.get('status') as string | null;
-    if (!status) return { success: false, error: 'Statut manquant.' };
+    const VALID_STATUSES = ['pending', 'confirmed', 'cancelled'] as const;
+    if (!status || !VALID_STATUSES.includes(status as never)) {
+      return { success: false, error: 'Statut invalide.' };
+    }
+
+    if (status === 'confirmed' && !isTeacher && !isAdmin) {
+      return { success: false, error: 'Seul un enseignant peut confirmer une réservation.' };
+    }
+
     return updateBooking(bookingId, { status: status as 'pending' | 'confirmed' | 'cancelled' });
   }
 

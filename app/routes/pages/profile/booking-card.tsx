@@ -4,6 +4,7 @@ import { Card, CardBody, Button, Chip, Dropdown, DropdownTrigger, DropdownMenu, 
 import { formatHourLabel, formatDateLabel, formatDuration, capitalize } from '~/lib/utils';
 import { useFetcher, useRevalidator } from 'react-router';
 import { useEffect } from 'react';
+import { addToast } from '@heroui/react';
 
 type BookingCardProps = {
   booking: BookingWithRelations;
@@ -15,12 +16,19 @@ export default function BookingCard({ booking, isTeacher, action = '/profile' }:
   const start = new Date(booking.startTime);
   const end = new Date(booking.endTime);
   const durationMinutes = Math.round((end.getTime() - start.getTime()) / 60000);
-  const fetcher = useFetcher<{ success?: boolean }>();
+  const fetcher = useFetcher<{ success?: boolean; error?: string }>();
   const revalidator = useRevalidator();
 
   useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data?.success) {
+    if (fetcher.state !== 'idle' || !fetcher.data) return;
+    if (fetcher.data.success) {
       revalidator.revalidate();
+    } else {
+      addToast({
+        title: 'Erreur',
+        description: fetcher.data.error ?? 'Une erreur est survenue.',
+        color: 'danger',
+      });
     }
   }, [fetcher.data, fetcher.state, revalidator]);
 

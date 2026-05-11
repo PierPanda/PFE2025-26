@@ -41,7 +41,7 @@ export default function BookingsTable({
   pageSize,
   isTeacher = false,
 }: BookingsTableProps) {
-  const [_searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   const totalPages = Math.ceil(total / pageSize);
   const rangeStart = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
