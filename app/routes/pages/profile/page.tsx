@@ -35,7 +35,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   const page = parsePageParam(url.searchParams.get('page'));
   const VALID_FILTERS: BookingFilter[] = ['all', 'upcoming', 'past', 'cancelled'];
   const rawFilter = url.searchParams.get('filter') ?? 'all';
-  const filter: BookingFilter = VALID_FILTERS.includes(rawFilter as BookingFilter) ? (rawFilter as BookingFilter) : 'all';
+  const filter: BookingFilter = VALID_FILTERS.includes(rawFilter as BookingFilter)
+    ? (rawFilter as BookingFilter)
+    : 'all';
   const offset = computeOffset(page, PAGE_SIZE);
 
   const [teacherResult, learnerResult] = await Promise.all([
@@ -64,7 +66,10 @@ export async function loader({ request }: Route.LoaderArgs) {
   const totalLearnerBookings = learnerBookingsResult?.success ? (learnerBookingsResult.total ?? 0) : 0;
 
   const rawView = url.searchParams.get('view') ?? '';
-  const activeView = rawView === 'teacher' || rawView === 'learner' ? rawView : teacher ? 'teacher' : 'learner';
+  const activeView = (() => {
+    if (rawView === 'teacher' || rawView === 'learner') return rawView;
+    return teacher ? 'teacher' : 'learner';
+  })();
   const relevantTotal = activeView === 'teacher' ? totalTeacherBookings : totalLearnerBookings;
   const totalPages = Math.ceil(relevantTotal / PAGE_SIZE);
 
@@ -267,10 +272,19 @@ export default function Page() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const rawView = searchParams.get('view') ?? '';
-  const view: View = rawView === 'teacher' || rawView === 'learner' ? rawView : teacher ? 'teacher' : 'learner';
+  const view: View = (() => {
+    if (rawView === 'teacher' || rawView === 'learner') return rawView;
+    return teacher ? 'teacher' : 'learner';
+  })();
 
   const handleViewChange = (newView: View) => {
-    setSearchParams((prev) => { prev.set('view', newView); return prev; }, { preventScrollReset: true });
+    setSearchParams(
+      (prev) => {
+        prev.set('view', newView);
+        return prev;
+      },
+      { preventScrollReset: true },
+    );
   };
 
   const isTeacherView = view === 'teacher';
