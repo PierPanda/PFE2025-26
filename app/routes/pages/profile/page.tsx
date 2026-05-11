@@ -231,6 +231,14 @@ export async function action({ request }: Route.ActionArgs) {
       return { success: false, error: 'Seul un enseignant peut confirmer une réservation.' };
     }
 
+    if (status === 'confirmed' && booking.status !== 'pending') {
+      return { success: false, error: 'Seule une réservation en attente peut être confirmée.' };
+    }
+
+    if (status === 'cancelled' && booking.status === 'cancelled') {
+      return { success: false, error: 'Cette réservation est déjà annulée.' };
+    }
+
     return updateBooking(bookingId, { status: status as 'pending' | 'confirmed' | 'cancelled' });
   }
 
