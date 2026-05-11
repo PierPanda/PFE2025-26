@@ -83,7 +83,7 @@ describe('getAvailableSlots', () => {
     }
   });
 
-  it('should pass slots when exception has no overlap', async () => {
+  it('should return slot unchanged when exception has no overlap', async () => {
     const ruleStart = new Date('2026-04-10T09:00:00Z');
     const ruleEnd = new Date('2026-04-10T12:00:00Z');
     const exStart = new Date('2026-04-10T14:00:00Z');
@@ -287,6 +287,37 @@ describe('getAvailableSlots', () => {
     expect(result.success).toBe(true);
     if (result.success) {
       // 9h-10h, then 14h-15h
+      expect(result.slots).toHaveLength(2);
+      expect(result.slots[0].startTime).toEqual(ruleStart);
+      expect(result.slots[0].endTime).toEqual(ex1Start);
+      expect(result.slots[1].startTime).toEqual(ex2End);
+      expect(result.slots[1].endTime).toEqual(ruleEnd);
+    }
+  });
+
+  it('should handle two overlapping exceptions on the same slot', async () => {
+    const ruleStart = new Date('2026-04-10T09:00:00Z');
+    const ruleEnd = new Date('2026-04-10T15:00:00Z');
+    // ex1 and ex2 overlap: 10h-12h and 11h-13h → combined block 10h-13h
+    const ex1Start = new Date('2026-04-10T10:00:00Z');
+    const ex1End = new Date('2026-04-10T12:00:00Z');
+    const ex2Start = new Date('2026-04-10T11:00:00Z');
+    const ex2End = new Date('2026-04-10T13:00:00Z');
+
+    mockGetAvailabilityByTeacherId.mockResolvedValue({
+      success: true,
+      availabilities: [
+        createAvailability('av-1', ruleStart, ruleEnd, false),
+        createAvailability('ex-1', ex1Start, ex1End, true),
+        createAvailability('ex-2', ex2Start, ex2End, true),
+      ],
+    });
+
+    const result = await getAvailableSlots(teacherId);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      // 9h-10h, then 13h-15h
       expect(result.slots).toHaveLength(2);
       expect(result.slots[0].startTime).toEqual(ruleStart);
       expect(result.slots[0].endTime).toEqual(ex1Start);
