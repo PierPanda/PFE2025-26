@@ -295,10 +295,10 @@ describe('getAvailableSlots', () => {
     }
   });
 
-  it('should filter out fragments shorter than minDurationMinutes after exception split', async () => {
+  it('should split fragments into course-duration slots and discard remainders shorter than minDurationMinutes', async () => {
     const ruleStart = new Date('2026-04-10T09:00:00Z');
     const ruleEnd = new Date('2026-04-10T12:00:00Z');
-    // Exception leaves a 10-min fragment on the left and a 60-min fragment on the right
+    // Exception leaves a 10-min fragment on the left (09:00-09:10) and a 60-min fragment on the right (11:00-12:00)
     const exStart = new Date('2026-04-10T09:10:00Z');
     const exEnd = new Date('2026-04-10T11:00:00Z');
 
@@ -314,10 +314,13 @@ describe('getAvailableSlots', () => {
 
     expect(result.success).toBe(true);
     if (result.success) {
-      // 10-min left fragment filtered out, 60-min right fragment kept
-      expect(result.slots).toHaveLength(1);
+      // 10-min left fragment → 0 slots (can't fit 30 min)
+      // 60-min right fragment → 2 slots: 11:00-11:30 and 11:30-12:00
+      expect(result.slots).toHaveLength(2);
       expect(result.slots[0].startTime).toEqual(exEnd);
-      expect(result.slots[0].endTime).toEqual(ruleEnd);
+      expect(result.slots[0].endTime).toEqual(new Date('2026-04-10T11:30:00Z'));
+      expect(result.slots[1].startTime).toEqual(new Date('2026-04-10T11:30:00Z'));
+      expect(result.slots[1].endTime).toEqual(ruleEnd);
     }
   });
 });
