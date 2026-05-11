@@ -358,8 +358,16 @@ async function seedBookings(
     return 0;
   }
 
-  const statuses: Array<'pending' | 'confirmed' | 'cancelled'> = ['pending', 'confirmed', 'cancelled'];
+  const statuses: Array<'pending' | 'confirmed' | 'cancelled' | 'completed'> = [
+    'pending',
+    'confirmed',
+    'cancelled',
+    'completed',
+  ];
   let created = 0;
+
+  // Track availabilities already taken by a pending/confirmed booking to avoid violating the exclusion constraint
+  const takenAvailabilityIds = new Set<string>();
 
   // Récupérer les détails des courses pour avoir les prix
   const courseDetails = await Promise.all(
@@ -399,6 +407,13 @@ async function seedBookings(
       const bookingStart = new Date(availabilityStart.getTime() + offsetStep * stepMs);
       const bookingEnd = new Date(bookingStart.getTime() + courseDurationMs);
 
+      const status = statuses[Math.floor(Math.random() * statuses.length)];
+
+      // Skip this availability if already taken by an active booking (exclusion constraint)
+      if ((status === 'pending' || status === 'confirmed') && takenAvailabilityIds.has(availability.id)) {
+        continue;
+      }
+
       const booking: typeof schema.bookings.$inferInsert = {
         id: randomUUID(),
         courseId: courseDetail.courseId,
@@ -407,13 +422,16 @@ async function seedBookings(
         startTime: bookingStart,
         endTime: bookingEnd,
         priceAtBooking: courseDetail.price,
-        status: statuses[Math.floor(Math.random() * statuses.length)],
+        status,
         paymentIntentId: Math.random() > 0.3 ? `pi_${randomUUID()}` : undefined,
       };
 
       try {
         await db.insert(schema.bookings).values(booking);
         created++;
+        if (status === 'pending' || status === 'confirmed') {
+          takenAvailabilityIds.add(availability.id);
+        }
       } catch (error) {
         console.error(
           '[WARN] Echec de creation du booking',
