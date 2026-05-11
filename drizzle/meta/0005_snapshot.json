@@ -1,6 +1,6 @@
 {
-  "id": "d6244505-3706-4ef9-bb8b-53b6416f0c9c",
-  "prevId": "a4d76e09-e5f6-4459-afb8-808715424e8c",
+  "id": "5139ef4e-b46a-4bba-a728-e5c02af30b68",
+  "prevId": "e7efc0f3-1287-409d-bc05-49fce26e28c7",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -138,6 +138,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
+        },
+        "isException": {
+          "name": "isException",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "createdAt": {
           "name": "createdAt",
