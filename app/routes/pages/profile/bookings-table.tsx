@@ -44,7 +44,7 @@ export default function BookingsTable({
   const [, setSearchParams] = useSearchParams();
 
   const totalPages = Math.ceil(total / pageSize);
-  const rangeStart = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const rangeStart = total === 0 ? 0 : Math.min((currentPage - 1) * pageSize + 1, total);
   const rangeEnd = Math.min(currentPage * pageSize, total);
 
   const handleFilterChange = (key: BookingFilter) => {
@@ -139,8 +139,8 @@ export default function BookingsTable({
         }}
       >
         <TableHeader>
-          <TableColumn className="w-50">Date</TableColumn>
-          <TableColumn className="w-50">Heure</TableColumn>
+          <TableColumn className="w-48">Date</TableColumn>
+          <TableColumn className="w-48">Heure</TableColumn>
           <TableColumn>Cours</TableColumn>
           <TableColumn className="w-56">{isTeacher ? 'Apprenant' : 'Professeur'}</TableColumn>
           <TableColumn className="w-24">Prix</TableColumn>

@@ -103,7 +103,7 @@ export async function getBookingsByLearnerId(
     return {
       success: true,
       bookings: bookingsList,
-      total: totalResult?.[0]?.total,
+      total: totalResult !== null ? Number(totalResult[0]?.total ?? 0) : undefined,
     };
   } catch (error) {
     console.error('Error fetching bookings by learner ID:', error);
@@ -157,7 +157,7 @@ export async function getBookingsByTeacherId(
     return {
       success: true,
       bookings: bookingsList,
-      total: totalResult?.[0]?.total,
+      total: totalResult !== null ? Number(totalResult[0]?.total ?? 0) : undefined,
     };
   } catch (error) {
     console.error('Error fetching bookings by teacher ID:', error);
