@@ -1,4 +1,4 @@
-import { data, useLoaderData, useSearchParams } from 'react-router';
+import { data, redirect, useLoaderData, useSearchParams } from 'react-router';
 import type { Route } from './+types/page';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { auth } from '~/auth.server';
@@ -60,6 +60,20 @@ export async function loader({ request }: Route.LoaderArgs) {
       learner ? getBookingsByLearnerId(learner.id, { filter: 'upcoming', limit: 3, orderDirection: 'asc' }) : null,
     ]);
 
+  const totalTeacherBookings = teacherBookingsResult?.success ? (teacherBookingsResult.total ?? 0) : 0;
+  const totalLearnerBookings = learnerBookingsResult?.success ? (learnerBookingsResult.total ?? 0) : 0;
+
+  const rawView = url.searchParams.get('view') ?? '';
+  const activeView = rawView === 'teacher' || rawView === 'learner' ? rawView : teacher ? 'teacher' : 'learner';
+  const relevantTotal = activeView === 'teacher' ? totalTeacherBookings : totalLearnerBookings;
+  const totalPages = Math.ceil(relevantTotal / PAGE_SIZE);
+
+  if (totalPages > 0 && page > totalPages) {
+    const redirectUrl = new URL(url);
+    redirectUrl.searchParams.set('page', String(totalPages));
+    throw redirect(redirectUrl.pathname + redirectUrl.search);
+  }
+
   return {
     user: session.user,
     teacher,
@@ -67,9 +81,9 @@ export async function loader({ request }: Route.LoaderArgs) {
     courses,
     availabilities,
     teacherBookings: teacherBookingsResult?.success ? teacherBookingsResult.bookings : [],
-    totalTeacherBookings: teacherBookingsResult?.success ? (teacherBookingsResult.total ?? 0) : 0,
+    totalTeacherBookings,
     learnerBookings: learnerBookingsResult?.success ? learnerBookingsResult.bookings : [],
-    totalLearnerBookings: learnerBookingsResult?.success ? (learnerBookingsResult.total ?? 0) : 0,
+    totalLearnerBookings,
     upcomingTeacherBookings: upcomingTeacherBookingsResult?.success ? upcomingTeacherBookingsResult.bookings : [],
     upcomingLearnerBookings: upcomingLearnerBookingsResult?.success ? upcomingLearnerBookingsResult.bookings : [],
     currentPage: page,
