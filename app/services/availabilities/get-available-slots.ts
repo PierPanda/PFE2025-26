@@ -36,7 +36,7 @@ export async function getAvailableSlots(teacherId: string, minDurationMinutes = 
       return availabilitiesResult;
     }
 
-    const bookingsResult = await getBookingsByTeacherId(teacherId, ['confirmed', 'pending']);
+    const bookingsResult = await getBookingsByTeacherId(teacherId, { status: ['confirmed', 'pending'] });
     if (!bookingsResult.success) {
       return bookingsResult;
     }

@@ -43,6 +43,13 @@
       "when": 1778527770793,
       "tag": "0005_vengeful_the_order",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1778528967680,
+      "tag": "0006_add_no_overlapping_constraint",
+      "breakpoints": true
     }
   ]
 }

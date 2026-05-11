@@ -122,6 +122,7 @@ export type GetBookingResponse = ServiceResponse<{
 
 export type GetBookingsResponse = ServiceResponse<{
   bookings: BookingWithRelations[];
+  total?: number;
 }>;
 
 export type GetAppStatsResponse = ServiceResponse<{

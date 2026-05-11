@@ -1,6 +1,5 @@
-import { data, useLoaderData, Link } from 'react-router';
+import { data, redirect, useLoaderData, useSearchParams } from 'react-router';
 import type { Route } from './+types/page';
-import { useState } from 'react';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { auth } from '~/auth.server';
 import { getCoursesByTeacher } from '~/services/courses/get-courses';
@@ -12,30 +11,89 @@ import { updateTeacher } from '~/services/teachers/update-teacher';
 import { uploadAvatar } from '~/server/services/upload/upload-avatar';
 import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability';
 import { courseFormSchema } from '~/lib/validation';
-import CourseCard from '~/components/ui/course-card';
+import { parsePageParam, computeOffset } from '~/lib/pagination';
 import UserProfile from '~/components/profile/user-profile';
-import EditProfileModal from '~/components/profile/edit-profile-modal';
-import { AvailabilitiesModal } from '~/components/availabilities/availabilities-modal';
-import { Button } from '@heroui/react';
-import { Icon, InlineIcon } from '@iconify/react';
+import {
+  getBooking,
+  getBookingsByLearnerId,
+  getBookingsByTeacherId,
+  type BookingFilter,
+} from '~/services/bookings/get-bookings';
+import { updateBooking } from '~/services/bookings/update-booking';
+import CalendarSection from './calendar-section';
+import CoursesSection from './courses-section';
+import BookingsTable from './bookings-table';
+import { Tabs, Tab } from '@heroui/react';
+import { getLearnerByUserId } from '~/services/learners/get-learner';
+
+const PAGE_SIZE = 10;
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
 
-  const teacherResult = await getTeacherByUserId(session.user.id);
+  const url = new URL(request.url);
+  const page = parsePageParam(url.searchParams.get('page'));
+  const VALID_FILTERS: BookingFilter[] = ['all', 'upcoming', 'past', 'cancelled'];
+  const rawFilter = url.searchParams.get('filter') ?? 'all';
+  const filter: BookingFilter = VALID_FILTERS.includes(rawFilter as BookingFilter)
+    ? (rawFilter as BookingFilter)
+    : 'all';
+  const offset = computeOffset(page, PAGE_SIZE);
+
+  const [teacherResult, learnerResult] = await Promise.all([
+    getTeacherByUserId(session.user.id),
+    getLearnerByUserId(session.user.id),
+  ]);
   const teacher = teacherResult.success ? teacherResult.teacher : null;
+  const learner = learnerResult.success ? learnerResult.learner : null;
 
-  const coursesResult = teacher ? await getCoursesByTeacher(teacher.id) : null;
+  const [coursesResult, availabilityResult] = await Promise.all([
+    teacher ? getCoursesByTeacher(teacher.id) : null,
+    teacher ? getAvailabilityByTeacherId(teacher.id) : null,
+  ]);
   const courses = coursesResult?.success ? (coursesResult.courses ?? []) : [];
-
-  const availabilityResult = teacher ? await getAvailabilityByTeacherId(teacher.id) : null;
   const availabilities = availabilityResult?.success ? availabilityResult.availabilities : [];
+
+  const [teacherBookingsResult, learnerBookingsResult, upcomingTeacherBookingsResult, upcomingLearnerBookingsResult] =
+    await Promise.all([
+      teacher ? getBookingsByTeacherId(teacher.id, { filter, limit: PAGE_SIZE, offset }) : null,
+      learner ? getBookingsByLearnerId(learner.id, { filter, limit: PAGE_SIZE, offset }) : null,
+      teacher ? getBookingsByTeacherId(teacher.id, { filter: 'upcoming', limit: 3, orderDirection: 'asc' }) : null,
+      learner ? getBookingsByLearnerId(learner.id, { filter: 'upcoming', limit: 3, orderDirection: 'asc' }) : null,
+    ]);
+
+  const totalTeacherBookings = teacherBookingsResult?.success ? (teacherBookingsResult.total ?? 0) : 0;
+  const totalLearnerBookings = learnerBookingsResult?.success ? (learnerBookingsResult.total ?? 0) : 0;
+
+  const rawView = url.searchParams.get('view') ?? '';
+  const activeView = (() => {
+    if (rawView === 'teacher' || rawView === 'learner') return rawView;
+    return teacher ? 'teacher' : 'learner';
+  })();
+  const relevantTotal = activeView === 'teacher' ? totalTeacherBookings : totalLearnerBookings;
+  const totalPages = Math.ceil(relevantTotal / PAGE_SIZE);
+
+  if (totalPages > 0 && page > totalPages) {
+    const redirectUrl = new URL(url);
+    redirectUrl.searchParams.set('page', String(totalPages));
+    throw redirect(redirectUrl.pathname + redirectUrl.search);
+  }
 
   return {
     user: session.user,
     teacher,
+    learner,
     courses,
     availabilities,
+    teacherBookings: teacherBookingsResult?.success ? teacherBookingsResult.bookings : [],
+    totalTeacherBookings,
+    learnerBookings: learnerBookingsResult?.success ? learnerBookingsResult.bookings : [],
+    totalLearnerBookings,
+    upcomingTeacherBookings: upcomingTeacherBookingsResult?.success ? upcomingTeacherBookingsResult.bookings : [],
+    upcomingLearnerBookings: upcomingLearnerBookingsResult?.success ? upcomingLearnerBookingsResult.bookings : [],
+    currentPage: page,
+    currentFilter: filter,
+    pageSize: PAGE_SIZE,
   };
 }
 
@@ -152,84 +210,127 @@ export async function action({ request }: Route.ActionArgs) {
     return deleteCourse(courseId);
   }
 
+  if (actionType === 'updateBooking') {
+    const bookingId = (formData.get('bookingId') as string | null)?.trim();
+    if (!bookingId) return { success: false, error: 'ID de réservation manquant.' };
+
+    const bookingResult = await getBooking(bookingId);
+    if (!bookingResult.success || !bookingResult.booking) {
+      return { success: false, error: 'Réservation introuvable.' };
+    }
+
+    const booking = bookingResult.booking;
+    const isLearner = booking.learner.user.id === session.user.id;
+    const isTeacher = booking.course.teacher.user.id === session.user.id;
+    if (!isAdmin && !isLearner && !isTeacher) {
+      return { success: false, error: 'Vous ne pouvez pas modifier cette réservation.' };
+    }
+
+    const status = formData.get('status') as string | null;
+    const VALID_STATUSES = ['pending', 'confirmed', 'cancelled'] as const;
+    if (!status || !VALID_STATUSES.includes(status as never)) {
+      return { success: false, error: 'Statut invalide.' };
+    }
+
+    if (status === 'confirmed' && !isTeacher && !isAdmin) {
+      return { success: false, error: 'Seul un enseignant peut confirmer une réservation.' };
+    }
+
+    if (status === 'confirmed' && booking.status !== 'pending') {
+      return { success: false, error: 'Seule une réservation en attente peut être confirmée.' };
+    }
+
+    if (status === 'cancelled' && booking.status === 'cancelled') {
+      return { success: false, error: 'Cette réservation est déjà annulée.' };
+    }
+
+    return updateBooking(bookingId, { status: status as 'pending' | 'confirmed' | 'cancelled' });
+  }
+
   return { success: false, error: 'Action inconnue.' };
 }
 
+type View = 'teacher' | 'learner';
+
 export default function Page() {
-  const { user, teacher, courses, availabilities } = useLoaderData<typeof loader>();
-  const [isAvailabilitiesOpen, setAvailabilitiesOpen] = useState(false);
-  const [isEditProfileOpen, setEditProfileOpen] = useState(false);
+  const {
+    user,
+    teacher,
+    learner,
+    courses,
+    availabilities,
+    teacherBookings,
+    totalTeacherBookings,
+    learnerBookings,
+    totalLearnerBookings,
+    upcomingTeacherBookings,
+    upcomingLearnerBookings,
+    currentPage,
+    currentFilter,
+    pageSize,
+  } = useLoaderData<typeof loader>();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const rawView = searchParams.get('view') ?? '';
+  const view: View = (() => {
+    if (rawView === 'teacher' || rawView === 'learner') return rawView;
+    return teacher ? 'teacher' : 'learner';
+  })();
+
+  const handleViewChange = (newView: View) => {
+    setSearchParams(
+      (prev) => {
+        prev.set('view', newView);
+        return prev;
+      },
+      { preventScrollReset: true },
+    );
+  };
+
+  const isTeacherView = view === 'teacher';
 
   return (
-    <main className="px-10 py-8 flex flex-col gap-6">
-      <div className="flex justify-between items-center bg-amber-50 rounded-2xl p-6 w-full gap-4">
-        <UserProfile user={user} teacher={teacher} />
-        <div className="flex gap-2 items-end shrink-0">
-          {teacher && (
-            <Button
-              size="lg"
-              color="warning"
-              variant="flat"
-              className="p-4"
-              startContent={<Icon icon="mdi:calendar-clock" width="16" />}
-              onPress={() => setAvailabilitiesOpen(true)}
-            >
-              Mes disponibilités
-            </Button>
-          )}
-          <Button isIconOnly size="lg" color="warning" variant="flat" onPress={() => setEditProfileOpen(true)}>
-            <Icon icon="mdi:pencil" width="16" />
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-col bg-amber-50 rounded-2xl p-6 gap-4 w-full overflow-hidden">
-        <div className="flex items-center justify-between">
-          <h3 className="text-2xl font-bold">Mes cours</h3>
-          {courses.length > 0 && (
-            <Link to="/courses/create">
-              <Button isIconOnly size="sm" color="warning" className="text-white">
-                <InlineIcon icon="mdi:plus" width="20" />
-              </Button>
-            </Link>
-          )}
-        </div>
-
-        {courses.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <p className="text-gray-500 mb-4">Vous n'avez pas encore de cours.</p>
-            <Link to="/courses/create">
-              <Button size="sm" color="warning" variant="flat">
-                Créer mon premier cours
-              </Button>
-            </Link>
-          </div>
-        ) : (
-          <div className="w-full overflow-x-auto">
-            <ul className="flex gap-4 pb-2">
-              {courses.map((course) => (
-                <CourseCard key={course.id} course={course} currentUserId={user.id} currentUserRole={user.role} />
-              ))}
-            </ul>
-          </div>
+    <main className="px-10 py-8 flex flex-col gap-12">
+      <UserProfile user={user} teacher={teacher} />
+      <div className="flex flex-col gap-20">
+        {teacher && learner && (
+          <Tabs
+            selectedKey={view}
+            onSelectionChange={(key) => handleViewChange(key as View)}
+            variant="underlined"
+            className="mx-auto"
+            classNames={{
+              tab: 'text-lg font-medium text-default-500',
+              cursor: 'bg-secondary',
+            }}
+          >
+            <Tab key="teacher" title="Enseignant" />
+            <Tab key="learner" title="Apprenant" />
+          </Tabs>
         )}
-      </div>
 
-      <EditProfileModal
-        isOpen={isEditProfileOpen}
-        onClose={() => setEditProfileOpen(false)}
-        user={user}
-        teacher={teacher}
-      />
+        {teacher && isTeacherView && (
+          <CalendarSection
+            teacherBookings={upcomingTeacherBookings}
+            teacher={teacher}
+            availabilities={availabilities}
+            isTeacher
+          />
+        )}
 
-      {teacher && (
-        <AvailabilitiesModal
-          isOpen={isAvailabilitiesOpen}
-          onClose={() => setAvailabilitiesOpen(false)}
-          teacherId={teacher.id}
-          availabilities={availabilities}
+        {teacher && isTeacherView && <CoursesSection courses={courses} user={user} />}
+
+        {learner && !isTeacherView && <CalendarSection learnerBookings={upcomingLearnerBookings} />}
+
+        <BookingsTable
+          bookings={isTeacherView ? teacherBookings : learnerBookings}
+          total={isTeacherView ? totalTeacherBookings : totalLearnerBookings}
+          currentPage={currentPage}
+          currentFilter={currentFilter}
+          pageSize={pageSize}
+          isTeacher={isTeacherView}
         />
-      )}
+      </div>
     </main>
   );
 }
