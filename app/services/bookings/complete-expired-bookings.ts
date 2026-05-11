@@ -3,21 +3,17 @@ import { db } from '~/server/lib/db/index.server';
 import { bookings } from '~/server/lib/db/schema';
 import type { CompleteExpiredBookingsResponse } from '../types';
 
-/**
- * Complete all confirmed bookings with an end time in the past
- */
+// Complete all confirmed bookings whose end time has passed
 export async function completeExpiredBookings(): Promise<CompleteExpiredBookingsResponse> {
   try {
-    const updatedBookings = await db
+    const result = await db
       .update(bookings)
       .set({ status: 'completed', updatedAt: sql`NOW()` })
-      .where(and(eq(bookings.status, 'confirmed'), lt(bookings.endTime, sql`NOW()`)))
-      .returning({ id: bookings.id });
+      .where(and(eq(bookings.status, 'confirmed'), lt(bookings.endTime, sql`NOW()`)));
 
     return {
       success: true,
-      updated: updatedBookings.length,
-      message: 'Réservations expirées complétées avec succès.',
+      updated: result.rowCount ?? 0,
     };
   } catch (error) {
     console.error('Error completing expired bookings:', error);

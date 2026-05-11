@@ -72,7 +72,7 @@ export const batchAvailabilitySchema = z.object({
   delete: z.array(uuidSchema).default([]),
 });
 
-const bookingStatusValues = ['pending', 'confirmed', 'cancelled', 'completed'] as const;
+const bookingStatusValues = ['pending', 'confirmed', 'cancelled'] as const;
 
 export const bookingFormSchema = z.object({
   courseId: z.string().min(1, "L'ID du cours est requis."),
