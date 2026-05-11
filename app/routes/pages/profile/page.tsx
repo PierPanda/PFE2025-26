@@ -11,6 +11,7 @@ import { updateTeacher } from '~/services/teachers/update-teacher';
 import { uploadAvatar } from '~/server/services/upload/upload-avatar';
 import { getAvailabilityByTeacherId } from '~/services/availabilities/get-availability';
 import { courseFormSchema } from '~/lib/validation';
+import { parsePageParam, computeOffset } from '~/lib/pagination';
 import UserProfile from '~/components/profile/user-profile';
 import {
   getBooking,
@@ -31,12 +32,11 @@ export async function loader({ request }: Route.LoaderArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
 
   const url = new URL(request.url);
-  const rawPage = parseInt(url.searchParams.get('page') ?? '1', 10);
-  const page = isNaN(rawPage) ? 1 : Math.max(1, rawPage);
+  const page = parsePageParam(url.searchParams.get('page'));
   const VALID_FILTERS: BookingFilter[] = ['all', 'upcoming', 'past', 'cancelled'];
   const rawFilter = url.searchParams.get('filter') ?? 'all';
   const filter: BookingFilter = VALID_FILTERS.includes(rawFilter as BookingFilter) ? (rawFilter as BookingFilter) : 'all';
-  const offset = (page - 1) * PAGE_SIZE;
+  const offset = computeOffset(page, PAGE_SIZE);
 
   const [teacherResult, learnerResult] = await Promise.all([
     getTeacherByUserId(session.user.id),
