@@ -50,6 +50,13 @@
       "when": 1778528967680,
       "tag": "0006_add_no_overlapping_constraint",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1778530522700,
+      "tag": "0007_add_reminder_sent_at",
+      "breakpoints": true
     }
   ]
 }

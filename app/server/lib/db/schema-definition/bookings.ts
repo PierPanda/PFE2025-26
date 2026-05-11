@@ -21,6 +21,7 @@ export const bookings = pgTable('bookings', {
   priceAtBooking: numeric('priceAtBooking').notNull(),
   status: bookingStatus('status').notNull(),
   paymentIntentId: text('paymentIntentId'),
+  reminderSentAt: timestamp('reminderSentAt'),
   createdAt: timestamp('createdAt').notNull().defaultNow(),
   updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });

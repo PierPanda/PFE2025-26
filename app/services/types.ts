@@ -159,3 +159,4 @@ export type CreateBookingResponse = ServiceResponse<{ booking: DbBooking }>;
 export type UpdateBookingResponse = ServiceResponse<{ booking: DbBooking }>;
 export type DeleteBookingResponse = ServiceResponse<object>;
 export type CompleteExpiredBookingsResponse = ServiceResponse<{ updated: number }>;
+export type SendBookingRemindersResponse = ServiceResponse<{ sent: number }>;
