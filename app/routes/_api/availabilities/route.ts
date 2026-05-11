@@ -6,6 +6,7 @@ import { createAvailability } from '~/services/availabilities/create-availabilit
 import { deleteAvailability } from '~/services/availabilities/delete-availability';
 import { batchUpdateAvailabilities } from '~/services/availabilities/batch-availabilities';
 import { getTeacherByUserId } from '~/services/teachers/get-teacher';
+import { getBookingsByTeacherId } from '~/services/bookings/get-bookings';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request);
@@ -87,6 +88,28 @@ export async function action({ request }: ActionFunctionArgs) {
         const deleteChecks = await Promise.all(parsed.data.delete.map((id) => getAvailability(id)));
         if (deleteChecks.some((r) => !r.success || !r.availability || r.availability.teacherId !== teacher.id)) {
           return data({ success: false, error: 'Non autorisé.' }, { status: 403 });
+        }
+      }
+
+      const exceptionSlots = parsed.data.add.filter((s) => s.isException);
+      if (exceptionSlots.length > 0) {
+        const bookingsResult = await getBookingsByTeacherId(teacher.id, ['confirmed', 'pending']);
+        if (!bookingsResult.success) {
+          return data(
+            { success: false, error: 'Impossible de vérifier les réservations existantes.' },
+            { status: 500 },
+          );
+        }
+
+        const hasConflict = bookingsResult.bookings.some((booking) =>
+          exceptionSlots.some((ex) => ex.startTime < booking.endTime && ex.endTime > booking.startTime),
+        );
+
+        if (hasConflict) {
+          return data(
+            { success: false, error: 'Ce créneau de blocage chevauche une réservation confirmée ou en attente.' },
+            { status: 409 },
+          );
         }
       }
 

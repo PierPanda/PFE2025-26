@@ -312,11 +312,7 @@ export function AvailabilitiesModal({ isOpen, onClose, teacherId, availabilities
                                 if (isExceptionSlot) return 'bg-danger-50 text-danger-600';
                                 return 'bg-amber-50 text-gray-700';
                               })();
-                              const iconColorClass = (() => {
-                                if (isMarked) return 'text-danger';
-                                if (isExceptionSlot) return 'text-danger';
-                                return 'text-warning';
-                              })();
+                              const iconColorClass = isMarked || isExceptionSlot ? 'text-danger' : 'text-warning';
                               return (
                                 <span
                                   key={a.id}
