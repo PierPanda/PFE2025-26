@@ -93,7 +93,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
       const exceptionSlots = parsed.data.add.filter((s) => s.isException);
       if (exceptionSlots.length > 0) {
-        const bookingsResult = await getBookingsByTeacherId(teacher.id, ['confirmed', 'pending']);
+        const bookingsResult = await getBookingsByTeacherId(teacher.id, { status: ['confirmed', 'pending'] });
         if (!bookingsResult.success) {
           return data(
             { success: false, error: 'Impossible de vérifier les réservations existantes.' },
