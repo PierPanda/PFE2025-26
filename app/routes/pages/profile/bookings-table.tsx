@@ -1,4 +1,5 @@
 import { useSearchParams } from 'react-router';
+import { computeRange } from '~/lib/pagination';
 import {
   Avatar,
   Button,
@@ -43,9 +44,7 @@ export default function BookingsTable({
 }: BookingsTableProps) {
   const [, setSearchParams] = useSearchParams();
 
-  const totalPages = Math.ceil(total / pageSize);
-  const rangeStart = total === 0 ? 0 : Math.min((currentPage - 1) * pageSize + 1, total);
-  const rangeEnd = Math.min(currentPage * pageSize, total);
+  const { totalPages, rangeStart, rangeEnd } = computeRange(currentPage, total, pageSize);
 
   const handleFilterChange = (key: BookingFilter) => {
     setSearchParams(

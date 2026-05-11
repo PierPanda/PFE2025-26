@@ -1,26 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import type { BookingFilter } from '~/services/bookings/get-bookings';
-
-// --- Helpers that replicate the loader and table logic ---
+import { parsePageParam, computeOffset, computeRange } from '~/lib/pagination';
 
 const PAGE_SIZE = 10;
-
-function parsePageParam(param: string | null): number {
-  const raw = parseInt(param ?? '1', 10);
-  return isNaN(raw) ? 1 : Math.max(1, raw);
-}
-
-function computeOffset(page: number): number {
-  return (page - 1) * PAGE_SIZE;
-}
-
-function computeRange(currentPage: number, total: number) {
-  return {
-    rangeStart: total === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1,
-    rangeEnd: Math.min(currentPage * PAGE_SIZE, total),
-    totalPages: Math.ceil(total / PAGE_SIZE),
-  };
-}
 
 type MockBooking = {
   startTime: Date;
@@ -79,15 +61,15 @@ describe('parsePageParam', () => {
 
 describe('computeOffset', () => {
   it('return 0 for page 1', () => {
-    expect(computeOffset(1)).toBe(0);
+    expect(computeOffset(1, PAGE_SIZE)).toBe(0);
   });
 
   it('return 10 for page 2', () => {
-    expect(computeOffset(2)).toBe(10);
+    expect(computeOffset(2, PAGE_SIZE)).toBe(10);
   });
 
   it('return 20 for page 3', () => {
-    expect(computeOffset(3)).toBe(20);
+    expect(computeOffset(3, PAGE_SIZE)).toBe(20);
   });
 });
 
@@ -95,37 +77,37 @@ describe('computeOffset', () => {
 
 describe('computeRange', () => {
   it('return correct range for 0 total results', () => {
-    const { rangeStart, rangeEnd } = computeRange(1, 0);
+    const { rangeStart, rangeEnd } = computeRange(1, 0, PAGE_SIZE);
     expect(rangeStart).toBe(0);
     expect(rangeEnd).toBe(0);
   });
 
   it('return correct range for page 1 with 25 results', () => {
-    const { rangeStart, rangeEnd } = computeRange(1, 25);
+    const { rangeStart, rangeEnd } = computeRange(1, 25, PAGE_SIZE);
     expect(rangeStart).toBe(1);
     expect(rangeEnd).toBe(10);
   });
 
   it('return correct range for page 2 with 25 results', () => {
-    const { rangeStart, rangeEnd } = computeRange(2, 25);
+    const { rangeStart, rangeEnd } = computeRange(2, 25, PAGE_SIZE);
     expect(rangeStart).toBe(11);
     expect(rangeEnd).toBe(20);
   });
 
   it('return correct range for last partial page', () => {
-    const { rangeStart, rangeEnd } = computeRange(3, 25);
+    const { rangeStart, rangeEnd } = computeRange(3, 25, PAGE_SIZE);
     expect(rangeStart).toBe(21);
     expect(rangeEnd).toBe(25);
   });
 
   it('return correct totalPages for 10 results', () => {
-    expect(computeRange(1, 10).totalPages).toBe(1);
+    expect(computeRange(1, 10, PAGE_SIZE).totalPages).toBe(1);
   });
 
   it('return correct totalPages', () => {
-    expect(computeRange(1, 25).totalPages).toBe(3);
-    expect(computeRange(1, 11).totalPages).toBe(2);
-    expect(computeRange(1, 0).totalPages).toBe(0);
+    expect(computeRange(1, 25, PAGE_SIZE).totalPages).toBe(3);
+    expect(computeRange(1, 11, PAGE_SIZE).totalPages).toBe(2);
+    expect(computeRange(1, 0, PAGE_SIZE).totalPages).toBe(0);
   });
 });
 
