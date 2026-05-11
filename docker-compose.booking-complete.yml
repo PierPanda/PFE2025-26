@@ -1,0 +1,13 @@
+# Cron-only stack for local testing
+# TODO: integration complete avec la stack Docker de prod en attente de la configuration Docker globale (service app + réseau + secrets)
+services:
+  bookings-cron:
+    build:
+      context: ./docker/cron
+    container_name: maestro-bookings-cron
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Forcer l'URL locale — remplacer par l'URL interne du service en prod
+      BOOKINGS_COMPLETE_ENDPOINT: http://host.docker.internal:5173/api/bookings/complete
