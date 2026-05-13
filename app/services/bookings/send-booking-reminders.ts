@@ -14,15 +14,6 @@ const bookingRelations = {
       },
     },
   },
-  availability: {
-    with: {
-      teacher: {
-        with: {
-          user: true,
-        },
-      },
-    },
-  },
   learner: {
     with: {
       user: true,
