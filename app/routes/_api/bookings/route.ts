@@ -216,11 +216,13 @@ export async function action({ request }: ActionFunctionArgs) {
       });
 
       if (result.success) {
-        getBooking(result.booking.id).then((bookingResult) => {
-          if (bookingResult.success && bookingResult.booking) {
-            sendBookingConfirmation(bookingResult.booking).catch(console.error);
-          }
-        });
+        getBooking(result.booking.id)
+          .then((bookingResult) => {
+            if (bookingResult.success && bookingResult.booking) {
+              sendBookingConfirmation(bookingResult.booking).catch(console.error);
+            }
+          })
+          .catch(console.error);
       }
 
       return data(result, { status: result.success ? 201 : 400 });
