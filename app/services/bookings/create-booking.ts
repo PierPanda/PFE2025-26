@@ -3,7 +3,7 @@ import { db } from '~/server/lib/db/index.server';
 import { bookings } from '~/server/lib/db/schema';
 import type { CreateBookingInput } from '~/types/booking';
 import type { CreateBookingResponse } from '../types';
-import { checkBookingConflict } from './check-conflict.server';
+import { checkBookingConflict } from './check-conflict';
 
 /**
  * Create a new booking in database
