@@ -42,10 +42,17 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
       booking: updatedBooking,
     };
   } catch (error) {
+    if (isExclusionViolation(error)) {
+      return { success: false, error: 'Ce créneau est déjà réservé pour cette période.' };
+    }
     console.error('Error updating booking:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la mise a jour de la réservation.",
+      error: "Une erreur s'est produite lors de la mise à jour de la réservation.",
     };
   }
+}
+
+function isExclusionViolation(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'code' in error && error.code === '23P01';
 }

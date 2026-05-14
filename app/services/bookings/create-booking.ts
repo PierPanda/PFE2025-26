@@ -35,10 +35,17 @@ export async function createBooking(bookingData: CreateBookingInput): Promise<Cr
       booking: createdBooking,
     };
   } catch (error) {
+    if (isExclusionViolation(error)) {
+      return { success: false, error: 'Ce créneau est déjà réservé pour cette période.' };
+    }
     console.error('Error creating booking:', error);
     return {
       success: false,
       error: "Une erreur s'est produite lors de la création de la réservation.",
     };
   }
+}
+
+function isExclusionViolation(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'code' in error && error.code === '23P01';
 }
