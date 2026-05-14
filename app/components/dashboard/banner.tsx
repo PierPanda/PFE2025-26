@@ -3,6 +3,8 @@ import { Button } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
 import StatCard from './stat-card';
 import heroBannerImage from '~/assets/images/silhouette-of-a-woman-with-raised-hands-on-a-conce-2026-01-09-08-42-41-utc.jpg';
+import { SearchBar } from '~/components/dashboard/search-bar';
+import type { NavigateOptions } from 'react-router';
 
 type BannerProps = {
   userName?: string;
@@ -12,9 +14,11 @@ type BannerProps = {
     learnersCount: number;
   };
   onFindCourses?: () => void;
+  searchParams: URLSearchParams;
+  setSearchParams: (params: URLSearchParams, navigateOptions?: NavigateOptions) => void;
 };
 
-export default function Banner({ userName, stats, onFindCourses }: BannerProps) {
+export default function Banner({ userName, stats, onFindCourses, searchParams, setSearchParams }: BannerProps) {
   const formatCount = (value: number) => new Intl.NumberFormat('fr-FR').format(value);
 
   const statistics = [
@@ -36,36 +40,48 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
   ];
   return (
     <section
-      className="relative h-180 rounded-2xl bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center"
+      className="relative h-180 rounded-2xl bg-cover bg-center bg-no-repeat flex flex-col"
       style={{ backgroundImage: `url(${heroBannerImage})` }}
     >
       <div className="absolute inset-0 rounded-2xl bg-black/45" />
-      <div className="space-y-5 z-10">
+
+      {/* Hero content — centré verticalement dans l'espace disponible */}
+      <div className="z-10 flex flex-1 flex-col items-center justify-center px-8">
         <h1 className="text-4xl md:text-5xl text-tertiary font-extrabold tracking-tight text-center px-50">
           Maîtrisez la musique avec des cours conçus pour vous.
         </h1>
-        <p className="text-base md:text-lg max-w-3xl text-tertiary leading-relaxed text-center mx-auto">
+        <p className="mt-3 text-base md:text-lg max-w-3xl text-tertiary leading-relaxed text-center mx-auto">
           {userName ? `${userName}, ` : ''}
           découvrez des cours adaptés à votre niveau, échangez avec des professeurs passionnés et progressez à votre
           rythme, en ligne.
         </p>
 
-        <div className="flex flex-wrap gap-4 justify-center">
+        <div className="mt-8 w-full max-w-xl">
+          <SearchBar
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
+            className="w-full"
+            size="lg"
+            onSubmit={onFindCourses}
+          />
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-4 justify-center">
           <Button
             onPress={onFindCourses}
-            size="lg"
+            size="md"
             radius="lg"
             color="secondary"
             className="font-semibold bg-secondary text-tertiary border-2 border-secondary hover:border-secondary hover:bg-transparent hover:text-secondary"
-            startContent={<InlineIcon icon="lucide:search" />}
+            startContent={<InlineIcon icon="lucide:arrow-down" />}
           >
-            Trouver un cours
+            Voir tous les cours
           </Button>
 
           <Button
             as={Link}
             to="/teacher"
-            size="lg"
+            size="md"
             radius="lg"
             variant="flat"
             className="font-semibold bg-tertiary text-dark border-2 border-tertiary hover:border-tertiary hover:bg-transparent hover:text-tertiary"
@@ -76,10 +92,12 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 md:max-w-2xl mx-auto">
-        {statistics.map((stat) => (
-          <StatCard key={stat.label} icon={stat.icon} title={stat.label} value={stat.value} />
-        ))}
+      <div className="z-10 pb-10 px-8">
+        <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+          {statistics.map((stat) => (
+            <StatCard key={stat.label} icon={stat.icon} title={stat.label} value={stat.value} />
+          ))}
+        </div>
       </div>
     </section>
   );

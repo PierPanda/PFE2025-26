@@ -93,7 +93,6 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const minPrice = filters.minPrice ?? 0;
   const maxPrice = filters.maxPrice ?? 1000;
-  const searchBarRef = useRef<HTMLInputElement>(null);
   const pendingPage = useRef<number | null>(null);
   const pageTokens = useRef<Record<number, string | null>>({
     1: null,
@@ -160,28 +159,27 @@ export default function Home() {
 
     const sectionTop = coursesSection.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({ top: sectionTop - HEADER_HEIGHT, behavior: 'smooth' });
-    setTimeout(() => {
-      searchBarRef.current?.focus();
-    }, 300);
   };
 
   return (
-    <main className="mx-auto max-w-full px-14 py-2">
-      <Banner userName={user?.name} stats={stats} onFindCourses={handleFindCourses} />
+    <main className="mx-auto max-w-screen-2xl px-14 py-8 pb-20">
+      <Banner
+        userName={user?.name}
+        stats={stats}
+        onFindCourses={handleFindCourses}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+      />
 
       {/* Section: Cours populaires */}
-      <section id="popular-courses" className="mt-48">
+      <section id="popular-courses" className="mt-14">
         <Card radius="lg" shadow="none">
           <CardBody className="bg-tertiary p-6 md:p-8">
-            <div className="mb-6">
+            <div className="mb-8">
               <h2 className="text-2xl font-bold text-dark">
                 <InlineIcon icon="tabler:flame-filled" className="mr-2 inline-block align-middle text-orange-500" />
                 Cours populaires
               </h2>
-              <p className="text-sm text-tertiary">
-                {popularCourses.length} résultat
-                {popularCourses.length > 1 ? 's' : ''}
-              </p>
             </div>
 
             {popularCourses.length === 0 ? (
@@ -198,15 +196,11 @@ export default function Home() {
       </section>
 
       {/* Section: Cours les mieux notés */}
-      <section id="top-rated-courses" className="mt-10">
+      <section id="top-rated-courses" className="mt-6">
         <Card radius="lg" shadow="none">
           <CardBody className="bg-tertiary p-6 md:p-8">
-            <div className="mb-6">
+            <div className="mb-8">
               <h2 className="text-2xl font-bold text-dark">Cours les mieux notés</h2>
-              <p className="text-sm text-tertiary">
-                {topRatedCourses.length} résultat
-                {topRatedCourses.length > 1 ? 's' : ''}
-              </p>
             </div>
 
             {topRatedCourses.length === 0 ? (
@@ -223,15 +217,11 @@ export default function Home() {
       </section>
 
       {/* Section: Nouveautés (cours les plus récents) */}
-      <section id="new-courses" className="mt-10">
+      <section id="new-courses" className="mt-6">
         <Card radius="lg" shadow="none">
           <CardBody className="bg-tertiary p-6 md:p-8">
-            <div className="mb-6">
+            <div className="mb-8">
               <h2 className="text-2xl font-bold text-dark">Nouveautés</h2>
-              <p className="text-sm text-tertiary">
-                {newestCourses.length} résultat
-                {newestCourses.length > 1 ? 's' : ''}
-              </p>
             </div>
 
             {newestCourses.length === 0 ? (
@@ -248,16 +238,16 @@ export default function Home() {
       </section>
 
       {/* Section: Tous les cours (filtres + pagination) */}
-      <section id="courses" className="mt-10">
+      <section id="courses" className="mt-16">
         <Card radius="lg" shadow="none">
           <CardBody className="p-6 md:p-8 bg-tertiary">
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-dark">Listes des cours</h2>
-                <p className="text-lg text-dark/60">{String(coursesPage.total).padStart(2, '0')} résultats</p>
+                <p className="mt-1 text-sm text-dark/50">{String(coursesPage.total).padStart(2, '0')} résultats</p>
               </div>
               <div className="flex gap-2">
-                <SearchBar ref={searchBarRef} searchParams={searchParams} setSearchParams={setSearchParams} />
+                <SearchBar searchParams={searchParams} setSearchParams={setSearchParams} />
                 <Filters
                   searchParams={searchParams}
                   setSearchParams={setSearchParams}

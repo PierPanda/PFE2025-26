@@ -179,9 +179,9 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
               <div className="flex h-full flex-col items-start justify-between">
                 <div>
                   <div className="mb-4 flex items-center gap-1">
-                    <InlineIcon color="#FFA500" height="20" icon="mdi:star" width="20" />
+                    <InlineIcon color={averageRating ? '#FFA500' : '#CBD5E1'} height="20" icon="mdi:star" width="20" />
                     <p className="text-sm text-dark/60">
-                      {averageRating ? averageRating.toFixed(1) : 'N/A'} ({ratings.length})
+                      {averageRating ? `${averageRating.toFixed(1)} (${ratings.length})` : 'Pas encore noté'}
                     </p>
                   </div>
 
