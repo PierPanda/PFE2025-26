@@ -159,3 +159,13 @@ export type CreateBookingResponse = ServiceResponse<{ booking: DbBooking }>;
 export type UpdateBookingResponse = ServiceResponse<{ booking: DbBooking }>;
 export type DeleteBookingResponse = ServiceResponse<object>;
 export type CompleteExpiredBookingsResponse = ServiceResponse<{ updated: number }>;
+
+export type RatingWithLearner = DbRating & {
+  learner: DbLearner & { user: Pick<DbUser, 'id' | 'name' | 'image'> };
+};
+
+export type GetRatingResponse = ServiceResponse<{ rating: DbRating | null }>;
+export type GetRatingsResponse = ServiceResponse<{ ratings: RatingWithLearner[] }>;
+export type CreateRatingResponse = ServiceResponse<{ rating: DbRating }>;
+export type UpdateRatingResponse = ServiceResponse<{ rating: DbRating }>;
+export type DeleteRatingResponse = ServiceResponse<object>;
