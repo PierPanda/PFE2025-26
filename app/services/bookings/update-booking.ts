@@ -3,12 +3,29 @@ import { db } from '~/server/lib/db/index.server';
 import { bookings } from '~/server/lib/db/schema';
 import type { UpdateBookingInput } from '~/types/booking';
 import type { UpdateBookingResponse } from '../types';
+import { checkBookingConflict } from './check-conflict.server';
 
 /**
  * Update an existing booking in database
  */
 export async function updateBooking(bookingId: string, data: UpdateBookingInput): Promise<UpdateBookingResponse> {
   try {
+    if (data.availabilityId && data.startTime && data.endTime) {
+      const conflict = await checkBookingConflict({
+        availabilityId: data.availabilityId,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        excludeBookingId: bookingId,
+      });
+
+      if (conflict) {
+        return {
+          success: false,
+          error: 'Ce créneau est déjà réservé pour cette période.',
+        };
+      }
+    }
+
     const [updatedBooking] = await db
       .update(bookings)
       .set({ ...data, updatedAt: sql`NOW()` })
@@ -31,7 +48,7 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
     console.error('Error updating booking:', error);
     return {
       success: false,
-      error: "Une erreur s'est produite lors de la mise a jour de la réservation.",
+      error: "Une erreur s'est produite lors de la mise à jour de la réservation.",
     };
   }
 }
