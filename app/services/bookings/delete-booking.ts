@@ -3,17 +3,15 @@ import { db } from '~/server/lib/db/index.server';
 import { bookings } from '~/server/lib/db/schema';
 import type { DeleteBookingResponse } from '../types';
 
-/**
- * Delete a booking from database
- */
 export async function deleteBooking(bookingId: string): Promise<DeleteBookingResponse> {
   try {
-    await db.delete(bookings).where(eq(bookings.id, bookingId)).returning();
+    const [deleted] = await db.delete(bookings).where(eq(bookings.id, bookingId)).returning();
 
-    return {
-      success: true,
-      message: 'Réservation supprimée avec succès.',
-    };
+    if (!deleted) {
+      return { success: false, error: 'Réservation introuvable.' };
+    }
+
+    return { success: true, message: 'Réservation supprimée avec succès.' };
   } catch (error) {
     console.error('Error deleting booking:', error);
     return {
