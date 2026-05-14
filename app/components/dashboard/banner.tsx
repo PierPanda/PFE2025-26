@@ -64,7 +64,7 @@ export default function Banner({ userName, stats, onFindCourses, searchParams, s
           />
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-4 justify-center">
+        <div className="flex flex-col mt-4 md:flex-row gap-4 justify-center">
           <Button
             onPress={onFindCourses}
             size="md"
