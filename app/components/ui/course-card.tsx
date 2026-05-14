@@ -172,32 +172,34 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
           </div>
 
           <CardBody>
-            <div className="flex h-full flex-col items-start justify-between">
-              <div>
-                <div className="mb-4 flex items-center gap-1">
-                  <InlineIcon color="#FFA500" height="20" icon="mdi:star" width="20" />
-                  <p className="text-sm text-dark/60">
-                    {averageRating ? averageRating.toFixed(1) : 'N/A'} ({ratings.length})
-                  </p>
+            <Link to={`/courses/${courseState.id}`} className="block h-full text-inherit no-underline">
+              <div className="flex h-full flex-col items-start justify-between">
+                <div>
+                  <div className="mb-4 flex items-center gap-1">
+                    <InlineIcon color={averageRating ? '#FFA500' : '#CBD5E1'} height="20" icon="mdi:star" width="20" />
+                    <p className="text-sm text-dark/60">
+                      {averageRating ? `${averageRating.toFixed(1)} (${ratings.length})` : 'Pas encore noté'}
+                    </p>
+                  </div>
+
+                  <p className="text-lg font-medium text-dark/80">{courseState.teacher.user.name}</p>
+                  <h3 className="mb-2 text-xl font-semibold leading-6 text-dark">{courseState.title}</h3>
+                  <p className="text-lg font-light text-dark">{courseState.description}</p>
                 </div>
 
-                <p className="text-lg font-medium text-dark/80">{courseState.teacher.user.name}</p>
-                <h3 className="mb-2 text-xl font-semibold leading-6 text-dark">{courseState.title}</h3>
-                <p className="text-lg font-light text-dark">{courseState.description}</p>
+                <div className="mt-4 flex w-full items-center justify-between">
+                  <div className="flex items-center justify-start gap-2">
+                    <InlineIcon icon="mdi:clock-outline" width="18" />
+                    <p>{courseState.duration} min</p>
+                  </div>
+
+                  <div className="flex items-center justify-start gap-2">
+                    <InlineIcon icon="mdi:money" width="18" />
+                    <p>{courseState.price} €</p>
+                  </div>
+                </div>
               </div>
-
-              <div className="mt-4 flex w-full items-center justify-between">
-                <div className="flex items-center justify-start gap-2">
-                  <InlineIcon icon="mdi:clock-outline" width="18" />
-                  <p>{courseState.duration} min</p>
-                </div>
-
-                <div className="flex items-center justify-start gap-2">
-                  <InlineIcon icon="mdi:money" width="18" />
-                  <p>{courseState.price} €</p>
-                </div>
-              </div>
-            </div>
+            </Link>
           </CardBody>
         </Card>
       </li>

@@ -55,9 +55,10 @@ export default function Home() {
         setSearchParams={setSearchParams}
       />
 
-      <section id="popular-courses" className="mt-14">
+      {/* Section: Cours populaires */}
+      <section id="popular-courses" className="mt-8 md:mt-16">
         <Card radius="lg" shadow="none">
-          <CardBody className="bg-tertiary p-6 md:p-8">
+          <CardBody className="bg-tertiary p-0 md:p-8">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-dark">
                 <InlineIcon icon="tabler:flame-filled" className="mr-2 inline-block align-middle text-orange-500" />

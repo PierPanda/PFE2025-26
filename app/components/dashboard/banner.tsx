@@ -54,7 +54,7 @@ export default function Banner({ userName, stats, onFindCourses, searchParams, s
           rythme, en ligne.
         </p>
 
-        <div className="mt-8 w-full max-w-xl">
+        <div className="mt-8 w-full max-w-xl mx-auto">
           <SearchBar
             searchParams={searchParams}
             setSearchParams={setSearchParams}
@@ -90,10 +90,12 @@ export default function Banner({ userName, stats, onFindCourses, searchParams, s
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:max-w-2xl mx-auto w-full px-4">
-        {statistics.map((stat) => (
-          <StatCard key={stat.label} icon={stat.icon} title={stat.label} value={stat.value} />
-        ))}
+      <div className="z-10 pb-10 px-8">
+        <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+          {statistics.map((stat) => (
+            <StatCard key={stat.label} icon={stat.icon} title={stat.label} value={stat.value} />
+          ))}
+        </div>
       </div>
     </section>
   );
