@@ -5,25 +5,27 @@ import type { UpdateBookingInput } from '~/types/booking';
 import type { UpdateBookingResponse } from '../types';
 import { checkBookingConflict } from './check-conflict';
 
-/**
- * Update an existing booking in database
- */
 export async function updateBooking(bookingId: string, data: UpdateBookingInput): Promise<UpdateBookingResponse> {
   try {
-    if (data.availabilityId && data.startTime && data.endTime) {
-      const conflict = await checkBookingConflict({
-        availabilityId: data.availabilityId,
-        startTime: data.startTime,
-        endTime: data.endTime,
-        excludeBookingId: bookingId,
-      });
+    const [existing] = await db.select().from(bookings).where(eq(bookings.id, bookingId)).limit(1);
 
-      if (conflict) {
-        return {
-          success: false,
-          error: 'Ce créneau est déjà réservé pour cette période.',
-        };
-      }
+    if (!existing) {
+      return { success: false, error: 'Réservation introuvable.' };
+    }
+
+    const effectiveAvailabilityId = data.availabilityId ?? existing.availabilityId;
+    const effectiveStartTime = data.startTime ?? existing.startTime;
+    const effectiveEndTime = data.endTime ?? existing.endTime;
+
+    const conflict = await checkBookingConflict({
+      availabilityId: effectiveAvailabilityId,
+      startTime: effectiveStartTime,
+      endTime: effectiveEndTime,
+      excludeBookingId: bookingId,
+    });
+
+    if (conflict) {
+      return { success: false, error: 'Ce créneau est déjà réservé pour cette période.' };
     }
 
     const [updatedBooking] = await db
@@ -31,13 +33,6 @@ export async function updateBooking(bookingId: string, data: UpdateBookingInput)
       .set({ ...data, updatedAt: sql`NOW()` })
       .where(eq(bookings.id, bookingId))
       .returning();
-
-    if (!updatedBooking) {
-      return {
-        success: false,
-        error: 'Réservation introuvable.',
-      };
-    }
 
     return {
       success: true,
