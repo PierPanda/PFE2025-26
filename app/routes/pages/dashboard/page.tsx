@@ -170,7 +170,7 @@ export default function Home() {
       <Banner userName={user?.name} stats={stats} onFindCourses={handleFindCourses} />
 
       {/* Section: Cours populaires */}
-      <section id="popular-courses" className="mt-48">
+      <section id="cours-populaires" className="mt-48">
         <Card radius="lg" shadow="none">
           <CardBody className="bg-tertiary p-6 md:p-8">
             <div className="mb-6">

@@ -5,6 +5,12 @@ import { UserProfile } from '~/components/auth/user-profile';
 import logo from '~/assets/images/LOGO_MAESTROO.png';
 import { Button } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
+import IconGuitare from '~/assets/icons_header/balalaika.svg?react';
+import IconPiano from '~/assets/icons_header/piano.svg?react';
+import IconChant from '~/assets/icons_header/microphone.svg?react';
+import IconFlute from '~/assets/icons_header/flute.svg?react';
+import IconBatterie from '~/assets/icons_header/drum-set.svg?react';
+import IconTrombone from '~/assets/icons_header/trumpet.svg?react';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
@@ -20,9 +26,52 @@ export default function AuthLayout() {
     { label: 'Créer un cours', to: '/courses/create' },
   ];
 
+  const iconsHeader = [
+    {
+      title: 'populaire',
+      icon: (
+        <InlineIcon
+          icon="tabler:flame-filled"
+          className="h-6 w-6 text-primary transition-colors group-hover:text-tertiary"
+        />
+      ),
+      url: '/#cours-populaires',
+    },
+    {
+      title: 'Guitare',
+      icon: <IconGuitare className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      url: '/cours/guitare',
+    },
+    {
+      title: 'piano',
+      icon: <IconPiano className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      url: '/cours/piano',
+    },
+    {
+      title: 'chant',
+      icon: <IconChant className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      url: '/cours/chant',
+    },
+    {
+      title: 'flute',
+      icon: <IconFlute className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      url: '/cours/flute',
+    },
+    {
+      title: 'batterie',
+      icon: <IconBatterie className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      url: '/cours/batterie',
+    },
+    {
+      title: 'trombone',
+      icon: <IconTrombone className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      url: '/cours/trombone',
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-tertiary">
-      <header className="sticky top-0 z-50 bg-tertiary p-2">
+      <header className="sticky top-0 z-50 bg-tertiary py-2">
         <div className="flex h-16 w-full items-center justify-between px-12">
           <Link to="/" className="shrink-0">
             <img src={logo} alt="Maestroo" className="h-9 w-auto" />
@@ -32,6 +81,21 @@ export default function AuthLayout() {
             <UserProfile />
           </div>
         </div>
+        <div className="w-full px-60 h-16 flex items-center justify-between bg-primary-light p-10">
+          <ul className="flex w-full items-center justify-between gap-6 ">
+            {iconsHeader.map((item) => (
+              <li key={item.title} className="group flex flex-col items-center justify-center">
+                <Link
+                  to={item.url}
+                  className="flex flex-col items-center justify-center hover:bg-primary rounded-lg h-17 w-17 transition-colors cursor-pointer hover:text-tertiary"
+                >
+                  {item.icon}
+                  <span className="mt-1 text-xs">{item.title}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </header>
 
       <Outlet />
@@ -40,8 +104,8 @@ export default function AuthLayout() {
         <footer className="mt-12 flex flex-col gap-4 rounded-2xl bg-black p-8">
           <div className="w-full flex flex-col md:flex-row gap-8">
             <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
-              <img src={logo} alt="Maestroo" className="h-auto md:h-10 w-auto mb-4 self-start" />
-              <h5 className="text-center md:text-left text-l text-gray-600 font-semibold">
+              <img src={logo} alt="Maestroo" className="h-auto md:h-10 w-auto mb-4 self-start  brightness-0 invert" />
+              <h5 className="text-center md:text-left text-l text-tertiary font-semibold">
                 Maestroo - Connectez-vous avec les meilleurs professeurs de musique pour des cours en ligne
                 personnalisés.
               </h5>
@@ -83,21 +147,21 @@ export default function AuthLayout() {
             </div>
           </div>
           <div className="flex flex-col md:flex-row items-center justify-center mt-8">
-            <a href="/legal/terms" className="text-sm text-gray-500 hover:text-amber-600">
+            <a href="/legal/terms" className="text-sm text-tertiary hover:text-amber-600">
               Conditions d'utilisation
             </a>
-            <a href="/legal/privacy" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
+            <a href="/legal/privacy" className="text-sm text-tertiary hover:text-amber-600 ml-4">
               Politique de confidentialité
             </a>
-            <a href="/legal/cookies" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
+            <a href="/legal/cookies" className="text-sm text-tertiary hover:text-amber-600 ml-4">
               Politique des cookies
             </a>
-            <a href="/legal/cgv" className="text-sm text-gray-500 hover:text-amber-600 ml-4">
+            <a href="/legal/cgv" className="text-sm text-tertiary hover:text-amber-600 ml-4">
               Conditions générales de vente
             </a>
           </div>
           <div className="flex items-center justify-center">
-            <p className="text-sm text-gray-500">© {currentYear} Maestroo. Tous droits réservés.</p>
+            <p className="text-sm text-tertiary">© {currentYear} Maestroo. Tous droits réservés.</p>
           </div>
         </footer>
       </div>
