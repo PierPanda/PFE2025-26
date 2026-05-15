@@ -6,7 +6,6 @@ import { LoginForm } from './login-form';
 import { SignUpForm } from './sign-up-form';
 import { cn } from '~/lib/utils';
 import RotatingText, { type RotatingTextRef } from '~/components/ui/rotating-text';
-import bgAuth from '~/assets/images/silhouette-of-a-woman-with-raised-hands-on-a-conce-2026-01-09-08-42-41-utc.jpg';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await auth.api.getSession({ headers: request.headers });

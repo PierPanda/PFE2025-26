@@ -61,7 +61,7 @@ export default function CategoryCoursesPage() {
   const { coursesPage, filters, category, user } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage] = useState(1);
   const searchBarRef = useRef<HTMLInputElement>(null);
 
   type LoaderData = typeof loader;
