@@ -84,7 +84,7 @@ export default function CategoryCoursesPage() {
       nextParams.delete('direction');
     }
 
-    fetcher.load(`/courses/${category}?${nextParams.toString()}`);
+    fetcher.load(`/cours/${category}?${nextParams.toString()}`);
   };
 
   const handlePaginationChange = (page: number) => {

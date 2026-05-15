@@ -23,7 +23,7 @@ export default function AuthLayout() {
   const footerPages = [
     { label: 'Dashboard', to: '/' },
     { label: 'Profil', to: '/profile' },
-    { label: 'Créer un cours', to: '/courses/create' },
+    { label: 'Créer un cours', to: '/cours/create' },
   ];
 
   const iconsHeader = [
