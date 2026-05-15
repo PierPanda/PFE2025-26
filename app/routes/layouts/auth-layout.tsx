@@ -5,12 +5,12 @@ import { UserProfile } from '~/components/auth/user-profile';
 import logo from '~/assets/images/LOGO_MAESTROO.png';
 import { Button } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
-import IconGuitare from '~/assets/icons_header/balalaika.svg?react';
-import IconPiano from '~/assets/icons_header/piano.svg?react';
-import IconChant from '~/assets/icons_header/microphone.svg?react';
-import IconFlute from '~/assets/icons_header/flute.svg?react';
-import IconBatterie from '~/assets/icons_header/drum-set.svg?react';
-import IconTrombone from '~/assets/icons_header/trumpet.svg?react';
+import iconGuitare from '~/assets/icons_header/balalaika.svg';
+import iconPiano from '~/assets/icons_header/piano.svg';
+import iconChant from '~/assets/icons_header/microphone.svg';
+import iconFlute from '~/assets/icons_header/flute.svg';
+import iconBatterie from '~/assets/icons_header/drum-set.svg';
+import iconTrombone from '~/assets/icons_header/trumpet.svg';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
@@ -39,32 +39,68 @@ export default function AuthLayout() {
     },
     {
       title: 'Guitare',
-      icon: <IconGuitare className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      icon: (
+        <img
+          alt="Guitare"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconGuitare}
+        />
+      ),
       url: '/cours/guitare',
     },
     {
       title: 'piano',
-      icon: <IconPiano className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      icon: (
+        <img
+          alt="Piano"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconPiano}
+        />
+      ),
       url: '/cours/piano',
     },
     {
       title: 'chant',
-      icon: <IconChant className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      icon: (
+        <img
+          alt="Chant"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconChant}
+        />
+      ),
       url: '/cours/chant',
     },
     {
       title: 'flute',
-      icon: <IconFlute className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      icon: (
+        <img
+          alt="Flûte"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconFlute}
+        />
+      ),
       url: '/cours/flute',
     },
     {
       title: 'batterie',
-      icon: <IconBatterie className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      icon: (
+        <img
+          alt="Batterie"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconBatterie}
+        />
+      ),
       url: '/cours/batterie',
     },
     {
       title: 'trombone',
-      icon: <IconTrombone className="h-6 w-6 text-black transition-colors group-hover:text-tertiary" />,
+      icon: (
+        <img
+          alt="Trombone"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconTrombone}
+        />
+      ),
       url: '/cours/trombone',
     },
   ];
