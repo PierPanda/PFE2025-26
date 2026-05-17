@@ -23,7 +23,86 @@ export default function AuthLayout() {
   const footerPages = [
     { label: 'Dashboard', to: '/' },
     { label: 'Profil', to: '/profile' },
-    { label: 'Créer un cours', to: '/courses/create' },
+    { label: 'Créer un cours', to: '/cours/create' },
+  ];
+
+  const iconsHeader = [
+    {
+      title: 'populaire',
+      icon: (
+        <InlineIcon
+          icon="tabler:flame-filled"
+          className="h-6 w-6 text-primary transition-colors group-hover:text-tertiary"
+        />
+      ),
+      url: '/#cours-populaires',
+    },
+    {
+      title: 'Guitare',
+      icon: (
+        <img
+          alt="Guitare"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconGuitare}
+        />
+      ),
+      url: '/cours/guitare',
+    },
+    {
+      title: 'piano',
+      icon: (
+        <img
+          alt="Piano"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconPiano}
+        />
+      ),
+      url: '/cours/piano',
+    },
+    {
+      title: 'chant',
+      icon: (
+        <img
+          alt="Chant"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconChant}
+        />
+      ),
+      url: '/cours/chant',
+    },
+    {
+      title: 'flute',
+      icon: (
+        <img
+          alt="Flûte"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconFlute}
+        />
+      ),
+      url: '/cours/flute',
+    },
+    {
+      title: 'batterie',
+      icon: (
+        <img
+          alt="Batterie"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconBatterie}
+        />
+      ),
+      url: '/cours/batterie',
+    },
+    {
+      title: 'trombone',
+      icon: (
+        <img
+          alt="Trombone"
+          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          src={iconTrombone}
+        />
+      ),
+      url: '/cours/trombone',
+    },
   ];
 
   const iconsHeader = [
