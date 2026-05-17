@@ -91,7 +91,7 @@ export function LoginForm({ onToggleForm }: LoginFormProps) {
       {onToggleForm && (
         <p className="mt-6 text-center text-sm text-gray-500">
           Première visite ?{' '}
-          <button onClick={onToggleForm} className="font-semibold text-tertiary hover:underline">
+          <button onClick={onToggleForm} className="font-semibold text-chip-dark hover:underline">
             Créer un compte
           </button>
         </p>

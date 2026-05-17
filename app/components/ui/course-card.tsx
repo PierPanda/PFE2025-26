@@ -68,7 +68,7 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
     const browserNavigator = window.navigator;
     const canUseNativeShare = typeof browserNavigator.share === 'function';
     const clipboard = browserNavigator.clipboard;
-    const shareUrl = new URL(`/courses/${courseState.id}`, window.location.origin).toString();
+    const shareUrl = new URL(`/cours/course/${courseState.id}`, window.location.origin).toString();
 
     try {
       if (canUseNativeShare) {
@@ -113,7 +113,7 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
           shadow="sm"
         >
           <div className="relative">
-            <Link to={`/courses/${courseState.id}`} className="block">
+            <Link to={`/cours/course/${courseState.id}`} className="block">
               <Image
                 alt={courseState.title}
                 className="rounded-t-lg object-cover"
@@ -175,7 +175,7 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
           </div>
 
           <CardBody>
-            <Link to={`/courses/${courseState.id}`} className="block h-full text-inherit no-underline">
+            <Link to={`/cours/course/${courseState.id}`} className="block h-full text-inherit no-underline">
               <div className="flex h-full flex-col items-start justify-between">
                 <div>
                   <div className="mb-4 flex items-center gap-1">
