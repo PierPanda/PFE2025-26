@@ -53,7 +53,7 @@ export default function CourseDetail() {
   return (
     <main className="py-20 mx-auto max-w-7xl px-6">
       <div className="space-y-8">
-        <a href="/#courses" className="flex items-center text-dark hover:underline">
+        <a href="/search" className="flex items-center text-dark hover:underline">
           <InlineIcon icon="mdi:arrow-left" className="mr-2" />
           <span>Retour à la liste des cours</span>
         </a>

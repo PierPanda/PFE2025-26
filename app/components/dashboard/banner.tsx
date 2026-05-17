@@ -45,7 +45,6 @@ export default function Banner({ userName, stats, onFindCourses, searchParams, s
     >
       <div className="absolute inset-0 rounded-2xl bg-black/45" />
 
-      {/* Hero content — centré verticalement dans l'espace disponible */}
       <div className="z-10 flex flex-1 flex-col items-center justify-center px-8">
         <h1 className="text-4xl md:text-5xl text-tertiary font-extrabold tracking-tight text-center px-50">
           Maîtrisez la musique avec des cours conçus pour vous.
@@ -73,7 +72,7 @@ export default function Banner({ userName, stats, onFindCourses, searchParams, s
             radius="lg"
             color="secondary"
             className="font-semibold bg-secondary text-tertiary border-2 border-secondary hover:border-secondary hover:bg-transparent hover:text-secondary"
-            startContent={<InlineIcon icon="lucide:arrow-down" />}
+            startContent={<InlineIcon icon="lucide:arrow-right" />}
           >
             Voir tous les cours
           </Button>

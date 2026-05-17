@@ -23,19 +23,19 @@ export default function AuthLayout() {
   const footerPages = [
     { label: 'Dashboard', to: '/' },
     { label: 'Profil', to: '/profile' },
-    { label: 'Créer un cours', to: '/cours/create' },
+    { label: 'Créer un cours', to: '/courses/create' },
   ];
 
   const iconsHeader = [
     {
-      title: 'populaire',
+      title: 'Populaire',
       icon: (
         <InlineIcon
           icon="tabler:flame-filled"
           className="h-6 w-6 text-primary transition-colors group-hover:text-tertiary"
         />
       ),
-      url: '/#cours-populaires',
+      url: '/#popular-courses',
     },
     {
       title: 'Guitare',
@@ -46,10 +46,10 @@ export default function AuthLayout() {
           src={iconGuitare}
         />
       ),
-      url: '/cours/guitare',
+      url: '/search?category=guitare',
     },
     {
-      title: 'piano',
+      title: 'Piano',
       icon: (
         <img
           alt="Piano"
@@ -57,10 +57,10 @@ export default function AuthLayout() {
           src={iconPiano}
         />
       ),
-      url: '/cours/piano',
+      url: '/search?category=piano',
     },
     {
-      title: 'chant',
+      title: 'Chant',
       icon: (
         <img
           alt="Chant"
@@ -68,10 +68,10 @@ export default function AuthLayout() {
           src={iconChant}
         />
       ),
-      url: '/cours/chant',
+      url: '/search?category=chant',
     },
     {
-      title: 'flute',
+      title: 'Flûte',
       icon: (
         <img
           alt="Flûte"
@@ -79,10 +79,10 @@ export default function AuthLayout() {
           src={iconFlute}
         />
       ),
-      url: '/cours/flute',
+      url: '/search?category=flute',
     },
     {
-      title: 'batterie',
+      title: 'Batterie',
       icon: (
         <img
           alt="Batterie"
@@ -90,10 +90,10 @@ export default function AuthLayout() {
           src={iconBatterie}
         />
       ),
-      url: '/cours/batterie',
+      url: '/search?category=batterie',
     },
     {
-      title: 'trombone',
+      title: 'Trombone',
       icon: (
         <img
           alt="Trombone"
@@ -101,7 +101,7 @@ export default function AuthLayout() {
           src={iconTrombone}
         />
       ),
-      url: '/cours/trombone',
+      url: '/search?category=trombone',
     },
   ];
 
