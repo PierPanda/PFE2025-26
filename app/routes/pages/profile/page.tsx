@@ -290,7 +290,7 @@ export default function Page() {
   const isTeacherView = view === 'teacher';
 
   return (
-    <main className="mx-auto max-w-screen-2xl px-14 md:px-10 py-8 pb-20 flex flex-col gap-12">
+    <main className="mx-auto max-w-screen-2xl px-4 md:px-10 py-8 pb-20 flex flex-col gap-12">
       <UserProfile user={user} teacher={teacher} />
       <div className="flex flex-col gap-20">
         {teacher && learner && (
