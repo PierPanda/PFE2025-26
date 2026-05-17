@@ -136,71 +136,68 @@ export default function AuthLayout() {
 
       <Outlet />
 
-      <div className="px-14 py-14">
-        <footer className="mt-12 flex flex-col gap-4 rounded-2xl bg-black p-8">
-          <div className="w-full flex flex-col md:flex-row gap-8">
-            <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
-              <img src={logo} alt="Maestroo" className="h-auto md:h-10 w-auto mb-4 self-start  brightness-0 invert" />
-              <h5 className="text-center md:text-left text-l text-tertiary font-semibold">
-                Maestroo - Connectez-vous avec les meilleurs professeurs de musique pour des cours en ligne
-                personnalisés.
-              </h5>
-            </div>
-            <div className="w-full md:w-1/3  flex  flex-col items-center justify-center">
-              <h4 className="mb-2 text-2xl font-bold text-tertiary">Plan du site</h4>
-              <ul className="space-y-2 pl-0 text-center text-lg text-tertiary md:pl-6 md:text-left">
-                {footerPages.map((page) => (
-                  <li key={page.to}>
-                    <Link to={page.to} className="text-tertiary/90 transition-colors hover:text-tertiary">
-                      {page.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
-              <Button
-                variant="solid"
-                color="default"
-                className="w-auto border-2 border-tertiary bg-tertiary text-xl font-bold text-black items-center self-center hover:bg-transparent hover:text-tertiary hover:border-tertiary md:self-end"
-              >
-                Contactez-nous
-              </Button>
-              <div className="flex gap-4 self-center md:self-end max-w-auto">
-                <InlineIcon
-                  icon="mdi:instagram"
-                  className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
-                />
-                <InlineIcon
-                  icon="mdi:facebook"
-                  className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
-                />
-                <InlineIcon
-                  icon="mdi:linkedin"
-                  className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
-                />
-              </div>
+      <footer className="flex flex-col gap-4 rounded-2xl bg-black p-8 m-14">
+        <div className="w-full flex flex-col md:flex-row gap-8">
+          <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
+            <img src={logo} alt="Maestroo" className="h-auto md:h-10 w-auto mb-4 self-start  brightness-0 invert" />
+            <h5 className="text-center md:text-left text-l text-tertiary font-semibold">
+              Maestroo - Connectez-vous avec les meilleurs professeurs de musique pour des cours en ligne personnalisés.
+            </h5>
+          </div>
+          <div className="w-full md:w-1/3  flex  flex-col items-center justify-center">
+            <h4 className="mb-2 text-2xl font-bold text-tertiary">Plan du site</h4>
+            <ul className="space-y-2 pl-0 text-center text-lg text-tertiary md:pl-6 md:text-left">
+              {footerPages.map((page) => (
+                <li key={page.to}>
+                  <Link to={page.to} className="text-tertiary/90 transition-colors hover:text-tertiary">
+                    {page.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
+            <Button
+              variant="solid"
+              color="default"
+              className="w-auto border-2 border-tertiary bg-tertiary text-xl font-bold text-black items-center self-center hover:bg-transparent hover:text-tertiary hover:border-tertiary md:self-end"
+            >
+              Contactez-nous
+            </Button>
+            <div className="flex gap-4 self-center md:self-end max-w-auto">
+              <InlineIcon
+                icon="mdi:instagram"
+                className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
+              />
+              <InlineIcon
+                icon="mdi:facebook"
+                className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
+              />
+              <InlineIcon
+                icon="mdi:linkedin"
+                className="mt-4 cursor-pointer text-4xl text-tertiary transition-colors duration-300 hover:text-tertiary/70"
+              />
             </div>
           </div>
-          <div className="flex flex-col md:flex-row items-center justify-center mt-8">
-            <a href="/legal/terms" className="text-sm text-tertiary hover:text-amber-600">
-              Conditions d'utilisation
-            </a>
-            <a href="/legal/privacy" className="text-sm text-tertiary hover:text-amber-600 ml-4">
-              Politique de confidentialité
-            </a>
-            <a href="/legal/cookies" className="text-sm text-tertiary hover:text-amber-600 ml-4">
-              Politique des cookies
-            </a>
-            <a href="/legal/cgv" className="text-sm text-tertiary hover:text-amber-600 ml-4">
-              Conditions générales de vente
-            </a>
-          </div>
-          <div className="flex items-center justify-center">
-            <p className="text-sm text-tertiary">© {currentYear} Maestroo. Tous droits réservés.</p>
-          </div>
-        </footer>
-      </div>
+        </div>
+        <div className="flex flex-col md:flex-row items-center justify-center mt-8">
+          <a href="/legal/terms" className="text-sm text-tertiary hover:text-amber-600">
+            Conditions d'utilisation
+          </a>
+          <a href="/legal/privacy" className="text-sm text-tertiary hover:text-amber-600 ml-4">
+            Politique de confidentialité
+          </a>
+          <a href="/legal/cookies" className="text-sm text-tertiary hover:text-amber-600 ml-4">
+            Politique des cookies
+          </a>
+          <a href="/legal/cgv" className="text-sm text-tertiary hover:text-amber-600 ml-4">
+            Conditions générales de vente
+          </a>
+        </div>
+        <div className="flex items-center justify-center">
+          <p className="text-sm text-tertiary">© {currentYear} Maestroo. Tous droits réservés.</p>
+        </div>
+      </footer>
     </div>
   );
 }
