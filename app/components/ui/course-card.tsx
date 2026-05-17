@@ -172,7 +172,7 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
           </div>
 
           <CardBody>
-            <Link to={`/courses/${courseState.id}`} className="block h-full text-inherit no-underline">
+            <Link to={`/cours/course/${courseState.id}`} className="block h-full text-inherit no-underline">
               <div className="flex h-full flex-col items-start justify-between">
                 <div>
                   <div className="mb-4 flex items-center gap-1">
