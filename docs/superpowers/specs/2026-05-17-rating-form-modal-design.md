@@ -10,6 +10,7 @@
 Les apprenants peuvent réserver des cours. Quand une réservation passe au statut `completed` (géré par le cron job `complete-expired-bookings`), l'API `/api/ratings` autorise déjà la création d'un avis. Il manque seulement le point d'entrée UI pour déclencher cette action depuis le profil.
 
 L'infrastructure backend est déjà en place :
+
 - Table `ratings` : `id`, `courseId`, `learnerId`, `title`, `description`, `rate`
 - Contrainte d'unicité `(learnerId, courseId)` — un seul avis par apprenant par cours
 - `POST /api/ratings` — crée un avis (vérifie booking complété + absence d'avis existant)
@@ -25,18 +26,34 @@ Ajouter dans la page profil (`/profile`) un bouton "Rédiger un avis" sur chaque
 
 ## Architecture & Data Flow
 
+La relation Drizzle entre `bookings` et `ratings` n'existe pas encore. On l'ajoute via les champs composites `(courseId, learnerId)` — le lien naturel entre une réservation et son avis. Drizzle supporte les relations multi-champs :
+
+```ts
+// bookings-relations.ts
+rating: one(ratings, {
+  fields: [bookings.courseId, bookings.learnerId],
+  references: [ratings.courseId, ratings.learnerId],
+})
 ```
-profile/page.tsx (loader)
-  ├── getRatingsByLearner(learner.id)   ← nouvelle fonction service
-  └── retourne learnerRatings: Rating[]
+
+Ensuite, `bookingRelations` dans `get-bookings.ts` inclut `rating: true`, ce qui fait que chaque booking retourné porte déjà son `rating: DbRating | null`. Zéro query supplémentaire, zéro matching JS côté client.
+
+```
+bookings-relations.ts
+  └── + relation rating (composite courseId + learnerId)
+
+get-bookings.ts
+  └── bookingRelations += { rating: true }
+
+BookingWithRelations (types.ts)
+  └── + rating: DbRating | null   (inféré automatiquement par Drizzle)
 
 BookingsTable (composant existant, étendu)
-  ├── prop learnerRatings: Rating[]     ← nouvelle prop (optionnelle, absente vue teacher)
   ├── onglet "Terminé" ajouté côté apprenant
   ├── colonne "Avis" ajoutée (hidden quand isTeacher=true)
   └── pour chaque ligne status='completed':
-        ├── pas de rating → bouton "Rédiger un avis"
-        └── rating existant → bouton "Modifier mon avis"
+        ├── booking.rating === null → bouton "Rédiger un avis"
+        └── booking.rating !== null → bouton "Modifier mon avis"
 
 RatingFormModal (nouveau composant)
   ├── props: isOpen, onClose, courseId, courseTitle, existingRating?
@@ -45,28 +62,33 @@ RatingFormModal (nouveau composant)
   └── PUT  /api/ratings?id= si édition    (body JSON)
 ```
 
+Le loader du profil n'a rien à changer : `getBookingsByLearnerId` retourne déjà les ratings via la relation.
+
 ---
 
 ## Fichiers à modifier / créer
 
 | Fichier | Action |
 |---|---|
-| `app/services/ratings/get-ratings.ts` | Ajouter `getRatingsByLearner(learnerId)` |
-| `app/routes/pages/profile/page.tsx` | Appeler `getRatingsByLearner` dans le loader, passer `learnerRatings` en prop à `BookingsTable` |
-| `app/routes/pages/profile/bookings-table.tsx` | Prop `learnerRatings`, filtre `completed`, colonne "Avis", intégration modal |
+| `app/server/lib/db/schema-definition/bookings-relations.ts` | Ajouter relation `rating` (composite courseId + learnerId) |
+| `app/services/bookings/get-bookings.ts` | Ajouter `rating: true` dans `bookingRelations` |
+| `app/routes/pages/profile/bookings-table.tsx` | Filtre `completed`, colonne "Avis", intégration modal |
 | `app/components/ratings/rating-form-modal.tsx` | **Nouveau** — modal formulaire |
 
 ---
 
 ## Détail des composants
 
-### `getRatingsByLearner(learnerId: string)`
+### Relation Drizzle `bookings → rating`
 
-Requête Drizzle sur la table `ratings` filtrée par `learnerId`. Retourne le pattern service standard `{ success: true, ratings: Rating[] }`.
+Dans `bookings-relations.ts`, ajouter `rating: one(ratings, { fields: [bookings.courseId, bookings.learnerId], references: [ratings.courseId, ratings.learnerId] })`. Ajouter l'import de `ratings`.
+
+Dans `get-bookings.ts`, ajouter `rating: true` dans la constante `bookingRelations`. Le type `BookingWithRelations` est inféré automatiquement par Drizzle via les relations déclarées.
 
 ### `RatingFormModal`
 
 **Props :**
+
 ```ts
 type RatingFormModalProps = {
   isOpen: boolean;
@@ -83,26 +105,26 @@ type RatingFormModalProps = {
 ```
 
 **Champs :**
+
 - `rate` : 5 étoiles cliquables (état local React, entiers 1–5). La `StarRating` existante est display-only ; ce composant gère son propre input étoile inline.
 - `title` : `<Input>` HeroUI, requis, min 3 / max 100 caractères
 - `description` : `<Textarea>` HeroUI, optionnelle, max 1000 caractères
 
 **Soumission :**
+
 - `useFetcher` sur `/api/ratings`
-- Mode création : `fetch.submit(body, { method: 'POST', encType: 'application/json', action: '/api/ratings' })`
-- Mode édition : `fetch.submit(body, { method: 'PUT', encType: 'application/json', action: '/api/ratings?id=...'})`
+- Mode création : `fetcher.submit(body, { method: 'POST', encType: 'application/json', action: '/api/ratings' })`
+- Mode édition : `fetcher.submit(body, { method: 'PUT', encType: 'application/json', action: \`/api/ratings?id=...\` })`
 - On success : `addToast` succès + `onClose()` + `revalidator.revalidate()`
 - On error : `addToast` danger avec le message serveur
-
-**État du bouton submit :**
-- Désactivé + spinner quand `fetcher.state === 'submitting'`
+- Bouton submit désactivé + spinner quand `fetcher.state === 'submitting'`
 
 ### `BookingsTable` — modifications
 
-- Nouvelle prop : `learnerRatings?: Rating[]`
-- Filtre `completed` ajouté dans `FILTERS` (visible seulement si `!isTeacher`)
+- Filtre `completed` ajouté dans `FILTERS` (affiché seulement si `!isTeacher`)
 - Nouvelle colonne `TableColumn` "Avis" (rendue uniquement si `!isTeacher`)
-- Dans `TableBody`, pour les bookings `completed` : afficher le bouton via un `useState` local `{ courseId, courseTitle, existingRating }` qui contrôle l'ouverture du modal
+- Un `useState` local `{ courseId, courseTitle, existingRating } | null` contrôle quel booking est en cours d'édition
+- Pour les bookings `completed` : bouton "Rédiger un avis" ou "Modifier mon avis" selon `booking.rating`
 - Le `RatingFormModal` est rendu une seule fois en dehors du tableau, contrôlé par cet état
 
 ---
