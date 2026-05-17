@@ -1,9 +1,9 @@
-import { and, asc, count, desc, eq, gt, inArray, lte, ne } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gt, inArray, ne } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { bookings, courses } from '~/server/lib/db/schema';
 import type { DbBooking, GetBookingResponse, GetBookingsResponse } from '../types';
 
-export type BookingFilter = 'all' | 'upcoming' | 'past' | 'cancelled';
+export type BookingFilter = 'all' | 'upcoming' | 'cancelled' | 'completed';
 
 type GetBookingsOptions = {
   status?: DbBooking['status'];
@@ -20,8 +20,8 @@ type GetTeacherBookingsOptions = Omit<GetBookingsOptions, 'status'> & {
 function buildFilterCondition(filter?: BookingFilter) {
   const now = new Date();
   if (filter === 'upcoming') return and(gt(bookings.startTime, now), ne(bookings.status, 'cancelled'));
-  if (filter === 'past') return and(lte(bookings.startTime, now), ne(bookings.status, 'cancelled'));
   if (filter === 'cancelled') return eq(bookings.status, 'cancelled');
+  if (filter === 'completed') return eq(bookings.status, 'completed');
   return undefined;
 }
 
@@ -49,6 +49,7 @@ const bookingRelations = {
       user: true,
     },
   },
+  rating: true,
 } as const;
 
 /**

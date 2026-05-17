@@ -61,6 +61,7 @@ export type BookingWithRelations = DbBooking & {
   course: CourseWithTeacher;
   availability: AvailabilityWithTeacher;
   learner: LearnerWithUser;
+  rating: DbRating | null;
 };
 
 /**

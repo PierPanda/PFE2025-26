@@ -6,15 +6,15 @@ const PAGE_SIZE = 10;
 
 type MockBooking = {
   startTime: Date;
-  status: 'pending' | 'confirmed' | 'cancelled';
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
 };
 
 function applyFilter(bookings: MockBooking[], filter: BookingFilter, now: Date): MockBooking[] {
   switch (filter) {
     case 'upcoming':
       return bookings.filter((b) => b.startTime > now && b.status !== 'cancelled');
-    case 'past':
-      return bookings.filter((b) => b.startTime <= now && b.status !== 'cancelled');
+    case 'completed':
+      return bookings.filter((b) => b.status === 'completed');
     case 'cancelled':
       return bookings.filter((b) => b.status === 'cancelled');
     default:
@@ -33,6 +33,7 @@ const BOOKINGS: MockBooking[] = [
   { startTime: new Date('2026-04-01T10:00:00Z'), status: 'confirmed' }, // passé confirmé
   { startTime: new Date('2026-04-10T10:00:00Z'), status: 'pending' }, // passé en attente
   { startTime: new Date('2026-04-15T10:00:00Z'), status: 'cancelled' }, // passé annulé
+  { startTime: new Date('2026-04-20T10:00:00Z'), status: 'completed' }, // passé terminé
 ];
 
 // --- URL param parsing ---
@@ -115,7 +116,7 @@ describe('computeRange', () => {
 
 describe('"all" filter', () => {
   it('return all bookings', () => {
-    expect(applyFilter(BOOKINGS, 'all', NOW)).toHaveLength(6);
+    expect(applyFilter(BOOKINGS, 'all', NOW)).toHaveLength(7);
   });
 });
 
@@ -136,23 +137,6 @@ describe('"upcoming" filter', () => {
   });
 });
 
-describe('"past" filter', () => {
-  it('exclude future bookings', () => {
-    const result = applyFilter(BOOKINGS, 'past', NOW);
-    result.forEach((b) => expect(b.startTime <= NOW).toBe(true));
-  });
-
-  it('exclude cancelled bookings', () => {
-    const result = applyFilter(BOOKINGS, 'past', NOW);
-    result.forEach((b) => expect(b.status).not.toBe('cancelled'));
-  });
-
-  it('return only past non-cancelled bookings', () => {
-    const result = applyFilter(BOOKINGS, 'past', NOW);
-    expect(result).toHaveLength(2);
-  });
-});
-
 describe('"cancelled" filter', () => {
   it('return only cancelled bookings', () => {
     const result = applyFilter(BOOKINGS, 'cancelled', NOW);
@@ -165,9 +149,28 @@ describe('"cancelled" filter', () => {
   });
 });
 
+describe('"completed" filter', () => {
+  it('return only completed bookings', () => {
+    const result = applyFilter(BOOKINGS, 'completed', NOW);
+    result.forEach((b) => expect(b.status).toBe('completed'));
+  });
+
+  it('return the correct count of completed bookings', () => {
+    const result = applyFilter(BOOKINGS, 'completed', NOW);
+    expect(result).toHaveLength(1);
+  });
+
+  it('exclude non-completed bookings', () => {
+    const result = applyFilter(BOOKINGS, 'completed', NOW);
+    result.forEach((b) => expect(b.status).not.toBe('confirmed'));
+    result.forEach((b) => expect(b.status).not.toBe('cancelled'));
+    result.forEach((b) => expect(b.status).not.toBe('pending'));
+  });
+});
+
 describe('page parameter reset', () => {
   it('reset page parameter when filter changes', () => {
-    const params = new URLSearchParams('page=3&filter=past');
+    const params = new URLSearchParams('page=3&filter=upcoming');
     params.delete('page');
     params.set('filter', 'upcoming');
     expect(parsePageParam(params.get('page'))).toBe(1);

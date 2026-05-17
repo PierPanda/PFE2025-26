@@ -189,8 +189,8 @@ export type CursorPagination = z.infer<typeof cursorPaginationSchema>;
 
 export const ratingFormSchema = z.object({
   courseId: z.string().min(1, "L'ID du cours est requis."),
-  title: z.string().min(3, 'Titre trop court.').max(100, 'Titre trop long.'),
-  description: z.string().max(1000, 'Description trop longue.').optional(),
+  title: z.string().trim().min(3, 'Titre trop court.').max(100, 'Titre trop long.'),
+  description: z.string().trim().max(1000, 'Description trop longue.').optional(),
   rate: z.coerce
     .number()
     .min(1, 'Note minimum 1.')
@@ -205,8 +205,8 @@ export const createRatingSchema = ratingFormSchema.extend({
 
 export const updateRatingSchema = z
   .object({
-    title: z.string().min(3, 'Titre trop court.').max(100, 'Titre trop long.'),
-    description: z.string().max(1000, 'Description trop longue.').optional(),
+    title: z.string().trim().min(3, 'Titre trop court.').max(100, 'Titre trop long.'),
+    description: z.string().trim().max(1000, 'Description trop longue.').optional(),
     rate: z.coerce
       .number()
       .min(1, 'Note minimum 1.')
