@@ -16,7 +16,7 @@ export default function CourseSection({ courses, user }: CourseSectionProps) {
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-bold">Mes cours</h3>
         {courses.length > 0 && (
-          <Link to="/courses/create">
+          <Link to="/cours/create">
             <Button size="sm" className="bg-secondary" startContent={<InlineIcon icon="mdi:plus" width="20" />}>
               Créer un cours
             </Button>
@@ -27,7 +27,7 @@ export default function CourseSection({ courses, user }: CourseSectionProps) {
       {courses.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <p className="text-gray-500 mb-4">Vous n'avez pas encore de cours.</p>
-          <Link to="/courses/create">
+          <Link to="/cours/create">
             <Button size="sm" className="bg-secondary" startContent={<InlineIcon icon="mdi:plus" width="20" />}>
               Créer mon premier cours
             </Button>

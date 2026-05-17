@@ -1,0 +1,420 @@
+{
+  "buildManifest": {
+    "serverBundles": {
+      "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0": {
+        "id": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+        "file": "build/server/nodejs_eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    },
+    "routeIdToServerBundleId": {
+      "root": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_api/auth/route": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_api/courses/route": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_api/teachers/route": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_api/stats/route": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_api/availabilities/route": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_api/bookings/route": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_api/bookings/complete/route": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_api/available-slots/route": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/pages/auth/page": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/pages/dashboard/page": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/pages/profile/page": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/pages/courses/course/page": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/pages/courses/category/[category]": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/pages/checkout/page": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/pages/courses/create-course-form": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/pages/admin/page": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+    },
+    "routes": {
+      "root": {
+        "id": "root",
+        "file": "app/root.tsx",
+        "path": "",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/_api/auth/route": {
+        "id": "routes/_api/auth/route",
+        "parentId": "root",
+        "file": "app/routes/_api/auth/route.ts",
+        "path": "/api/auth/*",
+        "config": {}
+      },
+      "routes/_api/courses/route": {
+        "id": "routes/_api/courses/route",
+        "parentId": "root",
+        "file": "app/routes/_api/courses/route.ts",
+        "path": "/api/courses",
+        "config": {}
+      },
+      "routes/_api/teachers/route": {
+        "id": "routes/_api/teachers/route",
+        "parentId": "root",
+        "file": "app/routes/_api/teachers/route.ts",
+        "path": "/api/teachers",
+        "config": {}
+      },
+      "routes/_api/stats/route": {
+        "id": "routes/_api/stats/route",
+        "parentId": "root",
+        "file": "app/routes/_api/stats/route.ts",
+        "path": "/api/stats",
+        "config": {}
+      },
+      "routes/_api/availabilities/route": {
+        "id": "routes/_api/availabilities/route",
+        "parentId": "root",
+        "file": "app/routes/_api/availabilities/route.ts",
+        "path": "/api/availabilities",
+        "config": {}
+      },
+      "routes/_api/bookings/route": {
+        "id": "routes/_api/bookings/route",
+        "parentId": "root",
+        "file": "app/routes/_api/bookings/route.ts",
+        "path": "/api/bookings",
+        "config": {}
+      },
+      "routes/_api/bookings/complete/route": {
+        "id": "routes/_api/bookings/complete/route",
+        "parentId": "root",
+        "file": "app/routes/_api/bookings/complete/route.ts",
+        "path": "/api/bookings/complete",
+        "config": {}
+      },
+      "routes/_api/available-slots/route": {
+        "id": "routes/_api/available-slots/route",
+        "parentId": "root",
+        "file": "app/routes/_api/available-slots/route.ts",
+        "path": "/api/available-slots",
+        "config": {}
+      },
+      "routes/layouts/public-layout": {
+        "id": "routes/layouts/public-layout",
+        "parentId": "root",
+        "file": "app/routes/layouts/public-layout.tsx",
+        "config": {}
+      },
+      "routes/pages/auth/page": {
+        "id": "routes/pages/auth/page",
+        "parentId": "routes/layouts/public-layout",
+        "file": "app/routes/pages/auth/page.tsx",
+        "path": "/auth",
+        "config": {}
+      },
+      "routes/layouts/auth-layout": {
+        "id": "routes/layouts/auth-layout",
+        "parentId": "root",
+        "file": "app/routes/layouts/auth-layout.tsx",
+        "config": {}
+      },
+      "routes/pages/dashboard/page": {
+        "id": "routes/pages/dashboard/page",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "app/routes/pages/dashboard/page.tsx",
+        "index": true,
+        "config": {}
+      },
+      "routes/pages/profile/page": {
+        "id": "routes/pages/profile/page",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "app/routes/pages/profile/page.tsx",
+        "path": "/profile",
+        "config": {}
+      },
+      "routes/pages/courses/course/page": {
+        "id": "routes/pages/courses/course/page",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "app/routes/pages/courses/course/page.tsx",
+        "path": "/cours/course/:id",
+        "config": {}
+      },
+      "routes/pages/courses/category/[category]": {
+        "id": "routes/pages/courses/category/[category]",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "app/routes/pages/courses/category/[category].tsx",
+        "path": "/cours/:category",
+        "config": {}
+      },
+      "routes/pages/checkout/page": {
+        "id": "routes/pages/checkout/page",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "app/routes/pages/checkout/page.tsx",
+        "path": "/checkout/:id",
+        "config": {}
+      },
+      "routes/layouts/teacher-layout": {
+        "id": "routes/layouts/teacher-layout",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "app/routes/layouts/teacher-layout.tsx",
+        "config": {}
+      },
+      "routes/pages/courses/create-course-form": {
+        "id": "routes/pages/courses/create-course-form",
+        "parentId": "routes/layouts/teacher-layout",
+        "file": "app/routes/pages/courses/create-course-form.tsx",
+        "path": "/cours/create",
+        "config": {}
+      },
+      "routes/layouts/admin-layout": {
+        "id": "routes/layouts/admin-layout",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "app/routes/layouts/admin-layout.tsx",
+        "config": {}
+      },
+      "routes/pages/admin/page": {
+        "id": "routes/pages/admin/page",
+        "parentId": "routes/layouts/admin-layout",
+        "file": "app/routes/pages/admin/page.tsx",
+        "path": "/admin",
+        "config": {}
+      }
+    }
+  },
+  "reactRouterConfig": {
+    "appDirectory": "/Users/gabrielbrehault/Documents/ECOLE/ECV/PFE2025-26/app",
+    "basename": "/",
+    "buildDirectory": "/Users/gabrielbrehault/Documents/ECOLE/ECV/PFE2025-26/build",
+    "future": {
+      "unstable_optimizeDeps": false,
+      "unstable_subResourceIntegrity": false,
+      "unstable_trailingSlashAwareDataRequests": false,
+      "v8_middleware": false,
+      "v8_splitRouteModules": false,
+      "v8_viteEnvironmentApi": false
+    },
+    "routes": {
+      "root": {
+        "id": "root",
+        "file": "root.tsx",
+        "path": ""
+      },
+      "routes/_api/auth/route": {
+        "id": "routes/_api/auth/route",
+        "parentId": "root",
+        "file": "routes/_api/auth/route.ts",
+        "path": "/api/auth/*"
+      },
+      "routes/_api/courses/route": {
+        "id": "routes/_api/courses/route",
+        "parentId": "root",
+        "file": "routes/_api/courses/route.ts",
+        "path": "/api/courses"
+      },
+      "routes/_api/teachers/route": {
+        "id": "routes/_api/teachers/route",
+        "parentId": "root",
+        "file": "routes/_api/teachers/route.ts",
+        "path": "/api/teachers"
+      },
+      "routes/_api/stats/route": {
+        "id": "routes/_api/stats/route",
+        "parentId": "root",
+        "file": "routes/_api/stats/route.ts",
+        "path": "/api/stats"
+      },
+      "routes/_api/availabilities/route": {
+        "id": "routes/_api/availabilities/route",
+        "parentId": "root",
+        "file": "routes/_api/availabilities/route.ts",
+        "path": "/api/availabilities"
+      },
+      "routes/_api/bookings/route": {
+        "id": "routes/_api/bookings/route",
+        "parentId": "root",
+        "file": "routes/_api/bookings/route.ts",
+        "path": "/api/bookings"
+      },
+      "routes/_api/bookings/complete/route": {
+        "id": "routes/_api/bookings/complete/route",
+        "parentId": "root",
+        "file": "routes/_api/bookings/complete/route.ts",
+        "path": "/api/bookings/complete"
+      },
+      "routes/_api/available-slots/route": {
+        "id": "routes/_api/available-slots/route",
+        "parentId": "root",
+        "file": "routes/_api/available-slots/route.ts",
+        "path": "/api/available-slots"
+      },
+      "routes/layouts/public-layout": {
+        "id": "routes/layouts/public-layout",
+        "parentId": "root",
+        "file": "routes/layouts/public-layout.tsx"
+      },
+      "routes/pages/auth/page": {
+        "id": "routes/pages/auth/page",
+        "parentId": "routes/layouts/public-layout",
+        "file": "routes/pages/auth/page.tsx",
+        "path": "/auth"
+      },
+      "routes/layouts/auth-layout": {
+        "id": "routes/layouts/auth-layout",
+        "parentId": "root",
+        "file": "routes/layouts/auth-layout.tsx"
+      },
+      "routes/pages/dashboard/page": {
+        "id": "routes/pages/dashboard/page",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "routes/pages/dashboard/page.tsx",
+        "index": true
+      },
+      "routes/pages/profile/page": {
+        "id": "routes/pages/profile/page",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "routes/pages/profile/page.tsx",
+        "path": "/profile"
+      },
+      "routes/pages/courses/course/page": {
+        "id": "routes/pages/courses/course/page",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "routes/pages/courses/course/page.tsx",
+        "path": "/cours/course/:id"
+      },
+      "routes/pages/courses/category/[category]": {
+        "id": "routes/pages/courses/category/[category]",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "routes/pages/courses/category/[category].tsx",
+        "path": "/cours/:category"
+      },
+      "routes/pages/checkout/page": {
+        "id": "routes/pages/checkout/page",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "routes/pages/checkout/page.tsx",
+        "path": "/checkout/:id"
+      },
+      "routes/layouts/teacher-layout": {
+        "id": "routes/layouts/teacher-layout",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "routes/layouts/teacher-layout.tsx"
+      },
+      "routes/pages/courses/create-course-form": {
+        "id": "routes/pages/courses/create-course-form",
+        "parentId": "routes/layouts/teacher-layout",
+        "file": "routes/pages/courses/create-course-form.tsx",
+        "path": "/cours/create"
+      },
+      "routes/layouts/admin-layout": {
+        "id": "routes/layouts/admin-layout",
+        "parentId": "routes/layouts/auth-layout",
+        "file": "routes/layouts/admin-layout.tsx"
+      },
+      "routes/pages/admin/page": {
+        "id": "routes/pages/admin/page",
+        "parentId": "routes/layouts/admin-layout",
+        "file": "routes/pages/admin/page.tsx",
+        "path": "/admin"
+      }
+    },
+    "routeDiscovery": {
+      "mode": "lazy",
+      "manifestPath": "/__manifest"
+    },
+    "serverBuildFile": "index.js",
+    "serverModuleFormat": "esm",
+    "ssr": true,
+    "allowedActionOrigins": false,
+    "unstable_routeConfig": [
+      {
+        "id": "root",
+        "path": "",
+        "file": "root.tsx",
+        "children": [
+          {
+            "file": "routes/_api/auth/route.ts",
+            "path": "/api/auth/*"
+          },
+          {
+            "file": "routes/_api/courses/route.ts",
+            "path": "/api/courses"
+          },
+          {
+            "file": "routes/_api/teachers/route.ts",
+            "path": "/api/teachers"
+          },
+          {
+            "file": "routes/_api/stats/route.ts",
+            "path": "/api/stats"
+          },
+          {
+            "file": "routes/_api/availabilities/route.ts",
+            "path": "/api/availabilities"
+          },
+          {
+            "file": "routes/_api/bookings/route.ts",
+            "path": "/api/bookings"
+          },
+          {
+            "file": "routes/_api/bookings/complete/route.ts",
+            "path": "/api/bookings/complete"
+          },
+          {
+            "file": "routes/_api/available-slots/route.ts",
+            "path": "/api/available-slots"
+          },
+          {
+            "file": "routes/layouts/public-layout.tsx",
+            "children": [
+              {
+                "file": "routes/pages/auth/page.tsx",
+                "path": "/auth"
+              }
+            ]
+          },
+          {
+            "file": "routes/layouts/auth-layout.tsx",
+            "children": [
+              {
+                "file": "routes/pages/dashboard/page.tsx",
+                "index": true
+              },
+              {
+                "file": "routes/pages/profile/page.tsx",
+                "path": "/profile"
+              },
+              {
+                "file": "routes/pages/courses/course/page.tsx",
+                "path": "/cours/course/:id"
+              },
+              {
+                "file": "routes/pages/courses/category/[category].tsx",
+                "path": "/cours/:category"
+              },
+              {
+                "file": "routes/pages/checkout/page.tsx",
+                "path": "/checkout/:id"
+              },
+              {
+                "file": "routes/layouts/teacher-layout.tsx",
+                "children": [
+                  {
+                    "file": "routes/pages/courses/create-course-form.tsx",
+                    "path": "/cours/create"
+                  }
+                ]
+              },
+              {
+                "file": "routes/layouts/admin-layout.tsx",
+                "children": [
+                  {
+                    "file": "routes/pages/admin/page.tsx",
+                    "path": "/admin"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "viteConfig": {
+    "build": {
+      "assetsDir": "assets"
+    }
+  }
+}
