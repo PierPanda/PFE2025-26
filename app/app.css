@@ -3,11 +3,21 @@
 @source "../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @custom-variant dark (&:is(.dark *));
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* Décalage pour les ancres (offset de 50px) */
+[id] {
+  scroll-margin-top: 150px;
+}
+
 @theme {
   --font-sans:
-    'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+    'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
   --color-primary: #ff7031;
+  --color-primary-light: #fff9f1;
   --color-secondary: #ffa500;
   --color-tertiary: #f7f0e5;
   --color-chip-light: #ffe6db;
