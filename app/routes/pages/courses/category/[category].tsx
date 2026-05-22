@@ -96,10 +96,10 @@ export default function CategoryCoursesPage() {
   const categoryLabel = category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Tous les cours';
 
   return (
-    <main className="mx-auto max-w-full px-14 py-2">
+    <main className="mx-auto max-w-full p-4 md:px-14 md:py-2">
       <section id="all-courses" className="mt-10">
         <Card radius="lg" shadow="none">
-          <CardBody className="p-6 md:p-8 bg-tertiary">
+          <CardBody className="p-0 md:p-8 bg-tertiary">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-dark">Cours de {categoryLabel}</h2>

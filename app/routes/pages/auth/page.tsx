@@ -26,7 +26,7 @@ export default function AuthPage() {
   }, [isLogin]);
 
   return (
-    <div className=" bg-tertiary flex">
+    <div className="min-h-screen bg-tertiary flex">
       <div className="w-full flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-sm">
           <div className="mb-10 text-center">

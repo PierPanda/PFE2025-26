@@ -36,12 +36,12 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
   ];
   return (
     <section
-      className="relative h-180 rounded-2xl bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center"
+      className="relative h-auto min-h-[60vh] md:h-180 rounded-2xl bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center"
       style={{ backgroundImage: `url(${heroBannerImage})` }}
     >
       <div className="absolute inset-0 rounded-2xl bg-black/45" />
-      <div className="space-y-5 z-10">
-        <h1 className="text-4xl md:text-5xl text-tertiary font-extrabold tracking-tight text-center px-50">
+      <div className="space-y-5 z-10 p-4">
+        <h1 className="text-3xl md:text-5xl text-tertiary font-extrabold tracking-tight text-center px-4 md:px-16 lg:px-32">
           Maîtrisez la musique avec des cours conçus pour vous.
         </h1>
         <p className="text-base md:text-lg max-w-3xl text-tertiary leading-relaxed text-center mx-auto">
@@ -50,13 +50,13 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
           rythme, en ligne.
         </p>
 
-        <div className="flex flex-wrap gap-4 justify-center">
+        <div className="flex flex-col  md:flex-row gap-4 justify-center">
           <Button
             onPress={onFindCourses}
             size="lg"
             radius="lg"
             color="secondary"
-            className="font-semibold bg-secondary text-tertiary border-2 border-secondary hover:border-secondary hover:bg-transparent hover:text-secondary"
+            className="w-full md:w-auto font-semibold bg-secondary text-tertiary border-2 border-secondary hover:border-secondary hover:bg-transparent hover:text-secondary"
             startContent={<InlineIcon icon="lucide:search" />}
           >
             Trouver un cours
@@ -68,7 +68,7 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
             size="lg"
             radius="lg"
             variant="flat"
-            className="font-semibold bg-tertiary text-dark border-2 border-tertiary hover:border-tertiary hover:bg-transparent hover:text-tertiary"
+            className="w-full md:w-auto font-semibold bg-tertiary text-dark border-2 border-tertiary hover:border-tertiary hover:bg-transparent hover:text-tertiary"
             startContent={<InlineIcon icon="lucide:music-2" />}
           >
             Devenir professeur
@@ -76,7 +76,7 @@ export default function Banner({ userName, stats, onFindCourses }: BannerProps) 
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 md:max-w-2xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:max-w-2xl mx-auto w-full px-4">
         {statistics.map((stat) => (
           <StatCard key={stat.label} icon={stat.icon} title={stat.label} value={stat.value} />
         ))}
