@@ -160,7 +160,7 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
   return (
     <aside className={cardColumnClasses}>
       <Card className="border border-primary/15 bg-white/95 shadow-lg shadow-primary/5 backdrop-blur-sm">
-        <CardBody className="flex flex-col gap-6 p-6 lg:overflow-y-auto">
+        <CardBody className="flex flex-col gap-6 p-6 lg:overflow-y-auto lg:max-h-[calc(100vh-8rem)]">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
               <h2 className="mb-0 text-2xl font-bold text-dark">Réservez le cours</h2>

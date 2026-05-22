@@ -94,7 +94,7 @@ export default function EditCourseModal({
               validate={(value) => validateField('title', value)}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <input type="hidden" name="category" value={selectedCategory} />
 
               <Autocomplete
@@ -139,7 +139,7 @@ export default function EditCourseModal({
               validate={(value) => validateField('description', value)}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <NumberInput
                 isRequired
                 color="warning"

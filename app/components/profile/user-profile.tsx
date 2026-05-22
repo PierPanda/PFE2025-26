@@ -31,20 +31,24 @@ export default function UserProfile({ user, teacher, isOwnProfile = true, rating
 
   return (
     <>
-      <div className="flex justify-between items-center w-full gap-4 border-b border-dark/10 pb-6">
-        <div className="flex items-center gap-6">
+      <div className="flex flex-col md:flex-row justify-between items-center w-full gap-4 border-b border-dark/10 pb-6">
+        <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
           {user.image ? (
-            <img src={user.image} alt={user.name} className="w-24 h-24 rounded-full object-cover shrink-0" />
+            <img
+              src={user.image}
+              alt={user.name}
+              className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover shrink-0"
+            />
           ) : (
             <div className="w-24 h-24 rounded-full bg-amber-100 flex items-center justify-center text-3xl font-bold text-amber-600 shrink-0">
               {user.name?.[0]?.toUpperCase() ?? '?'}
             </div>
           )}
 
-          <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold">{user.name}</h1>
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <h2 className="text-2xl font-bold">{user.name}</h2>
 
-            <div className="flex items-center gap-3 text-sm text-gray-500">
+            <div className="flex items-center gap-3 text-sm text-gray-500 text-center md:text-left">
               {rating !== null && rating !== undefined && rating > 0 && (
                 <>
                   <span className="flex items-center gap-1">
@@ -55,7 +59,7 @@ export default function UserProfile({ user, teacher, isOwnProfile = true, rating
                   <span className="text-gray-300">|</span>
                 </>
               )}
-              <span>Membre depuis {memberSince}</span>
+              <span className="text-center md:text-left">Membre depuis {memberSince}</span>
             </div>
 
             {teacher?.description && <p>{teacher.description}</p>}
