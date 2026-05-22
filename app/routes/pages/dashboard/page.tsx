@@ -46,7 +46,7 @@ export default function Home() {
   };
 
   return (
-    <main className="mx-auto max-w-screen-2xl px-14 py-8 pb-20">
+    <main className="mx-auto max-w-screen-2xl px-14 py-8 pb-20 md:px-14">
       <Banner
         userName={user?.name}
         stats={stats}
@@ -78,9 +78,9 @@ export default function Home() {
         </Card>
       </section>
 
-      <section id="top-rated-courses" className="mt-6">
+      <section id="top-rated-courses" className="mt-8 md:mt-16">
         <Card radius="lg" shadow="none">
-          <CardBody className="bg-tertiary p-6 md:p-8">
+          <CardBody className="bg-tertiary  p-0 md:p-8">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-dark">Cours les mieux notés</h2>
             </div>
@@ -98,10 +98,11 @@ export default function Home() {
         </Card>
       </section>
 
-      <section id="new-courses" className="mt-6">
+      {/* Section: Nouveautés (cours les plus récents) */}
+      <section id="new-courses" className="mt-8 md:mt-16">
         <Card radius="lg" shadow="none">
-          <CardBody className="bg-tertiary p-6 md:p-8">
-            <div className="mb-8">
+          <CardBody className="bg-tertiary p-0 md:p-8">
+            <div className="mb-6">
               <h2 className="text-2xl font-bold text-dark">Nouveautés</h2>
             </div>
 

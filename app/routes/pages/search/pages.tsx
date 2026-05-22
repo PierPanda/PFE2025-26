@@ -101,11 +101,11 @@ export default function SearchPage() {
   };
 
   return (
-    <main className="mx-auto max-w-screen-2xl px-14 py-2">
-      <section id="courses" className="mt-10">
+    <main className="mx-auto max-w-screen-2xl p-4 md:px-14 md:py-2">
+      <section id="all-courses" className="mt-10">
         <Card radius="lg" shadow="none">
-          <CardBody className="p-6 md:p-8 bg-tertiary">
-            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <CardBody className="p-0 md:p-8 bg-tertiary">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-dark">Listes des cours</h2>
                 <p className="mt-1 text-sm text-dark/50">{String(coursesPage.total).padStart(2, '0')} résultats</p>

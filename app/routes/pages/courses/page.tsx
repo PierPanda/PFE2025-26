@@ -51,7 +51,7 @@ export default function CourseDetail() {
   const { course, teacher, availableSlots } = useLoaderData<typeof loader>();
 
   return (
-    <main className="py-20 mx-auto max-w-7xl px-6">
+    <main className="py-8 md:py-20 mx-auto max-w-7xl px-6">
       <div className="space-y-8">
         <a href="/search" className="flex items-center text-dark hover:underline">
           <InlineIcon icon="mdi:arrow-left" className="mr-2" />
