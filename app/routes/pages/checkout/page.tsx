@@ -38,7 +38,7 @@ export default function CheckoutPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
-      <div className="rounded-3xl border border-primary/15 bg-white p-8 shadow-lg shadow-primary/5">
+      <div className="rounded-3xl border border-primary/15 bg-white p-4 sm:p-8 shadow-lg shadow-primary/5">
         <div className="space-y-2">
           <p className="text-sm font-semibold uppercase tracking-wide text-primary">Checkout</p>
           <h1 className="text-3xl font-bold text-dark">Réservation enregistrée</h1>
@@ -70,10 +70,10 @@ export default function CheckoutPage() {
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button as={Link} to="/" className="bg-secondary font-semibold text-dark">
+          <Button as={Link} to="/" size="lg" className="bg-secondary font-semibold text-dark">
             Retour à l'accueil
           </Button>
-          <Button as={Link} to="/profile" variant="light">
+          <Button as={Link} to="/profile" size="lg" variant="light">
             Voir mes réservations
           </Button>
         </div>

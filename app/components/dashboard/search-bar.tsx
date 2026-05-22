@@ -50,7 +50,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(function S
       onChange={handleChange}
       value={inputValue}
       placeholder="Rechercher un cours..."
-      className="w-64"
+      className="w-full sm:w-64"
       startContent={<InlineIcon icon="lucide:search" />}
     />
   );
