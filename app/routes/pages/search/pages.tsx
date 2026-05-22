@@ -11,7 +11,7 @@ import { authentifyUser } from '~/server/utils/authentify-user';
 import type { CourseLevel, CourseCategory } from '~/types/course';
 import { cursorPaginationSchema, validateSearchParams } from '~/lib/validation';
 
-const ALL_COURSES_PER_PAGE = 12;
+const ALL_COURSES_PER_PAGE = 16;
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
