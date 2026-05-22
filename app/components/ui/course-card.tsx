@@ -9,7 +9,6 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Image,
   Modal,
   ModalBody,
   ModalContent,
@@ -106,29 +105,27 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
 
   return (
     <>
-      <li className="shrink-0">
+      <li className="relative shrink-0">
         <Card
-          className="h-full max-w-100 md:max-w-80 border-none bg-white p-2 transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
+          className="h-full w-full border-none bg-white p-2 transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
           radius="lg"
           shadow="sm"
         >
-          <div className="relative">
-            <Link to={`/cours/course/${courseState.id}`} className="block">
-              <Image
-                alt={courseState.title}
-                className="rounded-t-lg object-cover"
-                height={150}
-                src={urlImage}
-                width={450}
-              />
-            </Link>
+          <Link
+            to={`/cours/course/${courseState.id}`}
+            className="absolute inset-0 z-10"
+            aria-label={courseState.title}
+          />
 
-            <Chip className="absolute left-3 top-3 z-10 bg-chip-light text-sm font-bold text-chip-dark" radius="sm">
+          <div className="relative">
+            <img alt={courseState.title} className="h-40 w-full rounded-lg object-cover" src={urlImage} />
+
+            <Chip className="absolute left-3 top-3 z-20 bg-chip-light text-sm font-bold text-chip-dark" radius="sm">
               {levelLabel}
             </Chip>
 
             {canManageCourse ? (
-              <div className="absolute right-2 top-2 z-10">
+              <div className="absolute right-2 top-2 z-20">
                 <Dropdown placement="bottom-end">
                   <DropdownTrigger>
                     <Button
@@ -175,34 +172,32 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
           </div>
 
           <CardBody>
-            <Link to={`/cours/course/${courseState.id}`} className="block h-full text-inherit no-underline">
-              <div className="flex h-full flex-col items-start justify-between">
-                <div>
-                  <div className="mb-4 flex items-center gap-1">
-                    <InlineIcon color="#FFA500" height="20" icon="mdi:star" width="20" />
-                    <p className="text-sm text-dark/60">
-                      {averageRating ? averageRating.toFixed(1) : 'N/A'} ({ratings.length})
-                    </p>
-                  </div>
-
-                  <p className="text-lg font-medium text-dark/80">{courseState.teacher.user.name}</p>
-                  <h3 className="mb-2 text-xl font-semibold leading-6 text-dark">{courseState.title}</h3>
-                  <p className="text-lg font-light text-dark">{courseState.description}</p>
+            <div className="flex h-full flex-col items-start justify-between">
+              <div>
+                <div className="mb-4 flex items-center gap-1">
+                  <InlineIcon color="#FFA500" height="20" icon="mdi:star" width="20" />
+                  <p className="text-sm text-dark/60">
+                    {averageRating ? averageRating.toFixed(1) : 'N/A'} ({ratings.length})
+                  </p>
                 </div>
 
-                <div className="mt-4 flex w-full items-center justify-between">
-                  <div className="flex items-center justify-start gap-2">
-                    <InlineIcon icon="mdi:clock-outline" width="18" />
-                    <p>{courseState.duration} min</p>
-                  </div>
+                <p className="text-lg font-medium text-dark/80">{courseState.teacher.user.name}</p>
+                <h3 className="mb-2 text-xl font-semibold leading-6 text-dark">{courseState.title}</h3>
+                <p className="text-lg font-light text-dark">{courseState.description}</p>
+              </div>
 
-                  <div className="flex items-center justify-start gap-2">
-                    <InlineIcon icon="mdi:money" width="18" />
-                    <p>{courseState.price} €</p>
-                  </div>
+              <div className="mt-4 flex w-full items-center justify-between">
+                <div className="flex items-center justify-start gap-2">
+                  <InlineIcon icon="mdi:clock-outline" width="18" />
+                  <p>{courseState.duration} min</p>
+                </div>
+
+                <div className="flex items-center justify-start gap-2">
+                  <InlineIcon icon="mdi:money" width="18" />
+                  <p>{courseState.price} €</p>
                 </div>
               </div>
-            </Link>
+            </div>
           </CardBody>
         </Card>
       </li>

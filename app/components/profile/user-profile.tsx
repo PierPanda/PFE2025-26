@@ -36,7 +36,7 @@ export default function UserProfile({ user, teacher, rating, reviewCount }: User
             <img
               src={user.image}
               alt={user.name}
-              className="w-auto h-20 md:w-24 md:h-24 rounded-full object-cover text-center md:text-left shrink-0"
+              className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover shrink-0"
             />
           ) : (
             <div className="w-24 h-24 rounded-full bg-amber-100 flex items-center justify-center text-3xl font-bold text-amber-600 shrink-0">

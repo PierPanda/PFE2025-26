@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { UserProfile } from '~/components/auth/user-profile';
 import logo from '~/assets/images/LOGO_MAESTROO.png';
-import { Button } from '@heroui/react';
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
 import iconGuitare from '~/assets/icons_header/balalaika.svg';
 import iconPiano from '~/assets/icons_header/piano.svg';
@@ -113,17 +113,33 @@ export default function AuthLayout() {
             <img src={logo} alt="Maestroo" className="h-6 md:h-9 w-auto" />
           </Link>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
+            <div className="md:hidden">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button variant="light" size="sm" endContent={<InlineIcon icon="lucide:chevron-down" width="14" />}>
+                    Catégories
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Catégories de cours">
+                  {iconsHeader.map((item) => (
+                    <DropdownItem key={item.title} href={item.url} startContent={item.icon}>
+                      {item.title}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            </div>
             <UserProfile />
           </div>
         </div>
-        <div className="w-full px-2 md:px-60 h-16 flex items-center justify-between bg-primary-light p-10">
-          <ul className="flex w-full items-center justify-between gap-6 overflow-x-scroll overflow-hidden md:overflow-visible">
+        <div className="hidden md:flex w-full px-10 lg:px-20 h-16 items-center bg-primary-light">
+          <ul className="flex w-full items-center justify-between gap-6">
             {iconsHeader.map((item) => (
               <li key={item.title} className="group flex flex-col items-center justify-center">
                 <Link
                   to={item.url}
-                  className="flex flex-col items-center justify-center hover:bg-primary  focus:bg-primary rounded-lg h-17 w-17 transition-colors cursor-pointer hover:text-tertiary focus:text-tertiary"
+                  className="flex flex-col items-center justify-center hover:bg-primary focus:bg-primary rounded-lg h-17 w-17 transition-colors cursor-pointer hover:text-tertiary focus:text-tertiary"
                 >
                   {item.icon}
                   <span className="mt-1 text-xs">{item.title}</span>
@@ -182,17 +198,17 @@ export default function AuthLayout() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row items-center justify-center mt-8">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 items-center justify-center mt-8">
             <a href="/legal/terms" className="text-sm text-tertiary hover:text-amber-600">
               Conditions d'utilisation
             </a>
-            <a href="/legal/privacy" className="text-sm text-tertiary hover:text-amber-600 ml-4">
+            <a href="/legal/privacy" className="text-sm text-tertiary hover:text-amber-600">
               Politique de confidentialité
             </a>
-            <a href="/legal/cookies" className="text-sm text-tertiary hover:text-amber-600 ml-4">
+            <a href="/legal/cookies" className="text-sm text-tertiary hover:text-amber-600">
               Politique des cookies
             </a>
-            <a href="/legal/cgv" className="text-sm text-tertiary hover:text-amber-600 ml-4">
+            <a href="/legal/cgv" className="text-sm text-tertiary hover:text-amber-600">
               Conditions générales de vente
             </a>
           </div>

@@ -170,7 +170,7 @@ export default function Home() {
       <Banner userName={user?.name} stats={stats} onFindCourses={handleFindCourses} />
 
       {/* Section: Cours populaires */}
-      <section id="cours-populaires" className="mt-48">
+      <section id="cours-populaires" className="mt-8 md:mt-16">
         <Card radius="lg" shadow="none">
           <CardBody className="bg-tertiary p-0 md:p-8">
             <div className="mb-6">
@@ -198,7 +198,7 @@ export default function Home() {
       </section>
 
       {/* Section: Cours les mieux notés */}
-      <section id="top-rated-courses" className="mt-10">
+      <section id="top-rated-courses" className="mt-8 md:mt-16">
         <Card radius="lg" shadow="none">
           <CardBody className="bg-tertiary p-0 md:p-8">
             <div className="mb-6">
@@ -223,7 +223,7 @@ export default function Home() {
       </section>
 
       {/* Section: Nouveautés (cours les plus récents) */}
-      <section id="new-courses" className="mt-10">
+      <section id="new-courses" className="mt-8 md:mt-16">
         <Card radius="lg" shadow="none">
           <CardBody className="bg-tertiary p-0 md:p-8">
             <div className="mb-6">
@@ -248,7 +248,7 @@ export default function Home() {
       </section>
 
       {/* Section: Tous les cours (filtres + pagination) */}
-      <section id="courses" className="mt-10">
+      <section id="courses" className="mt-8 md:mt-16">
         <Card radius="lg" shadow="none">
           <CardBody className="p-0 md:p-8 bg-tertiary">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -256,7 +256,7 @@ export default function Home() {
                 <h2 className="text-2xl font-bold text-dark">Listes des cours</h2>
                 <p className="text-lg text-dark/60">{String(coursesPage.total).padStart(2, '0')} résultats</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex w-full gap-2 sm:w-auto">
                 <SearchBar ref={searchBarRef} searchParams={searchParams} setSearchParams={setSearchParams} />
                 <Filters
                   searchParams={searchParams}
