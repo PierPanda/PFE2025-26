@@ -20,14 +20,14 @@ export default [
   // Authenticated Pages
   layout('routes/layouts/auth-layout.tsx', [
     index('routes/pages/dashboard/page.tsx'),
+    route('/courses', 'routes/pages/courses/page.tsx'),
     route('/profile', 'routes/pages/profile/page.tsx'),
-    route('/cours/course/:id', 'routes/pages/courses/course/page.tsx'),
-    route('/cours/:category', 'routes/pages/courses/category/[category].tsx'),
+    route('/course/:id', 'routes/pages/courses/course/page.tsx'),
     route('/checkout/:id', 'routes/pages/checkout/page.tsx'),
 
     // Teacher-only Pages (nested: hérite du header auth-layout)
     layout('routes/layouts/teacher-layout.tsx', [
-      route('/cours/create', 'routes/pages/courses/create-course-form.tsx'),
+      route('/course/create', 'routes/pages/courses/create-course-form.tsx'),
     ]),
 
     // Admin-only Pages (nested: hérite du header auth-layout)
