@@ -326,7 +326,7 @@ export default function Page() {
 
   return (
     <main className="px-4 md:px-10 py-8 flex flex-col gap-12">
-      <UserProfile user={user} teacher={teacher} />
+      <UserProfile user={profileUser} teacher={profileTeacher} isOwnProfile={true} />
       <div className="flex flex-col gap-20">
         {profileTeacher && learner && (
           <Tabs
