@@ -108,7 +108,7 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
     <>
       <li className="shrink-0">
         <Card
-          className="h-full max-w-80 border-none bg-white p-2 transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
+          className="h-full max-w-100 md:max-w-80 border-none bg-white p-2 transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
           radius="lg"
           shadow="sm"
         >
@@ -119,7 +119,7 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
                 className="rounded-t-lg object-cover"
                 height={150}
                 src={urlImage}
-                width={350}
+                width={450}
               />
             </Link>
 

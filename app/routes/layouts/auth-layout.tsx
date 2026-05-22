@@ -32,7 +32,7 @@ export default function AuthLayout() {
       icon: (
         <InlineIcon
           icon="tabler:flame-filled"
-          className="h-6 w-6 text-primary transition-colors group-hover:text-tertiary"
+          className="h-5 w-auto md:h-6 md:w-6 text-primary transition-colors group-hover:text-tertiary "
         />
       ),
       url: '/#cours-populaires',
@@ -42,7 +42,7 @@ export default function AuthLayout() {
       icon: (
         <img
           alt="Guitare"
-          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          className="h-5 w-auto md:h-6 md:w-6 transition-opacity text-tertiary group-hover:text-tertiary"
           src={iconGuitare}
         />
       ),
@@ -53,7 +53,7 @@ export default function AuthLayout() {
       icon: (
         <img
           alt="Piano"
-          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          className="h-5 w-auto md:h-6 md:w-6 transition-opacity text-tertiary group-hover:text-tertiary"
           src={iconPiano}
         />
       ),
@@ -64,7 +64,7 @@ export default function AuthLayout() {
       icon: (
         <img
           alt="Chant"
-          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          className="h-5 w-auto md:h-6 md:w-6 transition-opacity text-tertiary group-hover:text-tertiary"
           src={iconChant}
         />
       ),
@@ -75,7 +75,7 @@ export default function AuthLayout() {
       icon: (
         <img
           alt="Flûte"
-          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          className="h-5 w-auto md:h-6 md:w-6 transition-opacity text-tertiary group-hover:text-tertiary"
           src={iconFlute}
         />
       ),
@@ -86,7 +86,7 @@ export default function AuthLayout() {
       icon: (
         <img
           alt="Batterie"
-          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          className="h-5 w-auto md:h-6 md:w-6 transition-opacity text-tertiary group-hover:text-tertiary"
           src={iconBatterie}
         />
       ),
@@ -97,7 +97,7 @@ export default function AuthLayout() {
       icon: (
         <img
           alt="Trombone"
-          className="h-6 w-6 transition-opacity text-tertiary group-hover:text-tertiary"
+          className="h-5 w-auto md:h-6 md:w-6 transition-opacity text-tertiary group-hover:text-tertiary"
           src={iconTrombone}
         />
       ),
@@ -108,22 +108,22 @@ export default function AuthLayout() {
   return (
     <div className="min-h-screen bg-tertiary">
       <header className="sticky top-0 z-50 bg-tertiary py-2">
-        <div className="flex h-16 w-full items-center justify-between px-12">
+        <div className="flex h-16 w-full items-center justify-between px-4 md:px-12">
           <Link to="/" className="shrink-0">
-            <img src={logo} alt="Maestroo" className="h-9 w-auto" />
+            <img src={logo} alt="Maestroo" className="h-6 md:h-9 w-auto" />
           </Link>
 
           <div className="flex items-center gap-4">
             <UserProfile />
           </div>
         </div>
-        <div className="w-full px-60 h-16 flex items-center justify-between bg-primary-light p-10">
-          <ul className="flex w-full items-center justify-between gap-6 ">
+        <div className="w-full px-2 md:px-60 h-16 flex items-center justify-between bg-primary-light p-10">
+          <ul className="flex w-full items-center justify-between gap-6 overflow-x-scroll overflow-hidden md:overflow-visible">
             {iconsHeader.map((item) => (
               <li key={item.title} className="group flex flex-col items-center justify-center">
                 <Link
                   to={item.url}
-                  className="flex flex-col items-center justify-center hover:bg-primary rounded-lg h-17 w-17 transition-colors cursor-pointer hover:text-tertiary"
+                  className="flex flex-col items-center justify-center hover:bg-primary  focus:bg-primary rounded-lg h-17 w-17 transition-colors cursor-pointer hover:text-tertiary focus:text-tertiary"
                 >
                   {item.icon}
                   <span className="mt-1 text-xs">{item.title}</span>
@@ -136,12 +136,12 @@ export default function AuthLayout() {
 
       <Outlet />
 
-      <div className="px-14 py-14">
+      <div className="p-4 md:p-14">
         <footer className="mt-12 flex flex-col gap-4 rounded-2xl bg-black p-8">
           <div className="w-full flex flex-col md:flex-row gap-8">
             <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
-              <img src={logo} alt="Maestroo" className="h-auto md:h-10 w-auto mb-4 self-start  brightness-0 invert" />
-              <h5 className="text-center md:text-left text-l text-tertiary font-semibold">
+              <img src={logo} alt="Maestroo" className="h-10 md:h-10 w-auto mb-4 self-center  brightness-0 invert" />
+              <h5 className="text-center md:text-center text-l text-tertiary font-semibold">
                 Maestroo - Connectez-vous avec les meilleurs professeurs de musique pour des cours en ligne
                 personnalisés.
               </h5>
@@ -162,7 +162,7 @@ export default function AuthLayout() {
               <Button
                 variant="solid"
                 color="default"
-                className="w-auto border-2 border-tertiary bg-tertiary text-xl font-bold text-black items-center self-center hover:bg-transparent hover:text-tertiary hover:border-tertiary md:self-end"
+                className="w-auto border-2 border-tertiary bg-tertiary text-xl font-bold text-black items-center self-center hover:bg-transparent hover:text-tertiary hover:border-tertiary  md:self-end"
               >
                 Contactez-nous
               </Button>
