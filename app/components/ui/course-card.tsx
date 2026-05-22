@@ -213,6 +213,7 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
         onClose={() => setEditOpen(false)}
         onSaved={setCourseState}
         course={courseState}
+        action={deleteAction}
       />
 
       <Modal isOpen={confirmOpen} onClose={() => setConfirmOpen(false)} size="sm">

@@ -350,6 +350,7 @@ export default function Page() {
             teacher={profileTeacher}
             availabilities={availabilities}
             isTeacher
+            action={`/profile/${profileUser.id}`}
           />
         )}
 
@@ -362,7 +363,9 @@ export default function Page() {
           />
         )}
 
-        {learner && !isTeacherView && <CalendarSection learnerBookings={upcomingLearnerBookings} />}
+        {learner && !isTeacherView && (
+          <CalendarSection learnerBookings={upcomingLearnerBookings} action={`/profile/${profileUser.id}`} />
+        )}
 
         <BookingsTable
           bookings={isTeacherView ? teacherBookings : learnerBookings}
