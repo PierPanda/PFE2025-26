@@ -20,7 +20,7 @@ export default [
   // Authenticated Pages
   layout('routes/layouts/auth-layout.tsx', [
     index('routes/pages/dashboard/page.tsx'),
-    route('/profile', 'routes/pages/profile/page.tsx'),
+    route('/profile/:id', 'routes/pages/profile/page.tsx'),
     route('/cours/course/:id', 'routes/pages/courses/course/page.tsx'),
     route('/cours/:category', 'routes/pages/courses/category/[category].tsx'),
     route('/checkout/:id', 'routes/pages/checkout/page.tsx'),

@@ -28,9 +28,37 @@ import { getLearnerByUserId } from '~/services/learners/get-learner';
 
 const PAGE_SIZE = 10;
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const session = await authentifyUser(request, { redirectTo: '/auth' });
+export async function loader({ params, request }: Route.LoaderArgs) {
+  const { id: profileUserId } = params;
 
+  if (!profileUserId) {
+    throw redirect('/');
+  }
+
+  const session = await authentifyUser(request, { redirectTo: '/auth' });
+  const isOwnProfile = profileUserId === session.user.id;
+
+  const profileTeacherResult = await getTeacherByUserId(profileUserId);
+  const profileTeacher = profileTeacherResult.success ? profileTeacherResult.teacher : null;
+
+  // Public profile: only teacher info + courses
+  if (!isOwnProfile) {
+    if (!profileTeacher) {
+      throw redirect('/');
+    }
+
+    const coursesResult = await getCoursesByTeacher(profileTeacher.id);
+    const courses = coursesResult.success ? (coursesResult.courses ?? []) : [];
+
+    return {
+      isOwnProfile: false as const,
+      profileUser: profileTeacher.user,
+      profileTeacher,
+      courses,
+    };
+  }
+
+  // Own profile: load all private data
   const url = new URL(request.url);
   const page = parsePageParam(url.searchParams.get('page'));
   const VALID_FILTERS: BookingFilter[] = ['all', 'upcoming', 'past', 'cancelled'];
@@ -40,11 +68,9 @@ export async function loader({ request }: Route.LoaderArgs) {
     : 'all';
   const offset = computeOffset(page, PAGE_SIZE);
 
-  const [teacherResult, learnerResult] = await Promise.all([
-    getTeacherByUserId(session.user.id),
-    getLearnerByUserId(session.user.id),
-  ]);
-  const teacher = teacherResult.success ? teacherResult.teacher : null;
+  const teacher = profileTeacher;
+
+  const learnerResult = await getLearnerByUserId(session.user.id);
   const learner = learnerResult.success ? learnerResult.learner : null;
 
   const [coursesResult, availabilityResult] = await Promise.all([
@@ -80,8 +106,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   return {
-    user: session.user,
-    teacher,
+    isOwnProfile: true as const,
+    profileUser: session.user,
+    profileTeacher: teacher,
     learner,
     courses,
     availabilities,
@@ -115,7 +142,6 @@ export async function action({ request }: Route.ActionArgs) {
       imageUrl = uploadResult.data;
     }
 
-    // Met à jour user en DB + rafraîchit le cookie cache Better Auth
     const updateResponse = await auth.api.updateUser({
       headers: request.headers,
       body: {
@@ -136,7 +162,6 @@ export async function action({ request }: Route.ActionArgs) {
       });
     }
 
-    // Propage les Set-Cookie pour que le navigateur reçoive le cookie rafraîchi
     const responseHeaders = new Headers();
     updateResponse.headers.getSetCookie().forEach((cookie) => {
       responseHeaders.append('Set-Cookie', cookie);
@@ -253,28 +278,15 @@ export async function action({ request }: Route.ActionArgs) {
 type View = 'teacher' | 'learner';
 
 export default function Page() {
-  const {
-    user,
-    teacher,
-    learner,
-    courses,
-    availabilities,
-    teacherBookings,
-    totalTeacherBookings,
-    learnerBookings,
-    totalLearnerBookings,
-    upcomingTeacherBookings,
-    upcomingLearnerBookings,
-    currentPage,
-    currentFilter,
-    pageSize,
-  } = useLoaderData<typeof loader>();
-
+  const loaderData = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const { isOwnProfile, profileUser, profileTeacher, courses } = loaderData;
+
   const rawView = searchParams.get('view') ?? '';
   const view: View = (() => {
     if (rawView === 'teacher' || rawView === 'learner') return rawView;
-    return teacher ? 'teacher' : 'learner';
+    return profileTeacher ? 'teacher' : 'learner';
   })();
 
   const handleViewChange = (newView: View) => {
@@ -287,13 +299,36 @@ export default function Page() {
     );
   };
 
+  if (!isOwnProfile) {
+    return (
+      <main className="px-10 py-8 flex flex-col gap-12">
+        <UserProfile user={profileUser} teacher={profileTeacher} isOwnProfile={false} />
+        {profileTeacher && <CoursesSection courses={courses} currentUserId={null} isOwnProfile={false} />}
+      </main>
+    );
+  }
+
+  const {
+    learner,
+    availabilities,
+    teacherBookings,
+    totalTeacherBookings,
+    learnerBookings,
+    totalLearnerBookings,
+    upcomingTeacherBookings,
+    upcomingLearnerBookings,
+    currentPage,
+    currentFilter,
+    pageSize,
+  } = loaderData;
+
   const isTeacherView = view === 'teacher';
 
   return (
     <main className="px-10 py-8 flex flex-col gap-12">
-      <UserProfile user={user} teacher={teacher} />
+      <UserProfile user={profileUser} teacher={profileTeacher} isOwnProfile={true} />
       <div className="flex flex-col gap-20">
-        {teacher && learner && (
+        {profileTeacher && learner && (
           <Tabs
             selectedKey={view}
             onSelectionChange={(key) => handleViewChange(key as View)}
@@ -309,16 +344,23 @@ export default function Page() {
           </Tabs>
         )}
 
-        {teacher && isTeacherView && (
+        {profileTeacher && isTeacherView && (
           <CalendarSection
             teacherBookings={upcomingTeacherBookings}
-            teacher={teacher}
+            teacher={profileTeacher}
             availabilities={availabilities}
             isTeacher
           />
         )}
 
-        {teacher && isTeacherView && <CoursesSection courses={courses} user={user} />}
+        {profileTeacher && isTeacherView && (
+          <CoursesSection
+            courses={courses}
+            currentUserId={profileUser.id}
+            isOwnProfile={true}
+            deleteAction={`/profile/${profileUser.id}`}
+          />
+        )}
 
         {learner && !isTeacherView && <CalendarSection learnerBookings={upcomingLearnerBookings} />}
 

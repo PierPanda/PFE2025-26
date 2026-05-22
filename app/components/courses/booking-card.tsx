@@ -119,7 +119,7 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
         description: 'Le cours a bien été supprimé.',
         color: 'success',
       });
-      navigate('/profile');
+      navigate(`/profile/${user?.id}`);
       return;
     }
 
@@ -130,7 +130,7 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
         color: 'danger',
       });
     }
-  }, [deleteFetcher.state, deleteFetcher.data, navigate]);
+  }, [deleteFetcher.state, deleteFetcher.data, navigate, user?.id]);
 
   const handleShare = async () => {
     try {
