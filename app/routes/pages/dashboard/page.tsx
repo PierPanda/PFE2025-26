@@ -46,7 +46,7 @@ export default function Home() {
   };
 
   return (
-    <main className="mx-auto max-w-screen-2xl px-14 py-8 pb-20 md:px-14">
+    <main className="mx-auto max-w-screen-2xl px-4 py-8 pb-20 md:px-14">
       <Banner
         userName={user?.name}
         stats={stats}
