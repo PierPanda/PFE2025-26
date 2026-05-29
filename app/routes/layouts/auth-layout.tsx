@@ -23,7 +23,7 @@ export default function AuthLayout() {
   const footerPages = [
     { label: 'Dashboard', to: '/' },
     { label: 'Profil', to: '/profile' },
-    { label: 'Créer un cours', to: '/cours/create' },
+    { label: 'Créer un cours', to: '/course/create' },
   ];
 
   const iconsHeader = [
@@ -35,7 +35,7 @@ export default function AuthLayout() {
           className="h-5 w-auto md:h-6 md:w-6 text-primary transition-colors group-hover:text-tertiary "
         />
       ),
-      url: '/#cours-populaires',
+      url: '/#popular-courses',
     },
     {
       title: 'Guitare',
@@ -46,7 +46,7 @@ export default function AuthLayout() {
           src={iconGuitare}
         />
       ),
-      url: '/cours/guitare',
+      url: '/courses?category=guitare',
     },
     {
       title: 'piano',
@@ -57,7 +57,7 @@ export default function AuthLayout() {
           src={iconPiano}
         />
       ),
-      url: '/cours/piano',
+      url: '/courses?category=piano',
     },
     {
       title: 'chant',
@@ -68,7 +68,7 @@ export default function AuthLayout() {
           src={iconChant}
         />
       ),
-      url: '/cours/chant',
+      url: '/courses?category=chant',
     },
     {
       title: 'flute',
@@ -79,7 +79,7 @@ export default function AuthLayout() {
           src={iconFlute}
         />
       ),
-      url: '/cours/flute',
+      url: '/courses?category=flute',
     },
     {
       title: 'batterie',
@@ -90,7 +90,7 @@ export default function AuthLayout() {
           src={iconBatterie}
         />
       ),
-      url: '/cours/batterie',
+      url: '/courses?category=batterie',
     },
     {
       title: 'trombone',
@@ -101,7 +101,7 @@ export default function AuthLayout() {
           src={iconTrombone}
         />
       ),
-      url: '/cours/trombone',
+      url: '/courses?category=trombone',
     },
   ];
 

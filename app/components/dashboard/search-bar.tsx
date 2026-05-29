@@ -1,4 +1,4 @@
-import { Input } from '@heroui/react';
+import { Button, Input } from '@heroui/react';
 import type { NavigateOptions } from 'react-router';
 import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import { InlineIcon } from '@iconify/react';
@@ -6,12 +6,15 @@ import { InlineIcon } from '@iconify/react';
 type SearchBarProps = {
   searchParams: URLSearchParams;
   setSearchParams: (params: URLSearchParams, navigateOptions?: NavigateOptions) => void;
+  className?: string;
+  size?: 'sm' | 'md' | 'lg';
+  onSubmit?: (value: string) => void;
 };
 
 const DEBOUNCE_MS = 300;
 
 export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(function SearchBar(
-  { searchParams, setSearchParams },
+  { searchParams, setSearchParams, className, size = 'md', onSubmit },
   ref,
 ) {
   const [inputValue, setInputValue] = useState(searchParams.get('search') ?? '');
@@ -44,14 +47,40 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(function S
     }, DEBOUNCE_MS);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return;
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    commitSearch(inputValue);
+    onSubmit?.(inputValue);
+  };
+
   return (
     <Input
       ref={ref}
       onChange={handleChange}
+      onKeyDown={handleKeyDown}
       value={inputValue}
       placeholder="Rechercher un cours..."
-      className="w-full sm:w-64"
+      className={className ?? 'w-64'}
+      size={size}
       startContent={<InlineIcon icon="lucide:search" />}
+      endContent={
+        onSubmit ? (
+          <Button
+            isIconOnly
+            size="sm"
+            radius="md"
+            color="secondary"
+            onPress={() => {
+              commitSearch(inputValue);
+              onSubmit(inputValue);
+            }}
+            aria-label="Lancer la recherche"
+          >
+            <InlineIcon icon="lucide:arrow-right" />
+          </Button>
+        ) : null
+      }
     />
   );
 });
