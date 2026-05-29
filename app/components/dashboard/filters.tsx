@@ -25,9 +25,9 @@ type FiltersProps = {
 };
 
 export default function Filters({ searchParams, setSearchParams, minPrice, maxPrice }: FiltersProps) {
-  const selectedCategoryValue = searchParams.get('category') ?? '';
-  const selectedLevelValue = searchParams.get('level') ?? '';
-  const selectedCategory = categoryOptions.find((cat) => cat.value === selectedCategoryValue);
+  const selectedCategoryKey = searchParams.get('category') ?? '';
+  const selectedLevelKey = searchParams.get('level') ?? '';
+  const selectedCategory = categoryOptions.find((cat) => cat.key === selectedCategoryKey);
 
   const rawMinPrice = Number(searchParams.get('minPrice') ?? minPrice);
   const rawMaxPrice = Number(searchParams.get('maxPrice') ?? maxPrice);
@@ -53,8 +53,8 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
   };
 
   const handleCategoryChange = (value: string) => {
-    const match = categoryOptions.find((cat) => cat.key === value);
-    setCategoryParam(match?.value ?? null);
+    const match = categoryOptions.find((cat) => cat.value === value);
+    setCategoryParam(match?.key ?? null);
   };
 
   const handleCategorySelection = (key: Key | null) => {
@@ -108,7 +108,7 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
             name="category"
             color="secondary"
             variant="bordered"
-            selectedKey={selectedCategoryValue || null}
+            selectedKey={selectedCategoryKey || null}
             inputValue={selectedCategory?.value || ''}
             onInputChange={handleCategoryChange}
             onSelectionChange={handleCategorySelection}
@@ -124,7 +124,7 @@ export default function Filters({ searchParams, setSearchParams, minPrice, maxPr
             name="level"
             color="secondary"
             variant="bordered"
-            selectedKeys={selectedLevelValue ? [selectedLevelValue] : []}
+            selectedKeys={selectedLevelKey ? [selectedLevelKey] : []}
             onChange={handleLevelChange}
             isClearable
           >

@@ -22,7 +22,7 @@ export default function CourseSection({
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-bold">{isOwnProfile ? 'Mes cours' : 'Cours'}</h3>
         {isOwnProfile && courses.length > 0 && (
-          <Link to="/cours/create">
+          <Link to="/course/create">
             <Button size="sm" className="bg-secondary" startContent={<InlineIcon icon="mdi:plus" width="20" />}>
               Créer un cours
             </Button>
@@ -33,7 +33,7 @@ export default function CourseSection({
       {courses.length === 0 && isOwnProfile && (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <p className="text-gray-500 mb-4">Vous n'avez pas encore de cours.</p>
-          <Link to="/cours/create">
+          <Link to="/course/create">
             <Button size="sm" className="bg-secondary" startContent={<InlineIcon icon="mdi:plus" width="20" />}>
               Créer mon premier cours
             </Button>

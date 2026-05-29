@@ -61,7 +61,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   // Own profile: load all private data
   const url = new URL(request.url);
   const page = parsePageParam(url.searchParams.get('page'));
-  const VALID_FILTERS: BookingFilter[] = ['all', 'upcoming', 'past', 'cancelled'];
+  const VALID_FILTERS: BookingFilter[] = ['all', 'upcoming', 'cancelled', 'completed'];
   const rawFilter = url.searchParams.get('filter') ?? 'all';
   const filter: BookingFilter = VALID_FILTERS.includes(rawFilter as BookingFilter)
     ? (rawFilter as BookingFilter)

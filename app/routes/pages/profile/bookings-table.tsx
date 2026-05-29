@@ -1,4 +1,5 @@
-import { useSearchParams, Link } from 'react-router';
+import { useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { computeRange } from '~/lib/pagination';
 import {
   Avatar,
@@ -17,13 +18,20 @@ import { InlineIcon } from '@iconify/react';
 import type { BookingWithRelations } from '~/services/types';
 import type { BookingFilter } from '~/services/bookings/get-bookings';
 import { formatDateLabel, formatDuration, formatHourLabel, formatPrice } from '~/lib/utils';
+import RatingFormModal from '~/components/ratings/rating-form-modal';
 
-const FILTERS: { key: BookingFilter; label: string }[] = [
+const ALL_FILTERS: { key: BookingFilter; label: string }[] = [
   { key: 'all', label: 'Tous' },
   { key: 'upcoming', label: 'À venir' },
-  { key: 'past', label: 'Passé' },
+  { key: 'completed', label: 'Terminé' },
   { key: 'cancelled', label: 'Annulé' },
 ];
+
+type ModalState = {
+  courseId: string;
+  courseTitle: string;
+  existingRating: BookingWithRelations['rating'];
+} | null;
 
 type BookingsTableProps = {
   bookings: BookingWithRelations[];
@@ -43,6 +51,7 @@ export default function BookingsTable({
   isTeacher = false,
 }: BookingsTableProps) {
   const [, setSearchParams] = useSearchParams();
+  const [modalState, setModalState] = useState<ModalState>(null);
 
   const { totalPages, rangeStart, rangeEnd } = computeRange(currentPage, total, pageSize);
 
@@ -79,6 +88,12 @@ export default function BookingsTable({
         return (
           <Chip color="danger" variant="flat" size="sm" radius="sm" className="font-semibold">
             Annulé
+          </Chip>
+        );
+      case 'completed':
+        return (
+          <Chip variant="flat" size="sm" radius="sm" className="font-semibold bg-blue-100 text-blue-700">
+            Terminé
           </Chip>
         );
       default:
@@ -123,7 +138,7 @@ export default function BookingsTable({
       <h3 className="text-2xl font-bold">Toutes les réservations</h3>
 
       <Tabs selectedKey={currentFilter} onSelectionChange={(key) => handleFilterChange(key as BookingFilter)}>
-        {FILTERS.map(({ key, label }) => (
+        {ALL_FILTERS.map(({ key, label }) => (
           <Tab key={key} title={label} />
         ))}
       </Tabs>
@@ -144,6 +159,11 @@ export default function BookingsTable({
           <TableColumn className="w-56">{isTeacher ? 'Apprenant' : 'Professeur'}</TableColumn>
           <TableColumn className="w-24">Prix</TableColumn>
           <TableColumn className="w-32">Statut</TableColumn>
+          {isTeacher ? (
+            <TableColumn className="hidden w-0 p-0">{''}</TableColumn>
+          ) : (
+            <TableColumn className="w-40">Avis</TableColumn>
+          )}
         </TableHeader>
         <TableBody items={bookings} emptyContent="Aucune réservation trouvée.">
           {(booking) => {
@@ -179,11 +199,47 @@ export default function BookingsTable({
                 </TableCell>
                 <TableCell className="text-sm">{formatPrice(booking.course.price)}</TableCell>
                 <TableCell>{getStatusChip(booking.status)}</TableCell>
+                {isTeacher ? (
+                  <TableCell className="hidden w-0 p-0">{''}</TableCell>
+                ) : (
+                  <TableCell>
+                    {booking.status === 'completed' ? (
+                      <Button
+                        size="sm"
+                        variant="light"
+                        color={booking.rating ? 'default' : 'primary'}
+                        startContent={
+                          <InlineIcon
+                            icon={booking.rating ? 'mdi:pencil-outline' : 'mdi:star-plus-outline'}
+                            width="16"
+                          />
+                        }
+                        onPress={() =>
+                          setModalState({
+                            courseId: booking.courseId,
+                            courseTitle: booking.course.title,
+                            existingRating: booking.rating,
+                          })
+                        }
+                      >
+                        {booking.rating ? 'Modifier' : 'Rédiger un avis'}
+                      </Button>
+                    ) : null}
+                  </TableCell>
+                )}
               </TableRow>
             );
           }}
         </TableBody>
       </Table>
+
+      <RatingFormModal
+        isOpen={modalState !== null}
+        onClose={() => setModalState(null)}
+        courseId={modalState?.courseId ?? ''}
+        courseTitle={modalState?.courseTitle ?? ''}
+        existingRating={modalState?.existingRating}
+      />
     </div>
   );
 }

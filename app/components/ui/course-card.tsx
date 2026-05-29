@@ -67,7 +67,7 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
     const browserNavigator = window.navigator;
     const canUseNativeShare = typeof browserNavigator.share === 'function';
     const clipboard = browserNavigator.clipboard;
-    const shareUrl = new URL(`/cours/course/${courseState.id}`, window.location.origin).toString();
+    const shareUrl = new URL(`/course/${courseState.id}`, window.location.origin).toString();
 
     try {
       if (canUseNativeShare) {
@@ -111,11 +111,7 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
           radius="lg"
           shadow="sm"
         >
-          <Link
-            to={`/cours/course/${courseState.id}`}
-            className="absolute inset-0 z-10"
-            aria-label={courseState.title}
-          />
+          <Link to={`/course/${courseState.id}`} className="absolute inset-0 z-10" aria-label={courseState.title} />
 
           <div className="relative">
             <img alt={courseState.title} className="h-40 w-full rounded-lg object-cover" src={urlImage} />
@@ -175,9 +171,14 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
             <div className="flex h-full flex-col items-start justify-between">
               <div>
                 <div className="mb-4 flex items-center gap-1">
-                  <InlineIcon color="#FFA500" height="20" icon="mdi:star" width="20" />
+                  <InlineIcon
+                    color={ratings.length === 0 ? '#9ca3af' : '#FFA500'}
+                    height="20"
+                    icon="mdi:star"
+                    width="20"
+                  />
                   <p className="text-sm text-dark/60">
-                    {averageRating ? averageRating.toFixed(1) : 'N/A'} ({ratings.length})
+                    {ratings.length === 0 ? 'Pas encore noté' : `${averageRating?.toFixed(1)} (${ratings.length})`}
                   </p>
                 </div>
 
