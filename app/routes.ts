@@ -25,6 +25,8 @@ export default [
     route('/cours/course/:id', 'routes/pages/courses/course/page.tsx'),
     route('/cours/:category', 'routes/pages/courses/category/[category].tsx'),
     route('/checkout/:id', 'routes/pages/checkout/page.tsx'),
+    // Catch-all route for 404 Not Found (matches any unmatched path)
+    route('*', 'routes/pages/not-found/page.tsx'),
 
     // Teacher-only Pages (nested: hérite du header auth-layout)
     layout('routes/layouts/teacher-layout.tsx', [
@@ -33,5 +35,7 @@ export default [
 
     // Admin-only Pages (nested: hérite du header auth-layout)
     layout('routes/layouts/admin-layout.tsx', [route('/admin', 'routes/pages/admin/page.tsx')]),
+
+    // (removed incorrect nested route)
   ]),
 ] satisfies RouteConfig;
