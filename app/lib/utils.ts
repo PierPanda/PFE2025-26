@@ -116,6 +116,22 @@ export function formatHourLabel(time: Date | string): string {
 }
 
 /**
+ * Format a date as a relative string in French (e.g. "il y a 2 mois")
+ */
+export function formatRelativeDate(date: Date | string): string {
+  const past = typeof date === 'string' ? new Date(date) : date;
+  const diffMs = Date.now() - past.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const diffMonths = Math.floor(diffDays / 30);
+  const diffYears = Math.floor(diffDays / 365);
+
+  if (diffYears >= 1) return `il y a ${diffYears} an${diffYears > 1 ? 's' : ''}`;
+  if (diffMonths >= 1) return `il y a ${diffMonths} mois`;
+  if (diffDays >= 1) return `il y a ${diffDays} jour${diffDays > 1 ? 's' : ''}`;
+  return "à l'instant";
+}
+
+/**
  * Calculate average rating from a list of ratings
  * Returns null if no ratings exist
  */

@@ -27,7 +27,8 @@ import CoursesSection from './courses-section';
 import BookingsTable from './bookings-table';
 import { Tabs, Tab } from '@heroui/react';
 import { getLearnerByUserId } from '~/services/learners/get-learner';
-import { getRatingsByTeacher, getRatingsByLearnerId } from '~/services/ratings/get-ratings';
+import { getRatingsByTeacher } from '~/services/ratings/get-ratings';
+import ReviewsSection from '~/components/ratings/reviews-section';
 
 const PAGE_SIZE = 10;
 
@@ -352,7 +353,7 @@ export default function Page() {
       <main className="px-10 py-8 flex flex-col gap-12">
         <UserProfile user={profileUser} teacher={profileTeacher} isOwnProfile={false} />
         {profileTeacher && <CoursesSection courses={courses} currentUserId={null} isOwnProfile={false} />}
-        {/* {profileTeacher && <ReviewsSection ratings={teacherRatings} />} */}
+        {profileTeacher && <ReviewsSection ratings={teacherRatings} />}
       </main>
     );
   }
@@ -412,13 +413,9 @@ export default function Page() {
           />
         )}
 
-        {/* {profileTeacher && isTeacherView && (
-          <ReviewsSection ratings={loaderData.teacherRatings} />
-        )} */}
+        {teacher && isTeacherView && <ReviewsSection ratings={teacherRatings} />}
 
-        {learner && !isTeacherView && (
-          <CalendarSection learnerBookings={upcomingLearnerBookings} action={`/profile/${profileUser.id}`} />
-        )}
+        {learner && !isTeacherView && <CalendarSection learnerBookings={upcomingLearnerBookings} />}
 
         <BookingsTable
           bookings={isTeacherView ? teacherBookings : learnerBookings}
