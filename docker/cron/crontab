@@ -2,3 +2,4 @@ SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 0 * * * * /usr/local/bin/complete-bookings.sh
+0 * * * * /usr/local/bin/remind-bookings.sh

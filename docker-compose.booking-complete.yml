@@ -9,5 +9,6 @@ services:
     env_file:
       - .env
     environment:
-      # Forcer l'URL locale — remplacer par l'URL interne du service en prod
+      # Forcer les URLs locales — remplacer par les URLs internes du service en prod
       BOOKINGS_COMPLETE_ENDPOINT: http://host.docker.internal:5173/api/bookings/complete
+      BOOKINGS_REMIND_ENDPOINT: http://host.docker.internal:5173/api/bookings/remind

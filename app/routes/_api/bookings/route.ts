@@ -17,6 +17,7 @@ import { getCourseById } from '~/services/courses/get-course';
 import { getAvailability } from '~/services/availabilities/get-availability';
 import { updateBooking } from '~/services/bookings/update-booking';
 import { deleteBooking } from '~/services/bookings/delete-booking';
+import { sendBookingConfirmation } from '~/services/emails/send-booking-confirmation';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request);
@@ -213,6 +214,17 @@ export async function action({ request }: ActionFunctionArgs) {
         priceAtBooking: String(courseResult.course.price),
         status: 'pending',
       });
+
+      if (result.success) {
+        getBooking(result.booking.id)
+          .then((bookingResult) => {
+            if (bookingResult.success && bookingResult.booking) {
+              sendBookingConfirmation(bookingResult.booking).catch(console.error);
+            }
+          })
+          .catch(console.error);
+      }
+
       return data(result, { status: result.success ? 201 : 400 });
     }
 

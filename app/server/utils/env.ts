@@ -15,6 +15,9 @@ const envSchema = z.object({
   R2_BUCKET: z.string().min(1),
   R2_PUBLIC_URL: z.string().min(1),
   BOOKINGS_COMPLETE_CRON_SECRET: z.string().optional(),
+  BOOKINGS_REMIND_CRON_SECRET: z.string().optional(),
+  RESEND_API_KEY: z.string().optional(),
+  RESEND_FROM_EMAIL: z.string().default('Maestroo <noreply@maestroo.fr>'),
 });
 
 const parsed = envSchema.safeParse({
@@ -32,6 +35,9 @@ const parsed = envSchema.safeParse({
   R2_BUCKET: process.env.R2_BUCKET,
   R2_PUBLIC_URL: process.env.R2_PUBLIC_URL,
   BOOKINGS_COMPLETE_CRON_SECRET: process.env.BOOKINGS_COMPLETE_CRON_SECRET,
+  BOOKINGS_REMIND_CRON_SECRET: process.env.BOOKINGS_REMIND_CRON_SECRET,
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
+  RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL,
 });
 
 if (!parsed.success) {
