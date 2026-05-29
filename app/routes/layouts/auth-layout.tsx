@@ -1,4 +1,4 @@
-import { Outlet, Link } from 'react-router';
+import { Outlet, Link, useLoaderData } from 'react-router';
 import type { LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { UserProfile } from '~/components/auth/user-profile';
@@ -18,11 +18,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function AuthLayout() {
+  const { user } = useLoaderData<typeof loader>();
   const currentYear = new Date().getFullYear();
 
   const footerPages = [
     { label: 'Dashboard', to: '/' },
-    { label: 'Profil', to: '/profile' },
+    { label: 'Profil', to: `/profile/${user.id}` },
     { label: 'Créer un cours', to: '/course/create' },
   ];
 

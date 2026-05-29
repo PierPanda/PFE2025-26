@@ -1,5 +1,6 @@
 import { Chip } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
+import { Link } from 'react-router';
 import { categoryOptions, levelOptions } from '~/lib/constant';
 import { calculateAverageRating, formatPrice } from '~/lib/utils';
 import type { CourseWithTeacherAndRatings } from '~/services/types';
@@ -30,7 +31,12 @@ export default function CourseHeader({ course }: CourseHeaderProps) {
       <div className="space-y-3">
         <div>
           <h1 className="text-4xl font-bold leading-tight lg:text-5xl">{course.title}</h1>
-          <p className="text-xl font-medium lg:text-2xl">avec {teacherName}</p>
+          <p className="text-xl font-medium lg:text-2xl">
+            avec{' '}
+            <Link to={`/profile/${course.teacher.user.id}`} className="hover:underline">
+              {teacherName}
+            </Link>
+          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">

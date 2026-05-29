@@ -2,7 +2,7 @@ import type { BookingWithRelations } from '~/services/types';
 import { InlineIcon } from '@iconify/react';
 import { Card, CardBody, Button, Chip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
 import { formatHourLabel, formatDateLabel, formatDuration, capitalize } from '~/lib/utils';
-import { useFetcher, useRevalidator } from 'react-router';
+import { useFetcher, useRevalidator, Link } from 'react-router';
 import { useEffect } from 'react';
 import { addToast } from '@heroui/react';
 
@@ -74,7 +74,13 @@ export default function BookingCard({ booking, isTeacher, action = '/profile' }:
                 <div className="mt-2 text-sm flex flex-col gap-1">
                   <span className="flex items-center gap-2">
                     <InlineIcon icon={`mdi:${isTeacher ? 'graduation-cap' : 'account'}`} width="16" />
-                    {isTeacher ? booking.learner.user.name : booking.course.teacher.user.name}
+                    {isTeacher ? (
+                      booking.learner.user.name
+                    ) : (
+                      <Link to={`/profile/${booking.course.teacher.user.id}`} className="hover:underline">
+                        {booking.course.teacher.user.name}
+                      </Link>
+                    )}
                   </span>
                   <span className="flex items-center gap-2">
                     <InlineIcon icon="mdi:tag" width="16" /> {capitalize(booking.course.category)}

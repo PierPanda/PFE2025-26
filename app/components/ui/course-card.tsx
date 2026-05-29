@@ -25,10 +25,10 @@ import type { CourseWithTeacherAndRatings } from '~/services/types';
 type CourseCardProps = {
   course: CourseWithTeacherAndRatings;
   currentUserId?: string | null;
-  deleteAction?: string;
+  courseAction?: string;
 };
 
-export default function CourseCard({ course, currentUserId = null, deleteAction = '/profile' }: CourseCardProps) {
+export default function CourseCard({ course, currentUserId = null, courseAction }: CourseCardProps) {
   const [courseState, setCourseState] = useState(course);
   const revalidator = useRevalidator();
   const deleteFetcher = useFetcher<{ success?: boolean }>();
@@ -53,11 +53,12 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
   const isCourseOwner = courseState.teacher.user.id === currentUserId;
   const canManageCourse = isCourseOwner;
   const urlImage = `/categories/${courseState.category}.jpg`;
+  const resolvedCourseAction = courseAction ?? (currentUserId ? `/profile/${currentUserId}` : undefined);
 
   const handleDelete = () => {
     deleteFetcher.submit(
       { _action: 'deleteCourse', courseId: courseState.id },
-      { method: 'post', action: deleteAction },
+      { method: 'post', action: resolvedCourseAction },
     );
   };
 
@@ -209,6 +210,7 @@ export default function CourseCard({ course, currentUserId = null, deleteAction 
         onClose={() => setEditOpen(false)}
         onSaved={setCourseState}
         course={courseState}
+        action={resolvedCourseAction}
       />
 
       <Modal isOpen={confirmOpen} onClose={() => setConfirmOpen(false)} size="sm">

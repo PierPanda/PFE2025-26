@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useSearchParams, Link } from 'react-router';
 import { computeRange } from '~/lib/pagination';
 import {
   Avatar,
@@ -171,10 +171,15 @@ export default function BookingsTable({
             const end = new Date(booking.endTime);
             const durationMinutes = Math.round((end.getTime() - start.getTime()) / 60000);
             const person = isTeacher ? booking.learner.user : booking.course.teacher.user;
+            const teacherUserId = booking.course.teacher.user.id;
             return (
               <TableRow key={booking.id}>
                 <TableCell className="text-sm font-medium">
-                  {formatDateLabel(start, { day: 'numeric', month: 'long', year: 'numeric' })}
+                  {formatDateLabel(start, {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
                 </TableCell>
                 <TableCell className="text-sm text-default-600">
                   <span>
@@ -184,10 +189,17 @@ export default function BookingsTable({
                 </TableCell>
                 <TableCell className="text-sm font-semibold">{booking.course.title}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar src={person.image ?? undefined} name={person.name} size="sm" className="flex-none" />
-                    <span className="text-sm">{person.name}</span>
-                  </div>
+                  {isTeacher ? (
+                    <div className="flex items-center gap-2">
+                      <Avatar src={person.image ?? undefined} name={person.name} size="sm" className="flex-none" />
+                      <span className="text-sm">{person.name}</span>
+                    </div>
+                  ) : (
+                    <Link to={`/profile/${teacherUserId}`} className="flex items-center gap-2 hover:underline">
+                      <Avatar src={person.image ?? undefined} name={person.name} size="sm" className="flex-none" />
+                      <span className="text-sm">{person.name}</span>
+                    </Link>
+                  )}
                 </TableCell>
                 <TableCell className="text-sm">{formatPrice(booking.course.price)}</TableCell>
                 <TableCell>{getStatusChip(booking.status)}</TableCell>

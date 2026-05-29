@@ -7,11 +7,12 @@ import EditProfileModal from './edit-profile-modal';
 type UserProfileProps = {
   user: DbUser;
   teacher: TeacherWithUserAndCourses | null;
+  isOwnProfile?: boolean;
   rating?: number | null;
   reviewCount?: number;
 };
 
-export default function UserProfile({ user, teacher, rating, reviewCount }: UserProfileProps) {
+export default function UserProfile({ user, teacher, isOwnProfile = true, rating, reviewCount }: UserProfileProps) {
   const [isEditProfileOpen, setEditProfileOpen] = useState(false);
 
   const memberSince = new Date(user.createdAt).toLocaleDateString('fr-FR', {
@@ -85,22 +86,26 @@ export default function UserProfile({ user, teacher, rating, reviewCount }: User
             )}
           </div>
         </div>
-        <Button
-          size="md"
-          variant="flat"
-          className="p-4 bg-secondary"
-          onPress={() => setEditProfileOpen(true)}
-          startContent={<Icon icon="mdi:pencil" width="16" />}
-        >
-          Modifier mes informations
-        </Button>
+        {isOwnProfile && (
+          <Button
+            size="md"
+            variant="flat"
+            className="p-4 bg-secondary"
+            onPress={() => setEditProfileOpen(true)}
+            startContent={<Icon icon="mdi:pencil" width="16" />}
+          >
+            Modifier mes informations
+          </Button>
+        )}
       </div>
-      <EditProfileModal
-        isOpen={isEditProfileOpen}
-        onClose={() => setEditProfileOpen(false)}
-        user={user}
-        teacher={teacher}
-      />
+      {isOwnProfile && (
+        <EditProfileModal
+          isOpen={isEditProfileOpen}
+          onClose={() => setEditProfileOpen(false)}
+          user={user}
+          teacher={teacher}
+        />
+      )}
     </>
   );
 }

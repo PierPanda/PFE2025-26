@@ -12,6 +12,7 @@ type CalendarSectionProps = {
   teacher?: TeacherWithUser;
   availabilities?: AvailabilityWithTeacher[];
   isTeacher?: boolean;
+  action?: string;
 };
 
 export default function CalendarSection({
@@ -20,6 +21,7 @@ export default function CalendarSection({
   teacher,
   availabilities = [],
   isTeacher = false,
+  action,
 }: CalendarSectionProps) {
   const [isAvailabilitiesOpen, setAvailabilitiesOpen] = useState(false);
   const upcomingBookings = isTeacher ? (teacherBookings ?? []) : (learnerBookings ?? []);
@@ -58,7 +60,7 @@ export default function CalendarSection({
             ) : (
               <div className="space-y-4">
                 {upcomingBookings.map((booking) => (
-                  <BookingCard key={booking.id} booking={booking} isTeacher={isTeacher} />
+                  <BookingCard key={booking.id} booking={booking} isTeacher={isTeacher} action={action} />
                 ))}
               </div>
             )}
