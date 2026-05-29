@@ -27,6 +27,8 @@ export default [
     route('/profile', 'routes/pages/profile/page.tsx'),
     route('/course/:id', 'routes/pages/courses/course/page.tsx'),
     route('/checkout/:id', 'routes/pages/checkout/page.tsx'),
+    // Catch-all route for 404 Not Found (matches any unmatched path)
+    route('*', 'routes/pages/not-found/page.tsx'),
 
     // Teacher-only Pages (nested: hérite du header auth-layout)
     layout('routes/layouts/teacher-layout.tsx', [
