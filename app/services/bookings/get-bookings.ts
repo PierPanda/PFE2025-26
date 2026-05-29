@@ -1,9 +1,9 @@
-import { and, asc, count, desc, eq, gt, inArray, lte, ne } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gt, inArray, ne } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { bookings, courses } from '~/server/lib/db/schema';
 import type { DbBooking, GetBookingResponse, GetBookingsResponse } from '../types';
 
-export type BookingFilter = 'all' | 'upcoming' | 'past' | 'cancelled';
+export type BookingFilter = 'all' | 'upcoming' | 'cancelled' | 'completed';
 
 type GetBookingsOptions = {
   status?: DbBooking['status'];
@@ -20,8 +20,8 @@ type GetTeacherBookingsOptions = Omit<GetBookingsOptions, 'status'> & {
 function buildFilterCondition(filter?: BookingFilter) {
   const now = new Date();
   if (filter === 'upcoming') return and(gt(bookings.startTime, now), ne(bookings.status, 'cancelled'));
-  if (filter === 'past') return and(lte(bookings.startTime, now), ne(bookings.status, 'cancelled'));
   if (filter === 'cancelled') return eq(bookings.status, 'cancelled');
+  if (filter === 'completed') return eq(bookings.status, 'completed');
   return undefined;
 }
 
@@ -49,6 +49,7 @@ const bookingRelations = {
       user: true,
     },
   },
+  rating: true,
 } as const;
 
 /**
@@ -165,6 +166,25 @@ export async function getBookingsByTeacherId(
       success: false,
       error: "Une erreur s'est produite lors de la recuperation des réservations.",
     };
+  }
+}
+
+/**
+ * Check if a learner has a completed booking for a specific course
+ */
+export async function hasCompletedBookingForCourse(
+  learnerId: string,
+  courseId: string,
+): Promise<{ success: true; exists: boolean } | { success: false; error: string }> {
+  try {
+    const booking = await db.query.bookings.findFirst({
+      where: and(eq(bookings.learnerId, learnerId), eq(bookings.courseId, courseId), eq(bookings.status, 'completed')),
+      columns: { id: true },
+    });
+    return { success: true, exists: booking !== undefined };
+  } catch (error) {
+    console.error('Error checking completed booking for course:', error);
+    return { success: false, error: "Une erreur s'est produite lors de la vérification de la réservation." };
   }
 }
 
