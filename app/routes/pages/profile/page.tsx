@@ -343,9 +343,7 @@ export default function Page() {
       <main className="px-10 py-8 flex flex-col gap-12">
         <UserProfile user={profileUser} teacher={profileTeacher} isOwnProfile={false} />
         {profileTeacher && <CoursesSection courses={courses} currentUserId={null} isOwnProfile={false} />}
-        {/* {profileTeacher && (
-          <ReviewsSection ratings={loaderData.teacherRatings} />
-        )} */}
+        {/* {profileTeacher && <ReviewsSection ratings={teacherRatings} />} */}
       </main>
     );
   }
