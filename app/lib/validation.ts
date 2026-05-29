@@ -213,4 +213,5 @@ export const updateRatingSchema = z
       .max(5, 'Note maximum 5.')
       .transform((val) => val.toFixed(2)),
   })
-  .partial();
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, { message: 'Au moins un champ est requis.' });

@@ -3,6 +3,9 @@ import { db } from '~/server/lib/db/index.server';
 import { courses, ratings } from '~/server/lib/db/schema';
 import type { GetRatingResponse, GetRatingsResponse } from '../types';
 
+const MAX_RATINGS_LIMIT = 50;
+const DEFAULT_RATINGS_LIMIT = 20;
+
 const ratingRelations = {
   learner: {
     with: {
@@ -17,12 +20,14 @@ const ratingRelations = {
   },
 } as const;
 
-export async function getRatingsByCourse(courseId: string): Promise<GetRatingsResponse> {
+export async function getRatingsByCourse(courseId: string, limit = DEFAULT_RATINGS_LIMIT): Promise<GetRatingsResponse> {
+  const safeLimit = Math.min(limit, MAX_RATINGS_LIMIT);
   try {
     const ratingsList = await db.query.ratings.findMany({
       where: eq(ratings.courseId, courseId),
       with: ratingRelations,
       orderBy: (r) => [desc(r.createdAt)],
+      limit: safeLimit,
     });
 
     return { success: true, ratings: ratingsList };
@@ -32,7 +37,11 @@ export async function getRatingsByCourse(courseId: string): Promise<GetRatingsRe
   }
 }
 
-export async function getRatingsByTeacher(teacherId: string): Promise<GetRatingsResponse> {
+export async function getRatingsByTeacher(
+  teacherId: string,
+  limit = DEFAULT_RATINGS_LIMIT,
+): Promise<GetRatingsResponse> {
+  const safeLimit = Math.min(limit, MAX_RATINGS_LIMIT);
   try {
     const teacherCourses = await db.query.courses.findMany({
       where: eq(courses.teacherId, teacherId),
@@ -48,6 +57,7 @@ export async function getRatingsByTeacher(teacherId: string): Promise<GetRatings
       where: inArray(ratings.courseId, courseIds),
       with: ratingRelations,
       orderBy: (r) => [desc(r.createdAt)],
+      limit: safeLimit,
     });
 
     return { success: true, ratings: ratingsList };

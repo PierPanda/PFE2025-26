@@ -170,6 +170,25 @@ export async function getBookingsByTeacherId(
 }
 
 /**
+ * Check if a learner has a completed booking for a specific course
+ */
+export async function hasCompletedBookingForCourse(
+  learnerId: string,
+  courseId: string,
+): Promise<{ success: true; exists: boolean } | { success: false; error: string }> {
+  try {
+    const booking = await db.query.bookings.findFirst({
+      where: and(eq(bookings.learnerId, learnerId), eq(bookings.courseId, courseId), eq(bookings.status, 'completed')),
+      columns: { id: true },
+    });
+    return { success: true, exists: booking !== undefined };
+  } catch (error) {
+    console.error('Error checking completed booking for course:', error);
+    return { success: false, error: "Une erreur s'est produite lors de la vérification de la réservation." };
+  }
+}
+
+/**
  * Get all bookings for a course
  */
 export async function getBookingsByCourseId(courseId: string): Promise<GetBookingsResponse> {

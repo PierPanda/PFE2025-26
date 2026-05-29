@@ -5,7 +5,7 @@ import type { DeleteRatingResponse } from '../types';
 
 export async function deleteRating(ratingId: string): Promise<DeleteRatingResponse> {
   try {
-    await db.delete(ratings).where(eq(ratings.id, ratingId)).returning();
+    await db.delete(ratings).where(eq(ratings.id, ratingId));
     return { success: true, message: 'Avis supprimé avec succès.' };
   } catch (error) {
     console.error('Error deleting rating:', error);

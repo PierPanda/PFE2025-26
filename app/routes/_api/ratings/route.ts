@@ -2,7 +2,7 @@ import { data, type ActionFunctionArgs, type LoaderFunctionArgs } from 'react-ro
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { ratingFormSchema, updateRatingSchema } from '~/lib/validation';
 import { getLearnerByUserId } from '~/services/learners/get-learner';
-import { getBookingsByLearnerId } from '~/services/bookings/get-bookings';
+import { hasCompletedBookingForCourse } from '~/services/bookings/get-bookings';
 import {
   getRatingsByCourse,
   getRatingsByTeacher,
@@ -18,13 +18,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const courseId = url.searchParams.get('courseId');
   const teacherId = url.searchParams.get('teacherId');
 
+  const limit = Math.min(Number(url.searchParams.get('limit') ?? '20'), 50);
+
   if (courseId) {
-    const result = await getRatingsByCourse(courseId);
+    const result = await getRatingsByCourse(courseId, limit);
     return data(result, { status: result.success ? 200 : 500 });
   }
 
   if (teacherId) {
-    const result = await getRatingsByTeacher(teacherId);
+    const result = await getRatingsByTeacher(teacherId, limit);
     return data(result, { status: result.success ? 200 : 500 });
   }
 
@@ -51,13 +53,12 @@ export async function action({ request }: ActionFunctionArgs) {
         return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
       }
 
-      const completedBookingsResult = await getBookingsByLearnerId(currentLearnerId, { status: 'completed' });
-      if (!completedBookingsResult.success) {
-        return data({ success: false, error: completedBookingsResult.error }, { status: 500 });
+      const completedCheck = await hasCompletedBookingForCourse(currentLearnerId, parsed.data.courseId);
+      if (!completedCheck.success) {
+        return data({ success: false, error: completedCheck.error }, { status: 500 });
       }
 
-      const hasCompletedBooking = completedBookingsResult.bookings.some((b) => b.courseId === parsed.data.courseId);
-      if (!hasCompletedBooking) {
+      if (!completedCheck.exists) {
         return data({ success: false, error: 'Le cours doit être terminé pour laisser un avis.' }, { status: 403 });
       }
 
