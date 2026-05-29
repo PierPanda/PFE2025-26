@@ -2,9 +2,8 @@ import { eq, and, gte, lte, min, max, ilike, desc, inArray, sql } from 'drizzle-
 import { db } from '~/server/lib/db/index.server';
 
 import { bookings, courses, ratings } from '~/server/lib/db/schema';
-import type { GetCoursesResponse, CourseWithTeacherAndRatings } from '../types';
+import type { GetCoursesResponse, CourseWithTeacherAndRatings, GetCoursesByTeacherResponse } from '../types';
 import type { CourseLevel, CourseCategory } from '~/types/course';
-import type { GetCoursesByTeacherResponse } from '../types';
 
 const activeBookingsCountSql = sql<number>`count(case when ${bookings.status} <> 'cancelled' then 1 end)`;
 
