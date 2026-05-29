@@ -420,6 +420,8 @@ export default function Page() {
 
         {teacher && isTeacherView && <ReviewsSection ratings={teacherRatings} />}
 
+        {teacher && isTeacherView && <ReviewsSection ratings={teacherRatings} />}
+
         {learner && !isTeacherView && <CalendarSection learnerBookings={upcomingLearnerBookings} />}
 
         <BookingsTable
