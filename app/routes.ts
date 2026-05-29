@@ -35,7 +35,5 @@ export default [
 
     // Admin-only Pages (nested: hérite du header auth-layout)
     layout('routes/layouts/admin-layout.tsx', [route('/admin', 'routes/pages/admin/page.tsx')]),
-
-    // (removed incorrect nested route)
   ]),
 ] satisfies RouteConfig;

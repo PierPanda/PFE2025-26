@@ -20,7 +20,3 @@ export default function Page() {
     </div>
   );
 }
-
-export function meta(): Route.Meta {
-  return [{ title: '404 | Maestroo' }];
-}
