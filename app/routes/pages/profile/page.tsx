@@ -330,7 +330,7 @@ export default function Page() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isAvailabilitiesOpen, setAvailabilitiesOpen] = useState(false);
 
-  const { isOwnProfile, profileUser, profileTeacher, courses } = loaderData;
+  const { isOwnProfile, profileUser, profileTeacher, courses, teacherRatings } = loaderData;
 
   const rawView = searchParams.get('view') ?? '';
   const view: View = (() => {
@@ -413,7 +413,7 @@ export default function Page() {
           />
         )}
 
-        {teacher && isTeacherView && <ReviewsSection ratings={teacherRatings} />}
+        {profileTeacher && isTeacherView && <ReviewsSection ratings={teacherRatings} />}
 
         {learner && !isTeacherView && <CalendarSection learnerBookings={upcomingLearnerBookings} />}
 
