@@ -1,4 +1,3 @@
-import type { Route } from './+types/page';
 import iconError from '~/assets/images/ICON-ERROR.png';
 import { Button } from '@heroui/react';
 
