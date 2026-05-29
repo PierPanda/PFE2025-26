@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useSearchParams, Link } from 'react-router';
 import { computeRange } from '~/lib/pagination';
 import {
   Avatar,
@@ -175,7 +175,11 @@ export default function BookingsTable({
             return (
               <TableRow key={booking.id}>
                 <TableCell className="text-sm font-medium">
-                  {formatDateLabel(start, { day: 'numeric', month: 'long', year: 'numeric' })}
+                  {formatDateLabel(start, {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
                 </TableCell>
                 <TableCell className="text-sm text-default-600">
                   <span>

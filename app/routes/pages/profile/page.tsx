@@ -25,6 +25,8 @@ import CoursesSection from './courses-section';
 import BookingsTable from './bookings-table';
 import { Tabs, Tab } from '@heroui/react';
 import { getLearnerByUserId } from '~/services/learners/get-learner';
+import { getRatingsByTeacher } from '~/services/ratings/get-ratings';
+// import ReviewsSection from "~/components/ratings/reviews-section";
 
 const PAGE_SIZE = 10;
 
@@ -47,14 +49,19 @@ export async function loader({ params, request }: Route.LoaderArgs) {
       throw redirect('/');
     }
 
-    const coursesResult = await getCoursesByTeacher(profileTeacher.id);
+    const [coursesResult, ratingsResult] = await Promise.all([
+      getCoursesByTeacher(profileTeacher.id),
+      getRatingsByTeacher(profileTeacher.id),
+    ]);
     const courses = coursesResult.success ? (coursesResult.courses ?? []) : [];
+    const teacherRatings = ratingsResult.success ? ratingsResult.ratings : [];
 
     return {
       isOwnProfile: false as const,
       profileUser: profileTeacher.user,
       profileTeacher,
       courses,
+      teacherRatings,
     };
   }
 
@@ -73,19 +80,33 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   const learnerResult = await getLearnerByUserId(session.user.id);
   const learner = learnerResult.success ? learnerResult.learner : null;
 
-  const [coursesResult, availabilityResult] = await Promise.all([
+  const [coursesResult, availabilityResult, ownRatingsResult] = await Promise.all([
     teacher ? getCoursesByTeacher(teacher.id) : null,
     teacher ? getAvailabilityByTeacherId(teacher.id) : null,
+    teacher ? getRatingsByTeacher(teacher.id) : null,
   ]);
   const courses = coursesResult?.success ? (coursesResult.courses ?? []) : [];
   const availabilities = availabilityResult?.success ? availabilityResult.availabilities : [];
+  const teacherRatings = ownRatingsResult?.success ? ownRatingsResult.ratings : [];
 
   const [teacherBookingsResult, learnerBookingsResult, upcomingTeacherBookingsResult, upcomingLearnerBookingsResult] =
     await Promise.all([
       teacher ? getBookingsByTeacherId(teacher.id, { filter, limit: PAGE_SIZE, offset }) : null,
       learner ? getBookingsByLearnerId(learner.id, { filter, limit: PAGE_SIZE, offset }) : null,
-      teacher ? getBookingsByTeacherId(teacher.id, { filter: 'upcoming', limit: 3, orderDirection: 'asc' }) : null,
-      learner ? getBookingsByLearnerId(learner.id, { filter: 'upcoming', limit: 3, orderDirection: 'asc' }) : null,
+      teacher
+        ? getBookingsByTeacherId(teacher.id, {
+            filter: 'upcoming',
+            limit: 3,
+            orderDirection: 'asc',
+          })
+        : null,
+      learner
+        ? getBookingsByLearnerId(learner.id, {
+            filter: 'upcoming',
+            limit: 3,
+            orderDirection: 'asc',
+          })
+        : null,
     ]);
 
   const totalTeacherBookings = teacherBookingsResult?.success ? (teacherBookingsResult.total ?? 0) : 0;
@@ -121,6 +142,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
     currentPage: page,
     currentFilter: filter,
     pageSize: PAGE_SIZE,
+    teacherRatings,
   };
 }
 
@@ -191,7 +213,10 @@ export async function action({ request }: Route.ActionArgs) {
       }
 
       if (courseResult.course.teacherId !== teacherResult.teacher.id) {
-        return { success: false, error: 'Vous ne pouvez modifier que vos propres cours.' };
+        return {
+          success: false,
+          error: 'Vous ne pouvez modifier que vos propres cours.',
+        };
       }
     }
 
@@ -228,7 +253,10 @@ export async function action({ request }: Route.ActionArgs) {
       }
 
       if (courseResult.course.teacherId !== teacherResult.teacher.id) {
-        return { success: false, error: 'Vous ne pouvez supprimer que vos propres cours.' };
+        return {
+          success: false,
+          error: 'Vous ne pouvez supprimer que vos propres cours.',
+        };
       }
     }
 
@@ -248,7 +276,10 @@ export async function action({ request }: Route.ActionArgs) {
     const isLearner = booking.learner.user.id === session.user.id;
     const isTeacher = booking.course.teacher.user.id === session.user.id;
     if (!isAdmin && !isLearner && !isTeacher) {
-      return { success: false, error: 'Vous ne pouvez pas modifier cette réservation.' };
+      return {
+        success: false,
+        error: 'Vous ne pouvez pas modifier cette réservation.',
+      };
     }
 
     const status = formData.get('status') as string | null;
@@ -258,18 +289,26 @@ export async function action({ request }: Route.ActionArgs) {
     }
 
     if (status === 'confirmed' && !isTeacher && !isAdmin) {
-      return { success: false, error: 'Seul un enseignant peut confirmer une réservation.' };
+      return {
+        success: false,
+        error: 'Seul un enseignant peut confirmer une réservation.',
+      };
     }
 
     if (status === 'confirmed' && booking.status !== 'pending') {
-      return { success: false, error: 'Seule une réservation en attente peut être confirmée.' };
+      return {
+        success: false,
+        error: 'Seule une réservation en attente peut être confirmée.',
+      };
     }
 
     if (status === 'cancelled' && booking.status === 'cancelled') {
       return { success: false, error: 'Cette réservation est déjà annulée.' };
     }
 
-    return updateBooking(bookingId, { status: status as 'pending' | 'confirmed' | 'cancelled' });
+    return updateBooking(bookingId, {
+      status: status as 'pending' | 'confirmed' | 'cancelled',
+    });
   }
 
   return { success: false, error: 'Action inconnue.' };
@@ -304,6 +343,9 @@ export default function Page() {
       <main className="px-10 py-8 flex flex-col gap-12">
         <UserProfile user={profileUser} teacher={profileTeacher} isOwnProfile={false} />
         {profileTeacher && <CoursesSection courses={courses} currentUserId={null} isOwnProfile={false} />}
+        {/* {profileTeacher && (
+          <ReviewsSection ratings={loaderData.teacherRatings} />
+        )} */}
       </main>
     );
   }
@@ -362,6 +404,10 @@ export default function Page() {
             deleteAction={`/profile/${profileUser.id}`}
           />
         )}
+
+        {/* {profileTeacher && isTeacherView && (
+          <ReviewsSection ratings={loaderData.teacherRatings} />
+        )} */}
 
         {learner && !isTeacherView && (
           <CalendarSection learnerBookings={upcomingLearnerBookings} action={`/profile/${profileUser.id}`} />
