@@ -79,28 +79,14 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 
   const teacher = profileTeacher;
 
-  const rawView = url.searchParams.get('view') ?? '';
-  const activeView = (() => {
-    if (rawView === 'teacher' || rawView === 'learner') return rawView;
-    return profileTeacher ? 'teacher' : 'learner';
-  })();
-
-  const learnerResult = await getLearnerByUserId(session.user.id);
-  const learner = learnerResult.success ? learnerResult.learner : null;
-  const isLearnerView = activeView === 'learner';
-
-  const [coursesResult, availabilityResult, ownRatingsResult, learnerRatingsResult] = await Promise.all([
+  const [coursesResult, availabilityResult, teacherRatingsResult] = await Promise.all([
     teacher ? getCoursesByTeacher(teacher.id) : null,
     teacher ? getAvailabilityByTeacherId(teacher.id) : null,
     teacher ? getRatingsByTeacher(teacher.id) : null,
-    isLearnerView && learnerResult.success && learnerResult.learner
-      ? getRatingsByLearnerId(learnerResult.learner.id)
-      : null,
   ]);
   const courses = coursesResult?.success ? (coursesResult.courses ?? []) : [];
   const availabilities = availabilityResult?.success ? availabilityResult.availabilities : [];
-  const teacherRatings = ownRatingsResult?.success ? ownRatingsResult.ratings : [];
-  const learnerRatings = learnerRatingsResult?.success ? learnerRatingsResult.ratings : [];
+  const teacherRatings = teacherRatingsResult?.success ? teacherRatingsResult.ratings : [];
 
   const [teacherBookingsResult, learnerBookingsResult, upcomingTeacherBookingsResult, upcomingLearnerBookingsResult] =
     await Promise.all([
@@ -326,7 +312,24 @@ export async function action({ request }: Route.ActionArgs) {
 type View = 'teacher' | 'learner';
 
 export default function Page() {
-  const loaderData = useLoaderData<typeof loader>();
+  const {
+    user,
+    teacher,
+    learner,
+    courses,
+    availabilities,
+    teacherBookings,
+    totalTeacherBookings,
+    learnerBookings,
+    totalLearnerBookings,
+    upcomingTeacherBookings,
+    upcomingLearnerBookings,
+    currentPage,
+    currentFilter,
+    pageSize,
+    teacherRatings,
+  } = useLoaderData<typeof loader>();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [isAvailabilitiesOpen, setAvailabilitiesOpen] = useState(false);
 
@@ -414,6 +417,8 @@ export default function Page() {
         )}
 
         {profileTeacher && isTeacherView && <ReviewsSection ratings={teacherRatings} />}
+
+        {teacher && isTeacherView && <ReviewsSection ratings={teacherRatings} />}
 
         {learner && !isTeacherView && <CalendarSection learnerBookings={upcomingLearnerBookings} />}
 
