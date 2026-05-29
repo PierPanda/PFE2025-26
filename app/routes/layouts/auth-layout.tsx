@@ -156,8 +156,12 @@ export default function AuthLayout() {
         <footer className="mt-12 flex flex-col gap-4 rounded-2xl bg-black p-8">
           <div className="w-full flex flex-col md:flex-row gap-8">
             <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
-              <img src={logo} alt="Maestroo" className="h-10 md:h-10 w-auto mb-4 self-center  brightness-0 invert" />
-              <h5 className="text-center md:text-center text-l text-tertiary font-semibold">
+              <img
+                src={logo}
+                alt="Maestroo"
+                className="h-10 md:h-10 w-auto mb-4 md:self-start self-center  brightness-0 invert"
+              />
+              <h5 className="text-center md:text-left text-l text-tertiary font-semibold">
                 Maestroo - Connectez-vous avec les meilleurs professeurs de musique pour des cours en ligne
                 personnalisés.
               </h5>
@@ -198,19 +202,11 @@ export default function AuthLayout() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row items-center justify-center mt-8">
-            <a href="/legal/terms" className="text-sm text-tertiary hover:text-amber-600">
-              Conditions d'utilisation
-            </a>
-            <a href="/legal/privacy" className="text-sm text-tertiary hover:text-amber-600 ml-4">
-              Politique de confidentialité
-            </a>
-            <a href="/legal/cookies" className="text-sm text-tertiary hover:text-amber-600 ml-4">
-              Politique des cookies
-            </a>
-            <a href="/legal/cgv" className="text-sm text-tertiary hover:text-amber-600 ml-4">
-              Conditions générales de vente
-            </a>
+          <div className="flex flex-wrap gap-x-4 gap-y-2 items-center justify-center mt-8">
+            <p className="text-sm text-tertiary hover:text-amber-600">Conditions d'utilisation</p>
+            <p className="text-sm text-tertiary hover:text-amber-600">Politique de confidentialité</p>
+            <p className="text-sm text-tertiary hover:text-amber-600">Politique des cookies</p>
+            <p className="text-sm text-tertiary hover:text-amber-600">Conditions générales de vente</p>
           </div>
           <div className="flex items-center justify-center">
             <p className="text-sm text-tertiary">© {currentYear} Maestroo. Tous droits réservés.</p>
