@@ -8,14 +8,14 @@ type CourseSectionProps = {
   courses: CourseWithTeacherAndRatings[];
   currentUserId?: string | null;
   isOwnProfile?: boolean;
-  deleteAction?: string;
+  courseAction?: string;
 };
 
 export default function CourseSection({
   courses,
   currentUserId = null,
   isOwnProfile = false,
-  deleteAction,
+  courseAction,
 }: CourseSectionProps) {
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -47,7 +47,7 @@ export default function CourseSection({
         <div className="w-full">
           <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {courses.map((course) => (
-              <CourseCard key={course.id} course={course} currentUserId={currentUserId} deleteAction={deleteAction} />
+              <CourseCard key={course.id} course={course} currentUserId={currentUserId} courseAction={courseAction} />
             ))}
           </ul>
         </div>

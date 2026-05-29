@@ -399,7 +399,7 @@ export default function Page() {
             courses={courses}
             currentUserId={profileUser.id}
             isOwnProfile={true}
-            deleteAction={`/profile/${profileUser.id}`}
+            courseAction={`/profile/${profileUser.id}`}
           />
         )}
 
