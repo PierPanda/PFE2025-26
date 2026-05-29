@@ -4,7 +4,7 @@ import type { LoaderFunctionArgs } from 'react-router';
 import { Card, CardBody } from '@heroui/react';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { useLoaderData, useNavigate } from 'react-router';
-import { useState } from 'react';
+import { useMemo } from 'react';
 import CourseCard from '~/components/ui/course-card';
 import Banner from '~/components/dashboard/banner';
 import { InlineIcon } from '@iconify/react';
@@ -37,7 +37,7 @@ export function meta() {
 export default function Home() {
   const { user, stats, popularCourses, topRatedCourses, newestCourses } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const [bannerParams, setBannerParams] = useState(new URLSearchParams());
+  const emptySearchParams = useMemo(() => new URLSearchParams(), []);
 
   const handleFindCourses = (value: string) => {
     const params = new URLSearchParams();
@@ -51,8 +51,8 @@ export default function Home() {
         userName={user?.name}
         stats={stats}
         onFindCourses={handleFindCourses}
-        searchParams={bannerParams}
-        setSearchParams={setBannerParams}
+        searchParams={emptySearchParams}
+        setSearchParams={() => {}}
       />
 
       {/* Section: Cours populaires */}

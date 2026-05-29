@@ -96,7 +96,7 @@ export async function getPopularCourses(limit = 4): Promise<CourseWithTeacherAnd
     .select({ id: courses.id, bookingsCount: activeBookingsCountSql })
     .from(courses)
     .leftJoin(bookings, eq(bookings.courseId, courses.id))
-    .groupBy(courses.id)
+    .groupBy(courses.id, courses.createdAt)
     .orderBy(desc(activeBookingsCountSql), desc(courses.createdAt), desc(courses.id))
     .limit(limit);
 

@@ -21,6 +21,8 @@ export default [
   layout('routes/layouts/auth-layout.tsx', [
     index('routes/pages/dashboard/page.tsx'),
     route('/courses', 'routes/pages/courses/page.tsx'),
+    route('/cours/course/:id', 'routes/pages/cours-course-redirect.ts'),
+    route('/cours/:category', 'routes/pages/cours-category-redirect.ts'),
     route('/profile', 'routes/pages/profile/page.tsx'),
     route('/course/:id', 'routes/pages/courses/course/page.tsx'),
     route('/checkout/:id', 'routes/pages/checkout/page.tsx'),
