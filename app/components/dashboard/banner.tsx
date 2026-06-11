@@ -109,7 +109,10 @@ export default function Banner({ userName, stats, onFindCourses, searchParams, s
           radius="lg"
           variant="bordered"
           onChange={(e) => {
-            if (e.target.value) navigate(`/courses?category=${e.target.value}`);
+            const category = e.target.value;
+            if (!category) return;
+            const params = new URLSearchParams({ category });
+            navigate(`/courses?${params.toString()}`);
           }}
         >
           {categoryOptions.map((cat) => (
