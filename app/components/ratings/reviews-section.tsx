@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import { Avatar, Card, CardBody } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
@@ -23,7 +21,9 @@ function ReviewCard({ rating }: { rating: RatingWithLearner }) {
         <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
           <span className="font-semibold">{name}</span>
           <StarRating rating={Math.round(parseFloat(rating.rate))} width="18" />
-          <span className="text-sm text-default-500">{formatRelativeDate(rating.createdAt)}</span>
+          <span className="text-sm text-default-500" suppressHydrationWarning>
+            {formatRelativeDate(rating.createdAt)}
+          </span>
         </div>
         {rating.title && <p className="font-medium mt-1">{rating.title}</p>}
         {rating.description && <p className="text-default-600 mt-0.5 text-sm">{rating.description}</p>}

@@ -432,11 +432,9 @@ export default function Page() {
 
         {profileTeacher && isTeacherView && <ReviewsSection ratings={teacherRatings} />}
 
-        {teacher && isTeacherView && <ReviewsSection ratings={teacherRatings} />}
-
-        {teacher && isTeacherView && <ReviewsSection ratings={teacherRatings} />}
-
-        {learner && !isTeacherView && <CalendarSection learnerBookings={upcomingLearnerBookings} />}
+        {learner && !isTeacherView && (
+          <CalendarSection learnerBookings={upcomingLearnerBookings} action={`/profile/${profileUser.id}`} />
+        )}
 
         <BookingsTable
           bookings={isTeacherView ? teacherBookings : learnerBookings}
