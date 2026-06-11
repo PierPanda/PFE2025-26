@@ -19,15 +19,22 @@ export function UserProfile() {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <button className="flex items-center gap-2 rounded-lg p-2 py-1 transition-colors hover:bg-tertiary/20">
+        <button
+          aria-label={`Menu de ${user.name}`}
+          className="flex items-center gap-2 rounded-lg p-2 py-1 transition-colors hover:bg-tertiary/20"
+        >
           {user.image ? (
-            <img src={user.image} alt={user.name} className="h-6 w-6 rounded-full object-cover ring-2 ring-tertiary" />
+            <img
+              src={user.image}
+              alt={user.name}
+              className="h-8 w-8 md:h-6 md:w-6 rounded-full object-cover ring-2 ring-tertiary"
+            />
           ) : (
-            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-tertiary text-xs font-bold text-black">
+            <div className="flex h-8 w-8 md:h-6 md:w-6 shrink-0 items-center justify-center rounded-full bg-tertiary text-xs font-bold text-black">
               {user.name.charAt(0).toUpperCase()}
             </div>
           )}
-          <span className="text-sm font-medium text-gray-800">{user.name}</span>
+          <span className="hidden md:inline text-sm font-medium text-gray-800">{user.name}</span>
           <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>

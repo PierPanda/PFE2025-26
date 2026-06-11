@@ -179,13 +179,12 @@ export function validateParams<T extends z.ZodTypeAny>(
   return result.data;
 }
 
-export const cursorPaginationSchema = z.object({
-  cursor: z.string().optional(),
+export const offsetPaginationSchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().min(1).max(100).default(20),
-  direction: z.enum(['next', 'prev']).default('next'),
 });
 
-export type CursorPagination = z.infer<typeof cursorPaginationSchema>;
+export type OffsetPagination = z.infer<typeof offsetPaginationSchema>;
 
 export const ratingFormSchema = z.object({
   courseId: z.string().min(1, "L'ID du cours est requis."),

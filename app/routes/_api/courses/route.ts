@@ -6,7 +6,7 @@ import { getCourseById } from '~/services/courses/get-course';
 import { getCoursesByTeacher } from '~/services/courses/get-courses';
 import { updateCourse } from '~/services/courses/update-course';
 import { deleteCourse } from '~/services/courses/delete-course';
-import { cursorPaginationSchema, validateSearchParams } from '~/lib/validation';
+import { offsetPaginationSchema, validateSearchParams } from '~/lib/validation';
 import { getCoursesPaginated, getCoursesPriceBounds } from '~/services/courses/get-courses-paginated';
 import type { CourseCategory, CourseLevel } from '~/types/course';
 
@@ -35,7 +35,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return result;
   }
 
-  const pagination = validateSearchParams(url, cursorPaginationSchema);
+  const pagination = validateSearchParams(url, offsetPaginationSchema);
 
   const [paginatedResult, filters] = await Promise.all([
     getCoursesPaginated(
@@ -55,8 +55,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     success: true,
     courses: paginatedResult.items,
     pagination: {
-      nextCursor: paginatedResult.nextCursor,
-      prevCursor: paginatedResult.prevCursor,
       hasMore: paginatedResult.hasMore,
       total: paginatedResult.total,
     },

@@ -75,10 +75,10 @@ export default function CourseDetail() {
               <CourseHeader course={course} />
               <CourseDescription description={course.description ?? null} />
             </div>
-            <ReviewsSection ratings={ratings} />
           </div>
           <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
         </div>
+        <ReviewsSection ratings={ratings} />
       </div>
     </main>
   );
