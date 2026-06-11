@@ -28,7 +28,6 @@ import BookingsTable from './bookings-table';
 import { Tabs, Tab } from '@heroui/react';
 import { getLearnerByUserId } from '~/services/learners/get-learner';
 import { getRatingsByTeacher, getRatingsByLearnerId } from '~/services/ratings/get-ratings';
-// import ReviewsSection from "~/components/ratings/reviews-section";
 
 const PAGE_SIZE = 10;
 
@@ -79,14 +78,23 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 
   const teacher = profileTeacher;
 
+  const rawView = url.searchParams.get('view') ?? '';
+  const activeView = (() => {
+    if (rawView === 'teacher' || rawView === 'learner') return rawView;
+    return profileTeacher ? 'teacher' : 'learner';
+  })();
+
   const learnerResult = await getLearnerByUserId(session.user.id);
   const learner = learnerResult.success ? learnerResult.learner : null;
+  const isLearnerView = activeView === 'learner';
 
   const [coursesResult, availabilityResult, ownRatingsResult, learnerRatingsResult] = await Promise.all([
     teacher ? getCoursesByTeacher(teacher.id) : null,
     teacher ? getAvailabilityByTeacherId(teacher.id) : null,
     teacher ? getRatingsByTeacher(teacher.id) : null,
-    learnerResult.success && learnerResult.learner ? getRatingsByLearnerId(learnerResult.learner.id) : null,
+    isLearnerView && learnerResult.success && learnerResult.learner
+      ? getRatingsByLearnerId(learnerResult.learner.id)
+      : null,
   ]);
   const courses = coursesResult?.success ? (coursesResult.courses ?? []) : [];
   const availabilities = availabilityResult?.success ? availabilityResult.availabilities : [];
@@ -116,11 +124,6 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   const totalTeacherBookings = teacherBookingsResult?.success ? (teacherBookingsResult.total ?? 0) : 0;
   const totalLearnerBookings = learnerBookingsResult?.success ? (learnerBookingsResult.total ?? 0) : 0;
 
-  const rawView = url.searchParams.get('view') ?? '';
-  const activeView = (() => {
-    if (rawView === 'teacher' || rawView === 'learner') return rawView;
-    return teacher ? 'teacher' : 'learner';
-  })();
   const relevantTotal = activeView === 'teacher' ? totalTeacherBookings : totalLearnerBookings;
   const totalPages = Math.ceil(relevantTotal / PAGE_SIZE);
 
@@ -377,7 +380,6 @@ export default function Page() {
         user={profileUser}
         teacher={profileTeacher}
         isOwnProfile={true}
-        isTeacher={!!profileTeacher}
         onEditAvailabilities={() => setAvailabilitiesOpen(true)}
       />
       <div className="flex flex-col gap-20">

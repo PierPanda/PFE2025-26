@@ -40,12 +40,17 @@ export async function getRatingsByTeacher(
   }
 }
 
-export async function getRatingsByLearnerId(learnerId: string): Promise<GetRatingsResponse> {
+export async function getRatingsByLearnerId(
+  learnerId: string,
+  limit = DEFAULT_RATINGS_LIMIT,
+): Promise<GetRatingsResponse> {
+  const safeLimit = Math.min(limit, MAX_RATINGS_LIMIT);
   try {
     const ratingsList = await db.query.ratings.findMany({
       where: eq(ratings.learnerId, learnerId),
       with: ratingWithLearner,
       orderBy: (r) => [desc(r.createdAt)],
+      limit: safeLimit,
     });
 
     return { success: true, ratings: ratingsList };

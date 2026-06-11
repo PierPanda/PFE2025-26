@@ -9,7 +9,6 @@ type UserProfileProps = {
   user: DbUser;
   teacher: TeacherWithUserAndCourses | null;
   isOwnProfile?: boolean;
-  isTeacher?: boolean;
   rating?: number | null;
   reviewCount?: number;
   onEditAvailabilities?: () => void;
@@ -19,7 +18,6 @@ export default function UserProfile({
   user,
   teacher,
   isOwnProfile = true,
-  isTeacher = false,
   rating,
   reviewCount,
   onEditAvailabilities,
@@ -108,7 +106,7 @@ export default function UserProfile({
             >
               Modifier mes informations
             </Button>
-            {isTeacher && onEditAvailabilities && (
+            {teacher && onEditAvailabilities && (
               <Button
                 size="md"
                 variant="flat"
@@ -119,7 +117,7 @@ export default function UserProfile({
                 Modifier mes disponibilités
               </Button>
             )}
-            {isTeacher && (
+            {teacher && (
               <Link to="/course/create">
                 <Button
                   size="md"

@@ -49,7 +49,6 @@ const bookingRelations = {
       user: true,
     },
   },
-  rating: true,
 } as const;
 
 /**

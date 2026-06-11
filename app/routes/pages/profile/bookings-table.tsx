@@ -175,6 +175,8 @@ export default function BookingsTable({
             const durationMinutes = Math.round((end.getTime() - start.getTime()) / 60000);
             const person = isTeacher ? booking.learner.user : booking.course.teacher.user;
             const teacherUserId = booking.course.teacher.user.id;
+            const teacherId = booking.course.teacher.id;
+            const existingRating = ratingByTeacherId.get(teacherId) ?? null;
             return (
               <TableRow key={booking.id}>
                 <TableCell className="text-sm font-medium">
@@ -210,34 +212,28 @@ export default function BookingsTable({
                   <TableCell className="hidden w-0 p-0">{''}</TableCell>
                 ) : (
                   <TableCell>
-                    {booking.status === 'completed'
-                      ? (() => {
-                          const teacherId = booking.course.teacher.id;
-                          const existingRating = ratingByTeacherId.get(teacherId) ?? null;
-                          return (
-                            <Button
-                              size="sm"
-                              variant="light"
-                              color={existingRating ? 'default' : 'primary'}
-                              startContent={
-                                <InlineIcon
-                                  icon={existingRating ? 'mdi:pencil-outline' : 'mdi:star-plus-outline'}
-                                  width="16"
-                                />
-                              }
-                              onPress={() =>
-                                setModalState({
-                                  teacherId,
-                                  teacherName: booking.course.teacher.user.name,
-                                  existingRating,
-                                })
-                              }
-                            >
-                              {existingRating ? 'Modifier' : 'Rédiger un avis'}
-                            </Button>
-                          );
-                        })()
-                      : null}
+                    {booking.status === 'completed' && (
+                      <Button
+                        size="sm"
+                        variant="light"
+                        color={existingRating ? 'default' : 'primary'}
+                        startContent={
+                          <InlineIcon
+                            icon={existingRating ? 'mdi:pencil-outline' : 'mdi:star-plus-outline'}
+                            width="16"
+                          />
+                        }
+                        onPress={() =>
+                          setModalState({
+                            teacherId,
+                            teacherName: booking.course.teacher.user.name,
+                            existingRating,
+                          })
+                        }
+                      >
+                        {existingRating ? 'Modifier' : 'Rédiger un avis'}
+                      </Button>
+                    )}
                   </TableCell>
                 )}
               </TableRow>
