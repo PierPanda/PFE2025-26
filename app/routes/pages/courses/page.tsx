@@ -1,7 +1,7 @@
 import { getCoursesPaginated, getCoursesPriceBounds } from '~/services/courses/get-courses-paginated';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import type { LoaderFunctionArgs } from 'react-router';
-import { Card, CardBody } from '@heroui/react';
+import { Card, CardBody, Spinner } from '@heroui/react';
 import { useLoaderData, useNavigation, useSearchParams } from 'react-router';
 import { SearchBar } from '~/components/dashboard/search-bar';
 import Filters from '~/components/dashboard/filters';
@@ -51,18 +51,17 @@ export default function CoursesListing() {
   const handlePaginationChange = (page: number) => {
     if (page === currentPage) return;
 
-    setSearchParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        if (page === 1) {
-          next.delete('page');
-        } else {
-          next.set('page', String(page));
-        }
-        return next;
-      },
-      { preventScrollReset: true },
-    );
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (page === 1) {
+        next.delete('page');
+      } else {
+        next.set('page', String(page));
+      }
+      return next;
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -86,9 +85,17 @@ export default function CoursesListing() {
               </div>
             </div>
 
-            {coursesPage.items.length === 0 ? (
+            {isLoading && (
+              <div className="flex items-center justify-center py-20">
+                <Spinner size="lg" color="primary" />
+              </div>
+            )}
+
+            {!isLoading && coursesPage.items.length === 0 && (
               <p className="py-10 text-center text-default-500">Aucun cours disponible pour le moment.</p>
-            ) : (
+            )}
+
+            {!isLoading && coursesPage.items.length > 0 && (
               <>
                 <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-8">
                   {coursesPage.items.map((course) => (
