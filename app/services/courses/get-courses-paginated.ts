@@ -2,6 +2,7 @@ import { and, desc, eq, gte, ilike, inArray, lte, max, min, sql } from 'drizzle-
 import type { SQL } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { bookings, courses } from '~/server/lib/db/schema';
+import type { OffsetPagination } from '~/lib/validation';
 import type { CourseCategory, CourseLevel } from '~/types/course';
 import type { PaginatedResponse } from '~/types/pagination';
 import type { CourseWithTeacherAndRatings } from '../types';
@@ -17,11 +18,6 @@ type CourseFilters = {
 type PriceBounds = {
   minPrice: number;
   maxPrice: number;
-};
-
-type OffsetPagination = {
-  page: number;
-  limit: number;
 };
 
 const activeBookingsCountSql = sql<number>`count(case when ${bookings.status} <> 'cancelled' then 1 end)`;

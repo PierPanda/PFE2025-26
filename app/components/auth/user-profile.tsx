@@ -20,7 +20,7 @@ export function UserProfile() {
     <Dropdown>
       <DropdownTrigger>
         <button
-          aria-label={user.name}
+          aria-label={`Menu de ${user.name}`}
           className="flex items-center gap-2 rounded-lg p-2 py-1 transition-colors hover:bg-tertiary/20"
         >
           {user.image ? (
