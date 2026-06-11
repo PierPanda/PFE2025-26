@@ -1,6 +1,6 @@
 {
-  "id": "d238586e-1ec4-47eb-bc56-324d73efbefc",
-  "prevId": "90eb979a-5c7f-4751-8587-87c5a49836fb",
+  "id": "d6baa642-6a8f-4f67-8026-92c28eac420b",
+  "prevId": "d238586e-1ec4-47eb-bc56-324d73efbefc",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -465,8 +465,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "teacherId": {
-          "name": "teacherId",
+        "courseId": {
+          "name": "courseId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -511,8 +511,8 @@
         }
       },
       "indexes": {
-        "ratings_learnerId_teacherId_unique": {
-          "name": "ratings_learnerId_teacherId_unique",
+        "ratings_learnerId_courseId_unique": {
+          "name": "ratings_learnerId_courseId_unique",
           "columns": [
             {
               "expression": "learnerId",
@@ -521,7 +521,7 @@
               "nulls": "last"
             },
             {
-              "expression": "teacherId",
+              "expression": "courseId",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -534,12 +534,12 @@
         }
       },
       "foreignKeys": {
-        "ratings_teacherId_teachers_id_fk": {
-          "name": "ratings_teacherId_teachers_id_fk",
+        "ratings_courseId_courses_id_fk": {
+          "name": "ratings_courseId_courses_id_fk",
           "tableFrom": "ratings",
-          "tableTo": "teachers",
+          "tableTo": "courses",
           "columnsFrom": [
-            "teacherId"
+            "courseId"
           ],
           "columnsTo": [
             "id"

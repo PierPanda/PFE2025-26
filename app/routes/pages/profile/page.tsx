@@ -326,23 +326,7 @@ export async function action({ request }: Route.ActionArgs) {
 type View = 'teacher' | 'learner';
 
 export default function Page() {
-  const {
-    user,
-    teacher,
-    learner,
-    courses,
-    availabilities,
-    teacherBookings,
-    totalTeacherBookings,
-    learnerBookings,
-    totalLearnerBookings,
-    upcomingTeacherBookings,
-    upcomingLearnerBookings,
-    currentPage,
-    currentFilter,
-    pageSize,
-    teacherRatings,
-  } = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [isAvailabilitiesOpen, setAvailabilitiesOpen] = useState(false);
