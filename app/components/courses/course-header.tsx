@@ -17,8 +17,8 @@ export default function CourseHeader({ course }: CourseHeaderProps) {
     month: 'long',
     year: 'numeric',
   });
-  const reviewsCount = course.teacher.ratings.length;
-  const averageRating = calculateAverageRating(course.teacher.ratings);
+  const reviewsCount = course.ratings.length;
+  const averageRating = calculateAverageRating(course.ratings);
   const formattedRating = averageRating ? averageRating.toFixed(1).replace('.', ',') : null;
 
   return (

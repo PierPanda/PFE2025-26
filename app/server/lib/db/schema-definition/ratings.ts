@@ -1,14 +1,14 @@
 import { pgTable, text, numeric, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
-import { teachers } from './teachers';
+import { courses } from './courses';
 import { learners } from './learners';
 
 export const ratings = pgTable(
   'ratings',
   {
     id: text('id').primaryKey(),
-    teacherId: text('teacherId')
+    courseId: text('courseId')
       .notNull()
-      .references(() => teachers.id),
+      .references(() => courses.id),
     learnerId: text('learnerId')
       .notNull()
       .references(() => learners.id),
@@ -18,5 +18,5 @@ export const ratings = pgTable(
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
   },
-  (t) => [uniqueIndex('ratings_learnerId_teacherId_unique').on(t.learnerId, t.teacherId)],
+  (t) => [uniqueIndex('ratings_learnerId_courseId_unique').on(t.learnerId, t.courseId)],
 );

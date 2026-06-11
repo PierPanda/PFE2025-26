@@ -7,11 +7,13 @@ import type { CourseLevel, CourseCategory } from '~/types/course';
 
 const activeBookingsCountSql = sql<number>`count(case when ${bookings.status} <> 'cancelled' then 1 end)`;
 
-const teacherWithRatings = {
-  with: {
-    user: true,
-    ratings: true,
+const courseWith = {
+  teacher: {
+    with: {
+      user: true,
+    },
   },
+  ratings: true,
 } as const;
 
 export async function getCourses(
@@ -30,7 +32,7 @@ export async function getCourses(
         maxPrice ? lte(courses.price, maxPrice) : undefined,
         search ? ilike(courses.title, `%${search}%`) : undefined,
       ),
-      with: { teacher: teacherWithRatings },
+      with: courseWith,
     });
 
     const [priceBounds] = await db
@@ -61,7 +63,7 @@ export async function getCoursesByTeacher(teacherId: string): Promise<GetCourses
   try {
     const result = await db.query.courses.findMany({
       where: eq(courses.teacherId, teacherId),
-      with: { teacher: teacherWithRatings },
+      with: courseWith,
     });
 
     return { success: true, courses: result };
@@ -88,7 +90,7 @@ export async function getPopularCourses(limit = 4): Promise<CourseWithTeacherAnd
   const fullCourses = courseIds.length
     ? await db.query.courses.findMany({
         where: inArray(courses.id, courseIds),
-        with: { teacher: teacherWithRatings },
+        with: courseWith,
       })
     : [];
 
@@ -107,7 +109,7 @@ export async function getTopRatedCourses(limit = 4): Promise<CourseWithTeacherAn
       ratingsCount: sql<number>`count(${ratings.id})`,
     })
     .from(courses)
-    .innerJoin(ratings, eq(ratings.teacherId, courses.teacherId))
+    .innerJoin(ratings, eq(ratings.courseId, courses.id))
     .groupBy(courses.id, courses.createdAt)
     .orderBy(
       desc(sql`avg(${ratings.rate})`),
@@ -122,7 +124,7 @@ export async function getTopRatedCourses(limit = 4): Promise<CourseWithTeacherAn
   const fullCourses = courseIds.length
     ? await db.query.courses.findMany({
         where: inArray(courses.id, courseIds),
-        with: { teacher: teacherWithRatings },
+        with: courseWith,
       })
     : [];
 
@@ -135,7 +137,7 @@ export async function getTopRatedCourses(limit = 4): Promise<CourseWithTeacherAn
 
 export async function getNewestCourses(limit = 4): Promise<CourseWithTeacherAndRatings[]> {
   return db.query.courses.findMany({
-    with: { teacher: teacherWithRatings },
+    with: courseWith,
     orderBy: [desc(courses.createdAt), desc(courses.id)],
     limit,
   });

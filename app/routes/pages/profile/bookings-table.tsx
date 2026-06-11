@@ -28,8 +28,8 @@ const ALL_FILTERS: { key: BookingFilter; label: string }[] = [
 ];
 
 type ModalState = {
-  teacherId: string;
-  teacherName: string;
+  courseId: string;
+  courseTitle: string;
   existingRating: DbRating | null;
 } | null;
 
@@ -52,7 +52,7 @@ export default function BookingsTable({
   isTeacher = false,
   learnerRatings = [],
 }: BookingsTableProps) {
-  const ratingByTeacherId = new Map(learnerRatings.map((r) => [r.teacherId, r]));
+  const ratingByCourseId = new Map(learnerRatings.map((r) => [r.courseId, r]));
   const [, setSearchParams] = useSearchParams();
   const [modalState, setModalState] = useState<ModalState>(null);
 
@@ -175,8 +175,7 @@ export default function BookingsTable({
             const durationMinutes = Math.round((end.getTime() - start.getTime()) / 60000);
             const person = isTeacher ? booking.learner.user : booking.course.teacher.user;
             const teacherUserId = booking.course.teacher.user.id;
-            const teacherId = booking.course.teacher.id;
-            const existingRating = ratingByTeacherId.get(teacherId) ?? null;
+            const existingRating = ratingByCourseId.get(booking.courseId) ?? null;
             return (
               <TableRow key={booking.id}>
                 <TableCell className="text-sm font-medium">
@@ -212,28 +211,29 @@ export default function BookingsTable({
                   <TableCell className="hidden w-0 p-0">{''}</TableCell>
                 ) : (
                   <TableCell>
-                    {booking.status === 'completed' && (
-                      <Button
-                        size="sm"
-                        variant="light"
-                        color={existingRating ? 'default' : 'primary'}
-                        startContent={
-                          <InlineIcon
-                            icon={existingRating ? 'mdi:pencil-outline' : 'mdi:star-plus-outline'}
-                            width="16"
-                          />
-                        }
-                        onPress={() =>
-                          setModalState({
-                            teacherId,
-                            teacherName: booking.course.teacher.user.name,
-                            existingRating,
-                          })
-                        }
-                      >
-                        {existingRating ? 'Modifier' : 'Rédiger un avis'}
-                      </Button>
-                    )}
+                    {booking.status !== 'cancelled' &&
+                      (booking.status === 'completed' || new Date(booking.endTime) < new Date()) && (
+                        <Button
+                          size="sm"
+                          variant="light"
+                          color={existingRating ? 'default' : 'primary'}
+                          startContent={
+                            <InlineIcon
+                              icon={existingRating ? 'mdi:pencil-outline' : 'mdi:star-plus-outline'}
+                              width="16"
+                            />
+                          }
+                          onPress={() =>
+                            setModalState({
+                              courseId: booking.courseId,
+                              courseTitle: booking.course.title,
+                              existingRating,
+                            })
+                          }
+                        >
+                          {existingRating ? 'Modifier' : 'Rédiger un avis'}
+                        </Button>
+                      )}
                   </TableCell>
                 )}
               </TableRow>
@@ -245,8 +245,8 @@ export default function BookingsTable({
       <RatingFormModal
         isOpen={modalState !== null}
         onClose={() => setModalState(null)}
-        teacherId={modalState?.teacherId ?? ''}
-        teacherName={modalState?.teacherName ?? ''}
+        courseId={modalState?.courseId ?? ''}
+        courseTitle={modalState?.courseTitle ?? ''}
         existingRating={modalState?.existingRating}
       />
     </div>

@@ -6,7 +6,7 @@ import CourseHeader from '~/components/courses/course-header';
 import CourseDescription from '~/components/courses/course-description';
 import BookingCard from '~/components/courses/booking-card';
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots';
-import { getRatingsByTeacher } from '~/services/ratings/get-ratings';
+import { getRatingsByCourse } from '~/services/ratings/get-ratings';
 import ReviewsSection from '~/components/ratings/reviews-section';
 import { InlineIcon } from '@iconify/react';
 
@@ -32,7 +32,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   const [teacherResult, availableSlotsResult, ratingsResult] = await Promise.all([
     getTeacherSummary(courseResult.course.teacherId),
     getAvailableSlots(courseResult.course.teacherId, courseResult.course.duration),
-    getRatingsByTeacher(courseResult.course.teacherId),
+    getRatingsByCourse(courseResult.course.id),
   ]);
 
   return {
