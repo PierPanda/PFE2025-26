@@ -31,7 +31,7 @@ type CourseCardProps = {
 export default function CourseCard({ course, currentUserId = null, courseAction }: CourseCardProps) {
   const [courseState, setCourseState] = useState(course);
   const revalidator = useRevalidator();
-  const deleteFetcher = useFetcher<{ success?: boolean }>();
+  const deleteFetcher = useFetcher<{ success?: boolean; error?: string }>();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [isEditOpen, setEditOpen] = useState(false);
 
@@ -40,13 +40,21 @@ export default function CourseCard({ course, currentUserId = null, courseAction 
   }, [course]);
 
   useEffect(() => {
-    if (deleteFetcher.state === 'idle' && deleteFetcher.data?.success) {
+    if (deleteFetcher.state !== 'idle' || !deleteFetcher.data) return;
+
+    if (deleteFetcher.data.success) {
       setConfirmOpen(false);
       revalidator.revalidate();
+    } else if (deleteFetcher.data.error) {
+      addToast({
+        title: 'Suppression impossible',
+        description: deleteFetcher.data.error,
+        color: 'danger',
+      });
     }
   }, [deleteFetcher.data, deleteFetcher.state, revalidator]);
 
-  const ratings = courseState.ratings ?? [];
+  const ratings = courseState.teacher.ratings ?? [];
   const averageRating = calculateAverageRating(ratings);
   const levelLabel =
     levelOptions.find((levelOption) => levelOption.key === courseState.level)?.value ?? courseState.level;

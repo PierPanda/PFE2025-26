@@ -2,6 +2,7 @@ import { Chip, Button } from '@heroui/react';
 import { Icon, InlineIcon } from '@iconify/react';
 import type { DbUser, TeacherWithUserAndCourses } from '~/services/types';
 import { useState } from 'react';
+import { Link } from 'react-router';
 import EditProfileModal from './edit-profile-modal';
 
 type UserProfileProps = {
@@ -10,9 +11,17 @@ type UserProfileProps = {
   isOwnProfile?: boolean;
   rating?: number | null;
   reviewCount?: number;
+  onEditAvailabilities?: () => void;
 };
 
-export default function UserProfile({ user, teacher, isOwnProfile = true, rating, reviewCount }: UserProfileProps) {
+export default function UserProfile({
+  user,
+  teacher,
+  isOwnProfile = true,
+  rating,
+  reviewCount,
+  onEditAvailabilities,
+}: UserProfileProps) {
   const [isEditProfileOpen, setEditProfileOpen] = useState(false);
 
   const memberSince = new Date(user.createdAt).toLocaleDateString('fr-FR', {
@@ -87,15 +96,40 @@ export default function UserProfile({ user, teacher, isOwnProfile = true, rating
           </div>
         </div>
         {isOwnProfile && (
-          <Button
-            size="md"
-            variant="flat"
-            className="p-4 bg-secondary"
-            onPress={() => setEditProfileOpen(true)}
-            startContent={<Icon icon="mdi:pencil" width="16" />}
-          >
-            Modifier mes informations
-          </Button>
+          <div className="flex flex-col gap-2 shrink-0">
+            <Button
+              size="md"
+              variant="flat"
+              className="p-4 bg-secondary"
+              onPress={() => setEditProfileOpen(true)}
+              startContent={<Icon icon="mdi:pencil" width="16" />}
+            >
+              Modifier mes informations
+            </Button>
+            {teacher && onEditAvailabilities && (
+              <Button
+                size="md"
+                variant="flat"
+                className="p-4 bg-secondary"
+                startContent={<Icon icon="mdi:calendar-clock" width="16" />}
+                onPress={onEditAvailabilities}
+              >
+                Modifier mes disponibilités
+              </Button>
+            )}
+            {teacher && (
+              <Link to="/course/create">
+                <Button
+                  size="md"
+                  variant="flat"
+                  className="p-4 bg-secondary w-full"
+                  startContent={<Icon icon="mdi:plus" width="16" />}
+                >
+                  Créer un cours
+                </Button>
+              </Link>
+            )}
+          </div>
         )}
       </div>
       {isOwnProfile && (

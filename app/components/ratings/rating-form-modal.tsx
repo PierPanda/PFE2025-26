@@ -17,8 +17,8 @@ import type { DbRating } from '~/services/types';
 type RatingFormModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  courseId: string;
-  courseTitle: string;
+  teacherId: string;
+  teacherName: string;
   existingRating?: DbRating | null;
 };
 
@@ -30,8 +30,8 @@ type RatingActionData = {
 export default function RatingFormModal({
   isOpen,
   onClose,
-  courseId,
-  courseTitle,
+  teacherId,
+  teacherName,
   existingRating,
 }: RatingFormModalProps) {
   const isEditing = Boolean(existingRating);
@@ -82,7 +82,7 @@ export default function RatingFormModal({
 
     submittedAsEditing.current = isEditing;
     const body: Record<string, string | number> = {
-      courseId,
+      teacherId,
       title: title.trim(),
       rate,
       description: description.trim(),
@@ -100,7 +100,7 @@ export default function RatingFormModal({
           {isEditing ? 'Modifier mon avis' : 'Rédiger un avis'}
         </ModalHeader>
         <ModalBody className="gap-4">
-          <p className="text-sm text-default-500">{courseTitle}</p>
+          <p className="text-sm text-default-500">{teacherName}</p>
 
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((star) => (

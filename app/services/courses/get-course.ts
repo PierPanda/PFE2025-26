@@ -11,10 +11,10 @@ export async function getCourseById(courseId: string): Promise<GetCourseResponse
     const course = await db.query.courses.findFirst({
       where: eq(courses.id, courseId),
       with: {
-        ratings: true,
         teacher: {
           with: {
             user: true,
+            ratings: true,
           },
         },
       },

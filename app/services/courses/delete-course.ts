@@ -1,13 +1,23 @@
-import { eq } from 'drizzle-orm';
+import { and, count, eq, notInArray } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
-import { courses } from '~/server/lib/db/schema';
+import { bookings, courses } from '~/server/lib/db/schema';
 import type { DeleteCourseResponse } from '../types';
 
-/**
- * Delete a course from database
- */
 export async function deleteCourse(courseId: string): Promise<DeleteCourseResponse> {
   try {
+    const [{ activeCount }] = await db
+      .select({ activeCount: count() })
+      .from(bookings)
+      .where(and(eq(bookings.courseId, courseId), notInArray(bookings.status, ['completed', 'cancelled'])));
+
+    if (activeCount > 0) {
+      return {
+        success: false,
+        error: 'Ce cours ne peut pas être supprimé car une réservation est en cours.',
+      };
+    }
+
+    await db.delete(bookings).where(eq(bookings.courseId, courseId));
     await db.delete(courses).where(eq(courses.id, courseId));
 
     return {

@@ -2,35 +2,23 @@ import { data, type ActionFunctionArgs, type LoaderFunctionArgs } from 'react-ro
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { ratingFormSchema, updateRatingSchema } from '~/lib/validation';
 import { getLearnerByUserId } from '~/services/learners/get-learner';
-import { hasCompletedBookingForCourse } from '~/services/bookings/get-bookings';
-import {
-  getRatingsByCourse,
-  getRatingsByTeacher,
-  getRatingById,
-  getRatingByLearnerAndCourse,
-} from '~/services/ratings/get-ratings';
+import { hasCompletedBookingWithTeacher } from '~/services/bookings/get-bookings';
+import { getRatingsByTeacher, getRatingById, getRatingByLearnerAndTeacher } from '~/services/ratings/get-ratings';
 import { createRating } from '~/services/ratings/create-rating';
 import { updateRating } from '~/services/ratings/update-rating';
 import { deleteRating } from '~/services/ratings/delete-rating';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-  const courseId = url.searchParams.get('courseId');
   const teacherId = url.searchParams.get('teacherId');
-
   const limit = Math.min(Number(url.searchParams.get('limit') ?? '20'), 50);
-
-  if (courseId) {
-    const result = await getRatingsByCourse(courseId, limit);
-    return data(result, { status: result.success ? 200 : 500 });
-  }
 
   if (teacherId) {
     const result = await getRatingsByTeacher(teacherId, limit);
     return data(result, { status: result.success ? 200 : 500 });
   }
 
-  return data({ success: false, error: 'courseId ou teacherId requis' }, { status: 400 });
+  return data({ success: false, error: 'teacherId requis' }, { status: 400 });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -53,22 +41,25 @@ export async function action({ request }: ActionFunctionArgs) {
         return data({ success: false, error: parsed.error.issues.map((e) => e.message).join(', ') }, { status: 400 });
       }
 
-      const completedCheck = await hasCompletedBookingForCourse(currentLearnerId, parsed.data.courseId);
+      const completedCheck = await hasCompletedBookingWithTeacher(currentLearnerId, parsed.data.teacherId);
       if (!completedCheck.success) {
         return data({ success: false, error: completedCheck.error }, { status: 500 });
       }
 
       if (!completedCheck.exists) {
-        return data({ success: false, error: 'Le cours doit être terminé pour laisser un avis.' }, { status: 403 });
+        return data(
+          { success: false, error: 'Un cours terminé avec ce professeur est requis pour laisser un avis.' },
+          { status: 403 },
+        );
       }
 
-      const existingRatingResult = await getRatingByLearnerAndCourse(currentLearnerId, parsed.data.courseId);
+      const existingRatingResult = await getRatingByLearnerAndTeacher(currentLearnerId, parsed.data.teacherId);
       if (!existingRatingResult.success) {
         return data({ success: false, error: existingRatingResult.error }, { status: 500 });
       }
 
       if (existingRatingResult.rating) {
-        return data({ success: false, error: 'Vous avez déjà noté ce cours.' }, { status: 409 });
+        return data({ success: false, error: 'Vous avez déjà noté ce professeur.' }, { status: 409 });
       }
 
       const result = await createRating({

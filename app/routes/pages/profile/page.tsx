@@ -1,4 +1,5 @@
 import { data, redirect, useLoaderData, useSearchParams } from 'react-router';
+import { useState } from 'react';
 import type { Route } from './+types/page';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { auth } from '~/auth.server';
@@ -21,12 +22,12 @@ import {
 } from '~/services/bookings/get-bookings';
 import { updateBooking } from '~/services/bookings/update-booking';
 import CalendarSection from './calendar-section';
+import { AvailabilitiesModal } from '~/components/availabilities/availabilities-modal';
 import CoursesSection from './courses-section';
 import BookingsTable from './bookings-table';
 import { Tabs, Tab } from '@heroui/react';
 import { getLearnerByUserId } from '~/services/learners/get-learner';
-import { getRatingsByTeacher } from '~/services/ratings/get-ratings';
-// import ReviewsSection from "~/components/ratings/reviews-section";
+import { getRatingsByTeacher, getRatingsByLearnerId } from '~/services/ratings/get-ratings';
 
 const PAGE_SIZE = 10;
 
@@ -77,17 +78,28 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 
   const teacher = profileTeacher;
 
+  const rawView = url.searchParams.get('view') ?? '';
+  const activeView = (() => {
+    if (rawView === 'teacher' || rawView === 'learner') return rawView;
+    return profileTeacher ? 'teacher' : 'learner';
+  })();
+
   const learnerResult = await getLearnerByUserId(session.user.id);
   const learner = learnerResult.success ? learnerResult.learner : null;
+  const isLearnerView = activeView === 'learner';
 
-  const [coursesResult, availabilityResult, ownRatingsResult] = await Promise.all([
+  const [coursesResult, availabilityResult, ownRatingsResult, learnerRatingsResult] = await Promise.all([
     teacher ? getCoursesByTeacher(teacher.id) : null,
     teacher ? getAvailabilityByTeacherId(teacher.id) : null,
     teacher ? getRatingsByTeacher(teacher.id) : null,
+    isLearnerView && learnerResult.success && learnerResult.learner
+      ? getRatingsByLearnerId(learnerResult.learner.id)
+      : null,
   ]);
   const courses = coursesResult?.success ? (coursesResult.courses ?? []) : [];
   const availabilities = availabilityResult?.success ? availabilityResult.availabilities : [];
   const teacherRatings = ownRatingsResult?.success ? ownRatingsResult.ratings : [];
+  const learnerRatings = learnerRatingsResult?.success ? learnerRatingsResult.ratings : [];
 
   const [teacherBookingsResult, learnerBookingsResult, upcomingTeacherBookingsResult, upcomingLearnerBookingsResult] =
     await Promise.all([
@@ -112,11 +124,6 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   const totalTeacherBookings = teacherBookingsResult?.success ? (teacherBookingsResult.total ?? 0) : 0;
   const totalLearnerBookings = learnerBookingsResult?.success ? (learnerBookingsResult.total ?? 0) : 0;
 
-  const rawView = url.searchParams.get('view') ?? '';
-  const activeView = (() => {
-    if (rawView === 'teacher' || rawView === 'learner') return rawView;
-    return teacher ? 'teacher' : 'learner';
-  })();
   const relevantTotal = activeView === 'teacher' ? totalTeacherBookings : totalLearnerBookings;
   const totalPages = Math.ceil(relevantTotal / PAGE_SIZE);
 
@@ -133,6 +140,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
     learner,
     courses,
     availabilities,
+    learnerRatings,
     teacherBookings: teacherBookingsResult?.success ? teacherBookingsResult.bookings : [],
     totalTeacherBookings,
     learnerBookings: learnerBookingsResult?.success ? learnerBookingsResult.bookings : [],
@@ -319,6 +327,7 @@ type View = 'teacher' | 'learner';
 export default function Page() {
   const loaderData = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isAvailabilitiesOpen, setAvailabilitiesOpen] = useState(false);
 
   const { isOwnProfile, profileUser, profileTeacher, courses } = loaderData;
 
@@ -351,6 +360,7 @@ export default function Page() {
   const {
     learner,
     availabilities,
+    learnerRatings,
     teacherBookings,
     totalTeacherBookings,
     learnerBookings,
@@ -366,7 +376,12 @@ export default function Page() {
 
   return (
     <main className="px-4 md:px-10 py-8 flex flex-col gap-12">
-      <UserProfile user={profileUser} teacher={profileTeacher} isOwnProfile={true} />
+      <UserProfile
+        user={profileUser}
+        teacher={profileTeacher}
+        isOwnProfile={true}
+        onEditAvailabilities={() => setAvailabilitiesOpen(true)}
+      />
       <div className="flex flex-col gap-20">
         {profileTeacher && learner && (
           <Tabs
@@ -385,13 +400,7 @@ export default function Page() {
         )}
 
         {profileTeacher && isTeacherView && (
-          <CalendarSection
-            teacherBookings={upcomingTeacherBookings}
-            teacher={profileTeacher}
-            availabilities={availabilities}
-            isTeacher
-            action={`/profile/${profileUser.id}`}
-          />
+          <CalendarSection teacherBookings={upcomingTeacherBookings} isTeacher action={`/profile/${profileUser.id}`} />
         )}
 
         {profileTeacher && isTeacherView && (
@@ -418,8 +427,17 @@ export default function Page() {
           currentFilter={currentFilter}
           pageSize={pageSize}
           isTeacher={isTeacherView}
+          learnerRatings={isTeacherView ? [] : learnerRatings}
         />
       </div>
+      {profileTeacher && (
+        <AvailabilitiesModal
+          isOpen={isAvailabilitiesOpen}
+          onClose={() => setAvailabilitiesOpen(false)}
+          teacherId={profileTeacher.id}
+          availabilities={availabilities}
+        />
+      )}
     </main>
   );
 }

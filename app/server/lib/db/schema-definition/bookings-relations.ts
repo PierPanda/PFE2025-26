@@ -3,7 +3,6 @@ import { bookings } from './bookings';
 import { courses } from './courses';
 import { availabilities } from './availabilities';
 import { learners } from './learners';
-import { ratings } from './ratings';
 
 export const bookingsRelations = relations(bookings, ({ one }) => ({
   course: one(courses, {
@@ -17,9 +16,5 @@ export const bookingsRelations = relations(bookings, ({ one }) => ({
   learner: one(learners, {
     fields: [bookings.learnerId],
     references: [learners.id],
-  }),
-  rating: one(ratings, {
-    fields: [bookings.courseId, bookings.learnerId],
-    references: [ratings.courseId, ratings.learnerId],
   }),
 }));
