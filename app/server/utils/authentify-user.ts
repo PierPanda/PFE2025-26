@@ -1,5 +1,8 @@
 import { auth } from '~/auth.server';
 import { redirect, href } from 'react-router';
+import { eq } from 'drizzle-orm';
+import { db } from '~/server/lib/db/index.server';
+import { user } from '~/server/lib/db/schema-definition/auth-schema';
 
 type AuthentifyUserOptions = {
   redirectTo?: string;
@@ -16,6 +19,15 @@ export async function authentifyUser(request: Request, { redirectTo }: Authentif
   }
 
   if (!session?.user) {
+    if (redirectTo) {
+      throw redirect(href(redirectTo as '/auth'));
+    }
+    throw new Response('Non authentifié', { status: 401 });
+  }
+
+  const existingUser = await db.select({ id: user.id }).from(user).where(eq(user.id, session.user.id)).limit(1);
+
+  if (existingUser.length === 0) {
     if (redirectTo) {
       throw redirect(href(redirectTo as '/auth'));
     }
