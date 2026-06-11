@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router';
+import { useState } from 'react';
 import { Button, Select, SelectItem } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
 import { categoryOptions } from '~/lib/constant';
@@ -21,6 +22,7 @@ type BannerProps = {
 
 export default function Banner({ userName, stats, onFindCourses, searchParams, setSearchParams }: BannerProps) {
   const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const formatCount = (value: number) => new Intl.NumberFormat('fr-FR').format(value);
 
   const statistics = [
@@ -108,6 +110,7 @@ export default function Banner({ userName, stats, onFindCourses, searchParams, s
           size="sm"
           radius="lg"
           variant="bordered"
+          selectedKeys={selectedCategory ? [selectedCategory] : []}
           onChange={(e) => {
             const category = e.target.value;
             if (!category) return;
