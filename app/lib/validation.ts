@@ -188,7 +188,7 @@ export const cursorPaginationSchema = z.object({
 export type CursorPagination = z.infer<typeof cursorPaginationSchema>;
 
 export const ratingFormSchema = z.object({
-  courseId: z.string().min(1, "L'ID du cours est requis."),
+  teacherId: z.string().min(1, "L'ID du professeur est requis."),
   title: z.string().trim().min(3, 'Titre trop court.').max(100, 'Titre trop long.'),
   description: z.string().trim().max(1000, 'Description trop longue.').optional(),
   rate: z.coerce

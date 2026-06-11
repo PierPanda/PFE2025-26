@@ -164,9 +164,9 @@ export async function getCoursesPaginated(
           teacher: {
             with: {
               user: true,
+              ratings: true,
             },
           },
-          ratings: true,
         },
       })
     : [];

@@ -3,6 +3,7 @@ import { teachers } from './teachers';
 import { user } from './auth-schema';
 import { courses } from './courses';
 import { availabilities } from './availabilities';
+import { ratings } from './ratings';
 
 export const teachersRelations = relations(teachers, ({ one, many }) => ({
   user: one(user, {
@@ -11,4 +12,5 @@ export const teachersRelations = relations(teachers, ({ one, many }) => ({
   }),
   courses: many(courses),
   availabilities: many(availabilities),
+  ratings: many(ratings),
 }));

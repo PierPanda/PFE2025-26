@@ -19,16 +19,7 @@ export default function CourseSection({
 }: CourseSectionProps) {
   return (
     <div className="flex flex-col gap-4 w-full">
-      <div className="flex items-center justify-between">
-        <h3 className="text-2xl font-bold">{isOwnProfile ? 'Mes cours' : 'Cours'}</h3>
-        {isOwnProfile && courses.length > 0 && (
-          <Link to="/course/create">
-            <Button size="sm" className="bg-secondary" startContent={<InlineIcon icon="mdi:plus" width="20" />}>
-              Créer un cours
-            </Button>
-          </Link>
-        )}
-      </div>
+      <h3 className="text-2xl font-bold">{isOwnProfile ? 'Mes cours' : 'Cours'}</h3>
 
       {courses.length === 0 && isOwnProfile && (
         <div className="flex flex-col items-center justify-center py-12 text-center">

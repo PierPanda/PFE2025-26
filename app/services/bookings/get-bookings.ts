@@ -169,21 +169,20 @@ export async function getBookingsByTeacherId(
   }
 }
 
-/**
- * Check if a learner has a completed booking for a specific course
- */
-export async function hasCompletedBookingForCourse(
+export async function hasCompletedBookingWithTeacher(
   learnerId: string,
-  courseId: string,
+  teacherId: string,
 ): Promise<{ success: true; exists: boolean } | { success: false; error: string }> {
   try {
-    const booking = await db.query.bookings.findFirst({
-      where: and(eq(bookings.learnerId, learnerId), eq(bookings.courseId, courseId), eq(bookings.status, 'completed')),
-      columns: { id: true },
-    });
-    return { success: true, exists: booking !== undefined };
+    const [{ bookingCount }] = await db
+      .select({ bookingCount: count() })
+      .from(bookings)
+      .innerJoin(courses, and(eq(bookings.courseId, courses.id), eq(courses.teacherId, teacherId)))
+      .where(and(eq(bookings.learnerId, learnerId), eq(bookings.status, 'completed')));
+
+    return { success: true, exists: bookingCount > 0 };
   } catch (error) {
-    console.error('Error checking completed booking for course:', error);
+    console.error('Error checking completed booking with teacher:', error);
     return { success: false, error: "Une erreur s'est produite lors de la vérification de la réservation." };
   }
 }

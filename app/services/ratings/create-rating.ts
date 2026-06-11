@@ -18,7 +18,7 @@ export async function createRating(data: CreateRatingInput): Promise<CreateRatin
     return { success: true, message: 'Avis publié avec succès.', rating: created };
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && error.code === '23505') {
-      return { success: false, error: 'Vous avez déjà noté ce cours.' };
+      return { success: false, error: 'Vous avez déjà noté ce professeur.' };
     }
     console.error('Error creating rating:', error);
     return { success: false, error: "Une erreur s'est produite lors de la publication de l'avis." };

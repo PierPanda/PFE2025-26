@@ -15,7 +15,7 @@ import {
   Tabs,
 } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
-import type { BookingWithRelations } from '~/services/types';
+import type { BookingWithRelations, DbRating } from '~/services/types';
 import type { BookingFilter } from '~/services/bookings/get-bookings';
 import { formatDateLabel, formatDuration, formatHourLabel, formatPrice } from '~/lib/utils';
 import RatingFormModal from '~/components/ratings/rating-form-modal';
@@ -28,9 +28,9 @@ const ALL_FILTERS: { key: BookingFilter; label: string }[] = [
 ];
 
 type ModalState = {
-  courseId: string;
-  courseTitle: string;
-  existingRating: BookingWithRelations['rating'];
+  teacherId: string;
+  teacherName: string;
+  existingRating: DbRating | null;
 } | null;
 
 type BookingsTableProps = {
@@ -40,6 +40,7 @@ type BookingsTableProps = {
   currentFilter: BookingFilter;
   pageSize: number;
   isTeacher?: boolean;
+  learnerRatings?: DbRating[];
 };
 
 export default function BookingsTable({
@@ -49,7 +50,9 @@ export default function BookingsTable({
   currentFilter,
   pageSize,
   isTeacher = false,
+  learnerRatings = [],
 }: BookingsTableProps) {
+  const ratingByTeacherId = new Map(learnerRatings.map((r) => [r.teacherId, r]));
   const [, setSearchParams] = useSearchParams();
   const [modalState, setModalState] = useState<ModalState>(null);
 
@@ -207,28 +210,34 @@ export default function BookingsTable({
                   <TableCell className="hidden w-0 p-0">{''}</TableCell>
                 ) : (
                   <TableCell>
-                    {booking.status === 'completed' ? (
-                      <Button
-                        size="sm"
-                        variant="light"
-                        color={booking.rating ? 'default' : 'primary'}
-                        startContent={
-                          <InlineIcon
-                            icon={booking.rating ? 'mdi:pencil-outline' : 'mdi:star-plus-outline'}
-                            width="16"
-                          />
-                        }
-                        onPress={() =>
-                          setModalState({
-                            courseId: booking.courseId,
-                            courseTitle: booking.course.title,
-                            existingRating: booking.rating,
-                          })
-                        }
-                      >
-                        {booking.rating ? 'Modifier' : 'Rédiger un avis'}
-                      </Button>
-                    ) : null}
+                    {booking.status === 'completed'
+                      ? (() => {
+                          const teacherId = booking.course.teacher.id;
+                          const existingRating = ratingByTeacherId.get(teacherId) ?? null;
+                          return (
+                            <Button
+                              size="sm"
+                              variant="light"
+                              color={existingRating ? 'default' : 'primary'}
+                              startContent={
+                                <InlineIcon
+                                  icon={existingRating ? 'mdi:pencil-outline' : 'mdi:star-plus-outline'}
+                                  width="16"
+                                />
+                              }
+                              onPress={() =>
+                                setModalState({
+                                  teacherId,
+                                  teacherName: booking.course.teacher.user.name,
+                                  existingRating,
+                                })
+                              }
+                            >
+                              {existingRating ? 'Modifier' : 'Rédiger un avis'}
+                            </Button>
+                          );
+                        })()
+                      : null}
                   </TableCell>
                 )}
               </TableRow>
@@ -240,8 +249,8 @@ export default function BookingsTable({
       <RatingFormModal
         isOpen={modalState !== null}
         onClose={() => setModalState(null)}
-        courseId={modalState?.courseId ?? ''}
-        courseTitle={modalState?.courseTitle ?? ''}
+        teacherId={modalState?.teacherId ?? ''}
+        teacherName={modalState?.teacherName ?? ''}
         existingRating={modalState?.existingRating}
       />
     </div>

@@ -44,8 +44,12 @@ export type AvailableSlot = {
   endTime: Date;
 };
 
-export type CourseWithTeacherAndRatings = CourseWithTeacher & {
+export type TeacherWithUserAndRatings = TeacherWithUser & {
   ratings: DbRating[];
+};
+
+export type CourseWithTeacherAndRatings = DbCourse & {
+  teacher: TeacherWithUserAndRatings;
 };
 
 export type LearnerWithUser = DbLearner & {
@@ -61,7 +65,6 @@ export type BookingWithRelations = DbBooking & {
   course: CourseWithTeacher;
   availability: AvailabilityWithTeacher;
   learner: LearnerWithUser;
-  rating: DbRating | null;
 };
 
 /**
