@@ -27,7 +27,7 @@ import CoursesSection from './courses-section';
 import BookingsTable from './bookings-table';
 import { Tabs, Tab } from '@heroui/react';
 import { getLearnerByUserId } from '~/services/learners/get-learner';
-import { getRatingsByTeacher } from '~/services/ratings/get-ratings';
+import { getRatingsByTeacher, getRatingsByLearnerId } from '~/services/ratings/get-ratings';
 import ReviewsSection from '~/components/ratings/reviews-section';
 
 const PAGE_SIZE = 10;
@@ -79,14 +79,28 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 
   const teacher = profileTeacher;
 
-  const [coursesResult, availabilityResult, teacherRatingsResult] = await Promise.all([
+  const rawView = url.searchParams.get('view') ?? '';
+  const activeView = (() => {
+    if (rawView === 'teacher' || rawView === 'learner') return rawView;
+    return profileTeacher ? 'teacher' : 'learner';
+  })();
+
+  const learnerResult = await getLearnerByUserId(session.user.id);
+  const learner = learnerResult.success ? learnerResult.learner : null;
+  const isLearnerView = activeView === 'learner';
+
+  const [coursesResult, availabilityResult, ownRatingsResult, learnerRatingsResult] = await Promise.all([
     teacher ? getCoursesByTeacher(teacher.id) : null,
     teacher ? getAvailabilityByTeacherId(teacher.id) : null,
     teacher ? getRatingsByTeacher(teacher.id) : null,
+    isLearnerView && learnerResult.success && learnerResult.learner
+      ? getRatingsByLearnerId(learnerResult.learner.id)
+      : null,
   ]);
   const courses = coursesResult?.success ? (coursesResult.courses ?? []) : [];
   const availabilities = availabilityResult?.success ? availabilityResult.availabilities : [];
-  const teacherRatings = teacherRatingsResult?.success ? teacherRatingsResult.ratings : [];
+  const teacherRatings = ownRatingsResult?.success ? ownRatingsResult.ratings : [];
+  const learnerRatings = learnerRatingsResult?.success ? learnerRatingsResult.ratings : [];
 
   const [teacherBookingsResult, learnerBookingsResult, upcomingTeacherBookingsResult, upcomingLearnerBookingsResult] =
     await Promise.all([
