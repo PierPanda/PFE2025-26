@@ -15,7 +15,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const session = await authentifyUser(request, { redirectTo: '/auth' });
 
   const url = new URL(request.url);
-  const page = Math.max(1, Number(url.searchParams.get('page') ?? '1'));
+  const rawPage = Number(url.searchParams.get('page') ?? '1');
+  const page = Math.max(1, Number.isNaN(rawPage) ? 1 : rawPage);
 
   const category = (url.searchParams.get('category') as CourseCategory | null) ?? null;
   const level = (url.searchParams.get('level') as CourseLevel | null) ?? null;

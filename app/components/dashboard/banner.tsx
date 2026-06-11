@@ -114,6 +114,7 @@ export default function Banner({ userName, stats, onFindCourses, searchParams, s
           onChange={(e) => {
             const category = e.target.value;
             if (!category) return;
+            setSelectedCategory(category);
             const params = new URLSearchParams({ category });
             navigate(`/courses?${params.toString()}`);
           }}
