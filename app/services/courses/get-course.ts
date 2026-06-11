@@ -14,9 +14,9 @@ export async function getCourseById(courseId: string): Promise<GetCourseResponse
         teacher: {
           with: {
             user: true,
-            ratings: true,
           },
         },
+        ratings: true,
       },
     });
 

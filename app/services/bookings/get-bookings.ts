@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, gt, inArray, ne } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gt, inArray, lt, ne, or, sql } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
 import { bookings, courses } from '~/server/lib/db/schema';
 import type { DbBooking, GetBookingResponse, GetBookingsResponse } from '../types';
@@ -168,20 +168,26 @@ export async function getBookingsByTeacherId(
   }
 }
 
-export async function hasCompletedBookingWithTeacher(
+export async function hasCompletedBookingForCourse(
   learnerId: string,
-  teacherId: string,
+  courseId: string,
 ): Promise<{ success: true; exists: boolean } | { success: false; error: string }> {
   try {
     const [{ bookingCount }] = await db
       .select({ bookingCount: count() })
       .from(bookings)
-      .innerJoin(courses, and(eq(bookings.courseId, courses.id), eq(courses.teacherId, teacherId)))
-      .where(and(eq(bookings.learnerId, learnerId), eq(bookings.status, 'completed')));
+      .where(
+        and(
+          eq(bookings.learnerId, learnerId),
+          eq(bookings.courseId, courseId),
+          ne(bookings.status, 'cancelled'),
+          or(eq(bookings.status, 'completed'), lt(bookings.endTime, sql`now()`)),
+        ),
+      );
 
     return { success: true, exists: bookingCount > 0 };
   } catch (error) {
-    console.error('Error checking completed booking with teacher:', error);
+    console.error('Error checking completed booking for course:', error);
     return { success: false, error: "Une erreur s'est produite lors de la vérification de la réservation." };
   }
 }

@@ -6,6 +6,8 @@ import CourseHeader from '~/components/courses/course-header';
 import CourseDescription from '~/components/courses/course-description';
 import BookingCard from '~/components/courses/booking-card';
 import { getAvailableSlots } from '~/services/availabilities/get-available-slots';
+import { getRatingsByCourse } from '~/services/ratings/get-ratings';
+import ReviewsSection from '~/components/ratings/reviews-section';
 import { InlineIcon } from '@iconify/react';
 
 export async function loader({ params }: Route.LoaderArgs) {
@@ -26,13 +28,18 @@ export async function loader({ params }: Route.LoaderArgs) {
   if (!courseResult.course) {
     throw new Response('Cours non trouvé', { status: 404 });
   }
-  const teacherResult = await getTeacherSummary(courseResult.course.teacherId);
-  const availableSlotsResult = await getAvailableSlots(courseResult.course.teacherId, courseResult.course.duration);
+
+  const [teacherResult, availableSlotsResult, ratingsResult] = await Promise.all([
+    getTeacherSummary(courseResult.course.teacherId),
+    getAvailableSlots(courseResult.course.teacherId, courseResult.course.duration),
+    getRatingsByCourse(courseResult.course.id),
+  ]);
 
   return {
     course: courseResult.course,
     teacher: teacherResult.success ? teacherResult.teacher : null,
     availableSlots: availableSlotsResult.success ? availableSlotsResult.slots : null,
+    ratings: ratingsResult.success ? ratingsResult.ratings : [],
   };
 }
 
@@ -48,7 +55,7 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export default function CourseDetail() {
-  const { course, teacher, availableSlots } = useLoaderData<typeof loader>();
+  const { course, teacher, availableSlots, ratings } = useLoaderData<typeof loader>();
 
   return (
     <main className="py-8 md:py-20 mx-auto max-w-7xl px-6">
@@ -58,7 +65,7 @@ export default function CourseDetail() {
           <span>Retour à la liste des cours</span>
         </a>
         <div className="flex items-start gap-8 flex-col lg:flex-row relative">
-          <div className="flex-1">
+          <div className="flex-1 space-y-10">
             <img
               src={`/categories/${course.category}.jpg`}
               alt={course.title}
@@ -68,6 +75,7 @@ export default function CourseDetail() {
               <CourseHeader course={course} />
               <CourseDescription description={course.description ?? null} />
             </div>
+            <ReviewsSection ratings={ratings} />
           </div>
           <BookingCard course={course} teacher={teacher} availableSlots={availableSlots} />
         </div>

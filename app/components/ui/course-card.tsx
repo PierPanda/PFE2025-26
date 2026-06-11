@@ -54,7 +54,7 @@ export default function CourseCard({ course, currentUserId = null, courseAction 
     }
   }, [deleteFetcher.data, deleteFetcher.state, revalidator]);
 
-  const ratings = courseState.teacher.ratings ?? [];
+  const ratings = courseState.ratings ?? [];
   const averageRating = calculateAverageRating(ratings);
   const levelLabel =
     levelOptions.find((levelOption) => levelOption.key === courseState.level)?.value ?? courseState.level;

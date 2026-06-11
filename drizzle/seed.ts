@@ -515,7 +515,7 @@ async function seedRatings(
 
       const rating: typeof schema.ratings.$inferInsert = {
         id: randomUUID(),
-        teacherId: course.teacherId,
+        courseId: course.courseId,
         learnerId: learner.learnerId,
         title,
         description,
@@ -529,7 +529,7 @@ async function seedRatings(
         console.error(
           '[WARN] Echec de creation de la note',
           {
-            teacherId: rating.teacherId,
+            courseId: rating.courseId,
             learnerId: rating.learnerId,
           },
           error,

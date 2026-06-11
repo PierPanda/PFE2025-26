@@ -44,12 +44,9 @@ export type AvailableSlot = {
   endTime: Date;
 };
 
-export type TeacherWithUserAndRatings = TeacherWithUser & {
-  ratings: DbRating[];
-};
-
 export type CourseWithTeacherAndRatings = DbCourse & {
-  teacher: TeacherWithUserAndRatings;
+  teacher: TeacherWithUser;
+  ratings: DbRating[];
 };
 
 export type LearnerWithUser = DbLearner & {

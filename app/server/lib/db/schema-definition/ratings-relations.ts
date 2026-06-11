@@ -1,12 +1,12 @@
 import { relations } from 'drizzle-orm';
 import { ratings } from './ratings';
-import { teachers } from './teachers';
+import { courses } from './courses';
 import { learners } from './learners';
 
 export const ratingsRelations = relations(ratings, ({ one }) => ({
-  teacher: one(teachers, {
-    fields: [ratings.teacherId],
-    references: [teachers.id],
+  course: one(courses, {
+    fields: [ratings.courseId],
+    references: [courses.id],
   }),
   learner: one(learners, {
     fields: [ratings.learnerId],

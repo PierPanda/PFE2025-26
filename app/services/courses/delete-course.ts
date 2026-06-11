@@ -1,6 +1,6 @@
 import { and, count, eq, notInArray } from 'drizzle-orm';
 import { db } from '~/server/lib/db/index.server';
-import { bookings, courses } from '~/server/lib/db/schema';
+import { bookings, courses, ratings } from '~/server/lib/db/schema';
 import type { DeleteCourseResponse } from '../types';
 
 export async function deleteCourse(courseId: string): Promise<DeleteCourseResponse> {
@@ -17,6 +17,7 @@ export async function deleteCourse(courseId: string): Promise<DeleteCourseRespon
       };
     }
 
+    await db.delete(ratings).where(eq(ratings.courseId, courseId));
     await db.delete(bookings).where(eq(bookings.courseId, courseId));
     await db.delete(courses).where(eq(courses.id, courseId));
 
