@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs } from 'react-router';
 import { authentifyUser } from '~/server/utils/authentify-user';
 import { UserProfile } from '~/components/auth/user-profile';
 import logo from '~/assets/images/LOGO_MAESTROO.png';
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@heroui/react';
+import { Button } from '@heroui/react';
 import { InlineIcon } from '@iconify/react';
 import iconGuitare from '~/assets/icons_header/balalaika.svg';
 import iconPiano from '~/assets/icons_header/piano.svg';
@@ -111,26 +111,10 @@ export default function AuthLayout() {
       <header className="sticky top-0 z-50 bg-tertiary py-2">
         <div className="flex h-16 w-full items-center justify-between px-4 md:px-12">
           <Link to="/" className="shrink-0">
-            <img src={logo} alt="Maestroo" className="h-6 md:h-9 w-auto" />
+            <img src={logo} alt="Maestroo" className="h-8 md:h-9 w-auto" />
           </Link>
 
           <div className="flex items-center gap-2 md:gap-4">
-            <div className="md:hidden">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button variant="light" size="sm" endContent={<InlineIcon icon="lucide:chevron-down" width="14" />}>
-                    Catégories
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Catégories de cours">
-                  {iconsHeader.map((item) => (
-                    <DropdownItem key={item.title} href={item.url} startContent={item.icon}>
-                      {item.title}
-                    </DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </Dropdown>
-            </div>
             <UserProfile />
           </div>
         </div>

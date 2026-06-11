@@ -315,7 +315,7 @@ export default function BookingCard({ course, teacher, availableSlots }: Booking
                 isDisabled={!selectedSlot}
                 onPress={() => setIsConfirmModalOpen(true)}
                 className={cn(
-                  'font-semibold shadow-none transition',
+                  'shrink-0 font-semibold shadow-none transition',
                   selectedSlot
                     ? 'border-secondary bg-secondary text-dark'
                     : 'border-primary/10 bg-tertiary text-dark/40',
